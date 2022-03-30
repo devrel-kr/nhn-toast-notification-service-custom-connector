@@ -5,9 +5,6 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
-
-    <AssemblyName>Toast.Sms.Tests</AssemblyName>
-    <RootNamespace>Toast.Sms.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NhnToast.Sms\NhnToast.Sms.csproj" />
+    <ProjectReference Include="..\..\src\NhnToast.Sms.Verification\NhnToast.Sms.Verification.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
 
-    <AssemblyName>Toast.Sms</AssemblyName>
-    <RootNamespace>Toast.Sms</RootNamespace>
+    <AssemblyName>Toast.Sms.Verification</AssemblyName>
+    <RootNamespace>Toast.Sms.Verification</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

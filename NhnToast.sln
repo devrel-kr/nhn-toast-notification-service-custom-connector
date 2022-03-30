@@ -3,17 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB42C374-242B-4020-AC8D-BD053F2716C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhnToast.Sms", "src\NhnToast.Sms\NhnToast.Sms.csproj", "{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NhnToast.Sms", "src\NhnToast.Sms\NhnToast.Sms.csproj", "{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4}"
 EndProject
-
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhnToast.Sms.Verification", "src\NhnToast.Sms.Verification\NhnToast.Sms.Verification.csproj", "{C3FEE702-D537-4195-9C6B-B1739E869544}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4F7AC02D-C734-4F9F-A5AC-A963AC093EAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhnToast.Sms.Tests", "test\NhnToast.Sms.Tests\NhnToast.Sms.Tests.csproj", "{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NhnToast.Sms.Tests", "test\NhnToast.Sms.Tests\NhnToast.Sms.Tests.csproj", "{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}"
 EndProject
-
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhnToast.Sms.Verification.Tests", "test\NhnToast.Sms.Verification.Tests\NhnToast.Sms.Verification.Tests.csproj", "{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,19 +25,27 @@ Global
 		{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4}.Release|Any CPU.Build.0 = Release|Any CPU
-
+		{C3FEE702-D537-4195-9C6B-B1739E869544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3FEE702-D537-4195-9C6B-B1739E869544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3FEE702-D537-4195-9C6B-B1739E869544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3FEE702-D537-4195-9C6B-B1739E869544}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BC8AC67-B823-4777-98AB-ABE6F4890DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AE24C49C-CEA5-489E-9D3C-5C8A880ACBD4} = {EB42C374-242B-4020-AC8D-BD053F2716C7}
-
+		{C3FEE702-D537-4195-9C6B-B1739E869544} = {EB42C374-242B-4020-AC8D-BD053F2716C7}
 		{2BC8AC67-B823-4777-98AB-ABE6F4890DA5} = {4F7AC02D-C734-4F9F-A5AC-A963AC093EAC}
+		{B2DBBAAB-6035-4C65-8DDE-48344DC2ABA1} = {4F7AC02D-C734-4F9F-A5AC-A963AC093EAC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C62FCB9E-F98F-4EFD-BD2B-F4109D0F4418}
