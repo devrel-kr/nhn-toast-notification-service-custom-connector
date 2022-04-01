@@ -13,24 +13,23 @@ using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
-namespace Toast.Sms.Verification
+namespace Toast.Sms.Verification.Triggers
 {
-    public class Function2
+    public class ListSenders
     {
-        private readonly ILogger<Function2> _logger;
+        private readonly ILogger<ListSenders> _logger;
 
-        public Function2(ILogger<Function2> log)
+        public ListSenders(ILogger<ListSenders> log)
         {
             _logger = log;
         }
 
-        [FunctionName("Function2")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+        [FunctionName(nameof(ListSenders))]
+        [OpenApiOperation(operationId: "Sender.List", tags: new[] { "sender" })]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "senders")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 

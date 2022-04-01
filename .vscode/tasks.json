@@ -7,7 +7,8 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj",
+        // "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj",
+        "${workspaceFolder}/test/NhnToast.Sms.Verification.Tests/NhnToast.Sms.Verification.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -19,7 +20,8 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj",
+        // "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj",
+        "${workspaceFolder}/test/NhnToast.Sms.Verification.Tests/NhnToast.Sms.Verification.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -33,7 +35,8 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj"
+        // "${workspaceFolder}/test/NhnToast.Sms.Tests/NhnToast.Sms.Tests.csproj"
+        "${workspaceFolder}/test/NhnToast.Sms.Verification.Tests/NhnToast.Sms.Verification.Tests.csproj"
       ],
       "problemMatcher": "$msCompile"
     },
@@ -48,7 +51,8 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src/NhnToast.Sms"
+        // "cwd": "${workspaceFolder}/src/NhnToast.Sms"
+        "cwd": "${workspaceFolder}/src/NhnToast.Sms.Verification"
       }
     },
     {
@@ -67,7 +71,8 @@
       },
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src\\NhnToast.Sms"
+        // "cwd": "${workspaceFolder}/src/NhnToast.Sms"
+        "cwd": "${workspaceFolder}/src/NhnToast.Sms.Verification"
       }
     },
     {
@@ -83,7 +88,8 @@
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src\\NhnToast.Sms"
+        // "cwd": "${workspaceFolder}/src/NhnToast.Sms"
+        "cwd": "${workspaceFolder}/src/NhnToast.Sms.Verification"
       }
     },
     {
@@ -100,14 +106,16 @@
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/src\\NhnToast.Sms"
+        // "cwd": "${workspaceFolder}/src/NhnToast.Sms"
+        "cwd": "${workspaceFolder}/src/NhnToast.Sms.Verification"
       }
     },
     {
       "type": "func",
       "dependsOn": "build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/src\\NhnToast.Sms/bin/Debug/net6.0"
+        // "cwd": "${workspaceFolder}/src/NhnToast.Sms/bin/Debug/net6.0"
+        "cwd": "${workspaceFolder}/src/NhnToast.Sms.Verification/bin/Debug/net6.0"
       },
       "command": "host start",
       "isBackground": true,

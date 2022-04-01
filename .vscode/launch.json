@@ -6,9 +6,11 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/test/NhnToast.Sms.Tests/bin/Debug/net6.0/Toast.Sms.Tests.dll",
+      // "program": "${workspaceFolder}/test/NhnToast.Sms.Tests/bin/Debug/net6.0/Toast.Sms.Tests.dll",
+      "program": "${workspaceFolder}/test/NhnToast.Sms.Verification.Tests/bin/Debug/net6.0/Toast.Sms.Verification.Tests.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/test/NhnToast.Sms.Tests",
+      // "cwd": "${workspaceFolder}/test/NhnToast.Sms.Tests",
+      "cwd": "${workspaceFolder}/test/NhnToast.Sms.Verification.Tests",
       "console": "internalConsole",
       "stopAtEntry": false
     },
