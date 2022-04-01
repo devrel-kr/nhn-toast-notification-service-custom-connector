@@ -1,0 +1,14 @@
+{
+  "Toast": {
+    "AppKey": "{appKey}",
+    "SecretKey": "{secretKey}",
+    "BaseUrl": "https://api-sms.cloud.toast.com/",
+    "Version": "v3.0",
+    "Endpoints": {
+      "SendMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
+      "ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
+      "GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
+      "ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results?startUpdateDate={startUpdateDate}&endUpdateDate={endUpdateDate}&messageType={messageType}&pageNum={pageNum}&pageSize={pageSize}"
+    }
+  }
+}

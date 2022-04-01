@@ -13,7 +13,7 @@ using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
-namespace Toast.Sms
+namespace Toast.Sms.Triggers
 {
     public class Function1
     {
