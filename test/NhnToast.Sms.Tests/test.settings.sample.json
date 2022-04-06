@@ -7,8 +7,11 @@
     "Endpoints": {
       "SendMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
       "ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
-      "GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
+      "GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}?recipientSeq={recipientSeq}",
       "ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results?startUpdateDate={startUpdateDate}&endUpdateDate={endUpdateDate}&messageType={messageType}&pageNum={pageNum}&pageSize={pageSize}"
+    },
+    "Examples": {
+      "RequestId": "{requestId}"
     }
   }
 }
