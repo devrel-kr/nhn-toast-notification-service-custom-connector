@@ -22,7 +22,11 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "AUTH", 1, 15, true)]
         [DataRow(null, "2018-10-04 16:17:10", "MMS", 1, 15, false)]
         [DataRow("2018-10-04 16:16:00", null, "MMS", 1, 15, false)]
+        [DataRow(null, null, "MMS", 1, 15, false)]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", null, 1, 15, true)]
+        [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", null, 0, 15, true)]
+        [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", null, 15, false)]
+        [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", 1, null, false)]
         public async Task Given_Parameters_When_ListMessagesStatus_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdatedate, string? messageType, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
