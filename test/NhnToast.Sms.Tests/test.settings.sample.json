@@ -9,6 +9,8 @@
       "ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
       "GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
       "ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results?startUpdateDate={startUpdateDate}&endUpdateDate={endUpdateDate}&messageType={messageType}&pageNum={pageNum}&pageSize={pageSize}"
-    }
+    },
+    "Sender": "01094437025",
+    "Recipient": "01047058194"
   }
 }
