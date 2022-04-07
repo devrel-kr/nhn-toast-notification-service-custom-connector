@@ -86,7 +86,6 @@ namespace Toast.Sms.Triggers
 
             var http = new HttpClient();
 
-            // Act
             http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
             var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
 

@@ -13,7 +13,7 @@ using WorldDomination.Net.Http;
 namespace Toast.Sms.Tests.Triggers
 {
     [TestClass]
-    public class LIstMessageStatusTests
+    public class ListMessageStatusTests
     {
         [DataTestMethod]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", 1, 15, true)]
