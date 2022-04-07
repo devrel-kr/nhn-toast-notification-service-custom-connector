@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 using SmartFormat;
 
-namespace Toast.Sms.Verification.Triggers
+namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
@@ -36,7 +36,7 @@ namespace Toast.Sms.Verification.Triggers
         [OpenApiParameter(name: "recipientSeq", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "sms sending sequence number")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId}")] HttpRequest req, string requestId)
+            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId:regex(^\\d+\\w+$)}")] HttpRequest req, string requestId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
