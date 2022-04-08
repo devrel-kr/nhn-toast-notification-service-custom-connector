@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 using SmartFormat;
 
-namespace Toast.Sms.Verification.Triggers
+namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
@@ -32,11 +32,11 @@ namespace Toast.Sms.Verification.Triggers
         [FunctionName(nameof(GetMessage))]
         [OpenApiOperation(operationId: "Message.Get", tags: new[] { "message" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Path, Required = true, Description = "sms sender's request ID")]
-        [OpenApiParameter(name: "recipientSeq", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "sms sending sequence number")]
+        [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Path, Required = true, Description = "SMS request ID")]
+        [OpenApiParameter(name: "recipientSeq", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "SMS request sequence number")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId}")] HttpRequest req, string requestId)
+            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId:regex(^\\d+\\w+$)}")] HttpRequest req, string requestId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -56,7 +56,6 @@ namespace Toast.Sms.Verification.Triggers
 
             var http = new HttpClient();
 
-            // Act
             http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
             var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
 
