@@ -18,17 +18,21 @@ namespace Toast.Sms.Tests.Triggers
     public class SendMessagesTests
     {
         [DataTestMethod]
-        [DataRow(true, true, true)]
-        [DataRow(false, false, false)]
-        [DataRow(true, false, true)]
-        [DataRow(false, true, false)]
-        public async Task Given_Parameters_When_SendMessages_Invoked_Then_It_Should_Return_Result(bool senderExist, bool recipientExist, bool expected)
+        [DataRow(null, false, false, false)]
+        [DataRow(null, false, true, false)]
+        [DataRow(null, true, false, false)]
+        [DataRow(null, true, true, false)]
+        [DataRow("hello world", false, false, false)]
+        [DataRow("hello world", false, true, false)]
+        [DataRow("hello world", true, false, true)]
+        [DataRow("hello world", true, true, true)]
+        public async Task Given_Parameters_When_SendMessages_Invoked_Then_It_Should_Return_Result(string body, bool useSendNo, bool useRecipientNo, bool expected)
         {
             // Arrange
             var config = new ConfigurationBuilder().AddJsonFile("test.settings.json").Build();
-            var sender = senderExist ? config.GetValue<string>("Toast:Sender") : null;
-            var recipient = recipientExist ? config.GetValue<string>("Toast:Recipient") : null;
-            var json = $"{{\"body\":\"hello world\",\"sendNo\":\"{sender}\",\"recipientList\":[{{\"recipientNo\":\"{recipient}\"}}]}}";
+            var sendNo = useSendNo ? config.GetValue<string>("Toast:Examples:SendNo") : null;
+            var recipientNo = useRecipientNo ? config.GetValue<string>("Toast:Examples:RecipientNo") : null;
+            var json = $"{{ \"body\": \"{body}\", \"sendNo\": \"{sendNo}\", \"recipientList\": [ {{\"recipientNo\": \"{recipientNo}\" }} ] }}";
             var appKey = config.GetValue<string>("Toast:AppKey");
             var secretKey = config.GetValue<string>("Toast:SecretKey");
             var baseUrl = config.GetValue<string>("Toast:BaseUrl");

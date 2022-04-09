@@ -13,7 +13,9 @@
     "Sender": "01094437025",
     "Recipient": "01047058194",
     "Examples": {
-      "RequestId": "{requestId}"
+      "RequestId": "{requestId}",
+      "SendNo": "{sendNo}",
+      "RecipientNo": "{recipientNo}"
     }
   }
 }

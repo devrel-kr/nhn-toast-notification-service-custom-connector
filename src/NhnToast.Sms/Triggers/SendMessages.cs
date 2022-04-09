@@ -32,9 +32,9 @@ namespace Toast.Sms.Triggers
         }
 
         [FunctionName(nameof(SendMessages))]
-        [OpenApiOperation(operationId: "Sender.List", tags: new[] { "sender" })]
+        [OpenApiOperation(operationId: "Message.Send", tags: new[] { "message" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Object), Description ="Message to Send")]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description ="Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "messages")] HttpRequest req)
