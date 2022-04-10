@@ -30,7 +30,7 @@ namespace Toast.Sms.Triggers
         }
 
         [FunctionName(nameof(ListMessages))]
-        [OpenApiOperation(operationId: "Message.List", tags: new[] { "message" })]
+        [OpenApiOperation(operationId: "Messages.List", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "RequestId to search. `requestId` or `startRequestDate` + `endRequestDate` or `startCreateDate` + `endCreateDate` must be filled")]
         [OpenApiParameter(name: "startRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending request start date (`yyyy-MM-dd HH:mm:ss`)")]

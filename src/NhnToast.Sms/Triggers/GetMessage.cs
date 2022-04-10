@@ -30,7 +30,7 @@ namespace Toast.Sms.Triggers
         }
 
         [FunctionName(nameof(GetMessage))]
-        [OpenApiOperation(operationId: "Message.Get", tags: new[] { "message" })]
+        [OpenApiOperation(operationId: "Messages.Get", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Path, Required = true, Description = "SMS request ID")]
         [OpenApiParameter(name: "recipientSeq", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "SMS request sequence number")]
