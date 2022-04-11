@@ -30,7 +30,7 @@ namespace Toast.Sms.Triggers
         }
 
         [FunctionName(nameof(ListMessageStatus))]
-        [OpenApiOperation(operationId: "MessageStatus.List", tags: new[] { "messageStatus" })]
+        [OpenApiOperation(operationId: "Messages.Status", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiParameter(name: "startUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "StartDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "endUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "endDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
