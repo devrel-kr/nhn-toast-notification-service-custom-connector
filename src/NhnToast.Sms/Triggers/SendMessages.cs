@@ -32,7 +32,7 @@ namespace Toast.Sms.Triggers
         }
 
         [FunctionName(nameof(SendMessages))]
-        [OpenApiOperation(operationId: "Message.Send", tags: new[] { "message" })]
+        [OpenApiOperation(operationId: "Messages.Send", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description ="Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
