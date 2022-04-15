@@ -8,12 +8,11 @@ on:
     inputs:
       tags:
         description: 'Test scenario tags'
-        required: true
         type: string 
 
 env:
-  SMS_PUBLISH_PATH: \nhn-toast-custom-connector\src\NhnToast.Sms\bin\Debug\net6.0\publish\
-  SMS_VERIFICATION_PUBLISH_PATH: \nhn-toast-custom-connector\src\NhnToast.Sms.Verification\bin\Debug\net6.0\publish\
+  SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Debug/net6.0/publish/
+  SMS_VERIFICATION_PUBLISH_PATH: src/NhnToast.Sms.Verification/bin/Debug/net6.0/publish/
   SMS_PUBLISH_NAME: SmsApp
   SMS_VERIFICATION_PUBLISH_NAME: SmsVerificaitonApp
 
@@ -27,7 +26,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0
+          dotnet-version: 6.0.x
 
       - name: Install dependencies
         run: dotnet restore
@@ -45,14 +44,14 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{env.SMS_PUBLISH_NAME}}
-          path: ${{env.SMS_PUBLISH_PATH}}
+          path: ${{ github.workspace }}/${{env.SMS_PUBLISH_PATH}}
           retention-days: 7
           
       - name: Upload app2 artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{SMS_VERIFICATION_PUBLISH_NAME}}
-          path: ${{SMS_VERIFICATION_PUBLISH_PATH}}
+          name: ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+          path: ${{ github.workspace }}/${{env.SMS_VERIFICATION_PUBLISH_PATH}}
           retention-days: 7
 
 
@@ -63,18 +62,21 @@ jobs:
     steps:
       - name: Download artifacts
         id: download_artifacts
-        uses: actions/download-artifact@v2 
+        uses: actions/download-artifact@v3
 
       - name: create github release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
 
-      - name: Deploy artifact-1 in github release
+      - run: zip ${{env.SMS_PUBLISH_NAME}}.zip ${{env.SMS_PUBLISH_NAME}}
+      - run: zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+
+      - name: Deploy app1 artifact in github release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -84,12 +86,12 @@ jobs:
           asset_name: ${{env.SMS_PUBLISH_NAME}}.zip
           asset_content_type: application/gzip
 
-      - name: Deploy artifact-2 in github release
+      - name: Deploy app2 artifact in github release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{SMS_VERIFICATION_PUBLISH_NAME}}.zip
-          asset_name: ${{SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          asset_path: ./${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          asset_name: ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
           asset_content_type: application/gzip
