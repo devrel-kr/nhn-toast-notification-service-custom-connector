@@ -18,15 +18,19 @@ using Newtonsoft.Json;
 
 using SmartFormat;
 
+using Toast.Sms.Configurations;
+
 namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
+        private readonly ToastSettings _settings;
         private readonly ILogger<GetMessage> _logger;
 
-        public GetMessage(ILogger<GetMessage> log)
+        public GetMessage(ToastSettings settings, ILogger<GetMessage> log)
         {
-            _logger = log;
+            this._settings = settings.ThrowIfNullOrDefault();
+            this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(GetMessage))]
