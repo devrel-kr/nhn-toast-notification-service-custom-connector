@@ -44,17 +44,19 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+            int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal);
+
             var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
             var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
             var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
             var version = Environment.GetEnvironmentVariable("Toast__Version");
             var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__GetMessage");
-            var options = new
+            var options = new GetMessagRequestUrlOptions()
             {
                 version = version,
                 appKey = appKey,
                 requestId = requestId,
-                recipientSeq = req.Query["recipientSeq"].ToString()
+                recipientSeq = recipientSeqVal,
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

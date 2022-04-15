@@ -43,20 +43,27 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+            
+            if (!(int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal)))
+                pageNumVal = 1;
+
+            if (!(int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal)))
+                pageSizeVal = 15;
+       
             var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
             var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
             var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
             var version = Environment.GetEnvironmentVariable("Toast__Version");
             var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__ListMessageStatus");
-            var options = new
+            var options = new ListmessageStatusRequestUrlOptions()
             {
                 version = version,
                 appKey = appKey,
                 startUpdateDate = req.Query["startUpdateDate"].ToString(),
                 endUpdateDate = req.Query["endUpdateDate"].ToString(),
                 messageType = req.Query["messageType"].ToString(),
-                pageNum = req.Query["pageNum"].ToString().IsNullOrWhiteSpace() ? "1" : req.Query["pageNum"].ToString(),
-                pageSize = req.Query["pageSize"].ToString().IsNullOrWhiteSpace() ? "15" : req.Query["pageSize"].ToString() 
+                pageNum = pageNumVal,
+                pageSize = pageSizeVal,
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
