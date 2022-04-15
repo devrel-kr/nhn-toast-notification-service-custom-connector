@@ -1,5 +1,5 @@
 public class RequestUrlOptions
 {
-    public string Version{ get; set; }
-    public string Appkey{get; set;}
+    public string version{ get; set; }
+    public string appkey{get; set;}
 }
