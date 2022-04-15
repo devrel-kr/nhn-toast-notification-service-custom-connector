@@ -30,7 +30,7 @@ namespace Toast.Sms.Verification.Triggers
         }
 
         [FunctionName(nameof(ListSenders))]
-        [OpenApiOperation(operationId: "Sender.List", tags: new[] { "sender" })]
+        [OpenApiOperation(operationId: "Senders.List", tags: new[] { "senders" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiParameter(name: "sendNo", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Sender's phone number")]
         [OpenApiParameter(name: "useYn", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Value indicating whether the number is used or not")]
