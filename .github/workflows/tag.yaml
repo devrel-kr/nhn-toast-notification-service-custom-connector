@@ -1,0 +1,95 @@
+name: Function apps deploy
+
+on:
+  push:
+    tags:
+      - '**'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags'
+        required: true
+        type: string 
+
+env:
+  SMS_PUBLISH_PATH: \nhn-toast-custom-connector\src\NhnToast.Sms\bin\Debug\net6.0\publish\
+  SMS_VERIFICATION_PUBLISH_PATH: \nhn-toast-custom-connector\src\NhnToast.Sms.Verification\bin\Debug\net6.0\publish\
+  SMS_PUBLISH_NAME: SmsApp
+  SMS_VERIFICATION_PUBLISH_NAME: SmsVerificaitonApp
+
+jobs:
+  Continuous-Integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0
+
+      - name: Install dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+        
+      # - name: Test
+      #   run: dotnet test --no-restore --verbosity normal
+
+      - name: Create artifacts 
+        run: dotnet publish
+      
+      - name: Upload app1 artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.SMS_PUBLISH_NAME}}
+          path: ${{env.SMS_PUBLISH_PATH}}
+          retention-days: 7
+          
+      - name: Upload app2 artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{SMS_VERIFICATION_PUBLISH_NAME}}
+          path: ${{SMS_VERIFICATION_PUBLISH_PATH}}
+          retention-days: 7
+
+
+
+  Continuous-Deployment:
+    runs-on: ubuntu-latest
+    needs: Continuous-Integration
+    steps:
+      - name: Download artifacts
+        id: download_artifacts
+        uses: actions/download-artifact@v2 
+
+      - name: create github release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+      - name: Deploy artifact-1 in github release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{env.SMS_PUBLISH_NAME}}.zip
+          asset_name: ${{env.SMS_PUBLISH_NAME}}.zip
+          asset_content_type: application/gzip
+
+      - name: Deploy artifact-2 in github release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          asset_name: ${{SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          asset_content_type: application/gzip
