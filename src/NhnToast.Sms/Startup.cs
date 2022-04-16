@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Toast.Sms.Configurations;
 
 [assembly: FunctionsStartup(typeof(Toast.Sms.Startup))]
+
 namespace Toast.Sms
 {
     public class Startup : FunctionsStartup
