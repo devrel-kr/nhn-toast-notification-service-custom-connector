@@ -1,5 +1,5 @@
-public abstract class RequestUrlOptions
+public class RequestUrlOptions
 {
     public virtual string version { get; set; }
-    public virtual string appkey { get; set; }
+    public virtual string appKey { get; set; }
 }
