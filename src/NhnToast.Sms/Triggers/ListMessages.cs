@@ -32,11 +32,11 @@ namespace Toast.Sms.Triggers
         [FunctionName(nameof(ListMessages))]
         [OpenApiOperation(operationId: "Messages.List", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "RequestId to search. `requestId` or `startRequestDate` + `endRequestDate` or `startCreateDate` + `endCreateDate` must be filled")]
-        [OpenApiParameter(name: "startRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending request start date (`yyyy-MM-dd HH:mm:ss`)")]
-        [OpenApiParameter(name: "endRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending request end date (`yyyy-MM-dd HH:mm:ss`)")]
-        [OpenApiParameter(name: "startCreateDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending registration start date (`yyyy-MM-dd HH:mm:ss`)")]
-        [OpenApiParameter(name: "endCreateDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending registration end date (`yyyy-MM-dd HH:mm:ss`)")]
+        [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "RequestId to search. `requestId` or `startRequestDate` + `endRequestDate` or `startCreateDate` + `endCreateDate` must be filled")]
+        [OpenApiParameter(name: "startRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "Message sending request start date (`yyyy-MM-dd HH:mm:ss`)")]
+        [OpenApiParameter(name: "endRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "Message sending request end date (`yyyy-MM-dd HH:mm:ss`)")]
+        [OpenApiParameter(name: "startCreateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "Message sending registration start date (`yyyy-MM-dd HH:mm:ss`)")]
+        [OpenApiParameter(name: "endCreateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "Message sending registration end date (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "startResultDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending complete start date (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "endResultDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending complete end date (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "sendNo", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Sender's phone number")]
@@ -79,8 +79,8 @@ namespace Toast.Sms.Triggers
                 subResultCode = req.Query["subResultCode"].ToString(),
                 senderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 recipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                pageNum = req.Query["pageNum"].ToString().IsNullOrWhiteSpace() ? 1 : int.Parse(req.Query["pageNum"]),
-                pageSize = req.Query["pageSize"].ToString().IsNullOrWhiteSpace() ? 15 : int.Parse(req.Query["pageSize"])         
+                pageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
+                pageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
