@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using SmartFormat;
+using SmartFormat.Core.Settings;
 
 namespace Toast.Sms.Configurations
 {
@@ -36,8 +34,13 @@ namespace Toast.Sms.Configurations
         public virtual string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="SmsSettings"/> object.
+        /// Gets or sets the <see cref="SmsEndpointSettings"/> object.
         /// </summary>
         public virtual SmsEndpointSettings Endpoints { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="SmartFormatter"/> instance.
+        /// </summary>
+        public virtual SmartFormatter Formatter { get; } = Smart.CreateDefaultSmartFormat(new SmartSettings() { CaseSensitivity = CaseSensitivityType.CaseInsensitive });
     }
 }
