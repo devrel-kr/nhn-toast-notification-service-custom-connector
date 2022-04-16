@@ -36,7 +36,7 @@ namespace Toast.Sms.Tests.Triggers
             var baseUrl = config.GetValue<string>("Toast:BaseUrl");
             var version = config.GetValue<string>("Toast:Version");
             var endpoint = config.GetValue<string>("Toast:Endpoints:ListMessageStatus");
-            var options = new ListmessageStatusRequestUrlOptions()
+            var options = new ListMessageStatusRequestUrlOptions()
             {
                 version = version,
                 appKey = appKey,
