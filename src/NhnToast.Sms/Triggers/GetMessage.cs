@@ -43,20 +43,17 @@ namespace Toast.Sms.Triggers
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId:regex(^\\d+\\w+$)}")] HttpRequest req, string requestId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal);
-
             var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
             var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
             var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
             var version = Environment.GetEnvironmentVariable("Toast__Version");
             var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__GetMessage");
-            var options = new GetMessagRequestUrlOptions()
+            var options = new GetMessageRequestUrlOptions()
             {
                 version = version,
                 appKey = appKey,
                 requestId = requestId,
-                recipientSeq = recipientSeqVal,
+                recipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

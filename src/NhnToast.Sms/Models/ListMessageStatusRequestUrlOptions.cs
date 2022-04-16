@@ -1,4 +1,4 @@
-public class ListmessageStatusRequestUrlOptions : RequestUrlOptions
+public class ListMessageStatusRequestUrlOptions : RequestUrlOptions
 {
     public string startUpdateDate { get; set; }
     public string endUpdateDate { get; set; }
