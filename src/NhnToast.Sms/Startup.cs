@@ -3,6 +3,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Exte
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 
 [assembly: FunctionsStartup(typeof(Toast.Sms.Startup))]
@@ -29,7 +30,7 @@ namespace Toast.Sms
         {
             var toastSettings = services.BuildServiceProvider()
                                         .GetService<IConfiguration>()
-                                        .Get<ToastSettings>(ToastSettings.Name);
+                                        .Get<ToastSettings<SmsEndpointSettings>>(ToastSettings.Name);
             services.AddSingleton(toastSettings);
         }
 

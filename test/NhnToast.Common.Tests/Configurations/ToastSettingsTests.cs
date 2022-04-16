@@ -2,9 +2,9 @@ using FluentAssertions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Toast.Sms.Configurations;
+using Toast.Common.Configurations;
 
-namespace Toast.Sms.Tests.Configurations
+namespace Toast.Common.Tests.Configurations
 {
     [TestClass]
     public class ToastSettingsTests
@@ -12,7 +12,7 @@ namespace Toast.Sms.Tests.Configurations
         [DataTestMethod]
         [DataRow("1.0.0", "helloworld", "/api/{version}/apps/{appKey}", "/api/1.0.0/apps/helloworld")]
         [DataRow("1.0.0", "helloworld", "/api/{Version}/apps/{AppKey}", "/api/1.0.0/apps/helloworld")]
-        public void Given_CarmelCaseObject_When_Formatted_Then_It_Should_Return_Result(string version, string appKey, string endpoint, string expected)
+        public void Given_CarmelCaseProperties_When_Formatted_Then_It_Should_Return_Result(string version, string appKey, string endpoint, string expected)
         {
             var options = new
             {
@@ -30,7 +30,7 @@ namespace Toast.Sms.Tests.Configurations
         [DataTestMethod]
         [DataRow("1.0.0", "helloworld", "/api/{version}/apps/{appKey}", "/api/1.0.0/apps/helloworld")]
         [DataRow("1.0.0", "helloworld", "/api/{Version}/apps/{AppKey}", "/api/1.0.0/apps/helloworld")]
-        public void Given_CapitalCaseObject_When_Formatted_Then_It_Should_Return_Result(string version, string appKey, string endpoint, string expected)
+        public void Given_CapitalCaseProperties_When_Formatted_Then_It_Should_Return_Result(string version, string appKey, string endpoint, string expected)
         {
             var options = new
             {
