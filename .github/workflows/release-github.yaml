@@ -89,6 +89,13 @@ jobs:
         name: ${{ env.SMS_VERIFICATION_PUBLISH_NAME }}
         path: ${{ github.workspace }}/${{ env.SMS_VERIFICATION_PUBLISH_PATH }}
         retention-days: 7
+        
+    - name: Upload release notes
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-notes
+        path: ${{ github.workspace }}/release-notes
+        retention-days: 7
 
   Continuous-Deployment:
     runs-on: ubuntu-latest
@@ -124,21 +131,22 @@ jobs:
           mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
           mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
 
-    - name: Get release note
-      id: releaseNote
-      shell: pwsh
-      run: |
-        $content = Get-Content -Path release-notes/${{ env.RELEASE_VERSION }}.md
+    # - name: Get release note
+    #   id: releaseNote
+    #   shell: pwsh
+    #   run: |
+    #     dir *.* /s
+    #     $content = Get-Content -Path release-notes/${{ env.RELEASE_VERSION }}.md
 
-        echo "::set-output name=content::$content"
+    #     echo "::set-output name=content::$content"
 
     - name: Release FunctionApp artifacts to GitHub
       uses: softprops/action-gh-release@v1
       with:
         prerelease: false
         name: Release ${{ env.RELEASE_VERSION }}
-        body: ${{ steps.releaseNote.outputs.content }}
-        # body_path: ${{ github.workspace }}/release-notes/${{ env.RELEASE_VERSION }}.md
+        # body: ${{ steps.releaseNote.outputs.content }}
+        body_path: ${{ github.workspace }}/release-notes/${{ env.RELEASE_VERSION }}.md
         generate_release_notes: true
         files: |
           published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
