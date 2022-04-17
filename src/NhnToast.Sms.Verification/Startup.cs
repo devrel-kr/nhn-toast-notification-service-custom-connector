@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Toast.Common.Configurations;
-using Toast.Sms.Configurations;
+using Toast.Sms.Verification.Configurations;
 
-[assembly: FunctionsStartup(typeof(Toast.Sms.Startup))]
+[assembly: FunctionsStartup(typeof(Toast.Sms.Verification.Startup))]
 
-namespace Toast.Sms
+namespace Toast.Sms.Verification
 {
     public class Startup : FunctionsStartup
     {
@@ -30,13 +30,13 @@ namespace Toast.Sms
         {
             var toastSettings = services.BuildServiceProvider()
                                         .GetService<IConfiguration>()
-                                        .Get<ToastSettings<SmsEndpointSettings>>(ToastSettings.Name);
+                                        .Get<ToastSettings<SmsVerificationEndpointSettings>>(ToastSettings.Name);
             services.AddSingleton(toastSettings);
         }
 
         private static void ConfigureHttpClient(IServiceCollection services)
         {
-            services.AddHttpClient("messages");
+            services.AddHttpClient("senders");
         }
     }
 }

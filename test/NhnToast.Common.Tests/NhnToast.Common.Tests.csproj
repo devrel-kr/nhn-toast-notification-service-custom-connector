@@ -6,8 +6,8 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>Toast.Sms.Verification.Tests</AssemblyName>
-    <RootNamespace>Toast.Sms.Verification.Tests</RootNamespace>
+    <AssemblyName>Toast.Common.Tests</AssemblyName>
+    <RootNamespace>Toast.Common.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,18 +20,10 @@
     <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.9" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.9" />
-    <PackageReference Include="WorldDomination.HttpClient.Helpers" Version="7.3.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NhnToast.Sms.Verification\NhnToast.Sms.Verification.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="test.settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
+    <ProjectReference Include="..\..\src\NhnToast.Common\NhnToast.Common.csproj" />
   </ItemGroup>
 
 </Project>

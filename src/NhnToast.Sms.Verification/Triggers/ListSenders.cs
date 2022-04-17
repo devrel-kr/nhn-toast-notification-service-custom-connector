@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,19 +12,22 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-using Newtonsoft.Json;
-
-using SmartFormat;
+using Toast.Common.Configurations;
+using Toast.Sms.Verification.Configurations;
 
 namespace Toast.Sms.Verification.Triggers
 {
     public class ListSenders
     {
+        private readonly ToastSettings<SmsVerificationEndpointSettings> _settings;
+        private readonly HttpClient _http;
         private readonly ILogger<ListSenders> _logger;
 
-        public ListSenders(ILogger<ListSenders> log)
+        public ListSenders(ToastSettings<SmsVerificationEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListSenders> log)
         {
-            _logger = log;
+            this._settings = settings.ThrowIfNullOrDefault();
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("senders");
+            this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(ListSenders))]
@@ -43,31 +44,27 @@ namespace Toast.Sms.Verification.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
-            var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
-            var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
-            var version = Environment.GetEnvironmentVariable("Toast__Version");
-            var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__ListSenders");
+            var appKey = this._settings.AppKey;
+            var secretKey = this._settings.SecretKey;
+            var baseUrl = this._settings.BaseUrl;
+            var version = this._settings.Version;
+            var endpoint = this._settings.Endpoints.ListSenders;
             var options = new
             {
-                version = version,
-                appKey = appKey,
-                sendNo = req.Query["sendNo"].ToString(),
-                useYn = req.Query["useYn"].ToString(),
-                blockYn = req.Query["blockYn"].ToString(),
-                pageNum = req.Query["pageNum"].ToString().IsNullOrWhiteSpace() ? "1" : req.Query["pageNum"].ToString(),
-                pageSize = req.Query["pageSize"].ToString().IsNullOrWhiteSpace() ? "15" : req.Query["pageSize"].ToString()
+                Version = version,
+                AppKey = appKey,
+                SendNo = req.Query["sendNo"].ToString(),
+                UseYn = req.Query["useYn"].ToString(),
+                BlockYn = req.Query["blockYn"].ToString(),
+                PageNum = req.Query["pageNum"].ToString().IsNullOrWhiteSpace() ? "1" : req.Query["pageNum"].ToString(),
+                PageSize = req.Query["pageSize"].ToString().IsNullOrWhiteSpace() ? "15" : req.Query["pageSize"].ToString()
             };
-            var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
-            var http = new HttpClient();
-
-            // Act
-            http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
-            var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
-
 
             return new OkObjectResult(payload);
         }
