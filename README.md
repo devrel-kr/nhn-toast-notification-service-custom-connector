@@ -17,5 +17,27 @@ The elements in the green rectangle is the scope of this project.
 
 ## Getting Started ##
 
+### GitHub Secrets ###
+
+Following GitHub Secrets are required for CI/CD pipelines:
+
+* `TOAST_APPKEY`: AppKey that NHN Toast issues.
+* `TOAST_SECRETKEY`: SecretKey that NHN Toast issues.
+* `REQUEST_ID`: Any request ID that was used to send SMS messages.
+* `SENDER_NO`: Any registered and verified sender number for integration tests.
+* `RECIPIENT_NO`: Recipient mobile phone number for integration tests. Make sure to use your mobile phone number, instead of random number.
+
+
+### Local Development ###
+
 TBD
 
+
+### Initial Autopilot to Azure ###
+
+TBD
+
+
+### Initial Autopilot to NHN Cloud ###
+
+TBD
