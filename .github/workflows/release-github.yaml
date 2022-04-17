@@ -132,5 +132,5 @@ jobs:
         body_path: release-notes/${{ env.RELEASE_VERSION }}.md
         generate_release_notes: true
         files: |
-          published/${{env.SMS_PUBLISH_NAME}}.zip
-          published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
+          published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
