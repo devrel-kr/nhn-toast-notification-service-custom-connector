@@ -39,7 +39,7 @@ jobs:
       run: |
         Copy-Item -Path test/NhnToast.Sms.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Tests/test.settings.json -Force
 
-        Get-Content -Path test/NhnToast.Sms.Tests/test.settings.json `
+        (Get-Content -Path test/NhnToast.Sms.Tests/test.settings.json) `
           -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
           -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
           -replace "{{requestId}}", "${{ secrets.REQUEST_ID }}" `
@@ -49,7 +49,7 @@ jobs:
 
         Copy-Item -Path test/NhnToast.Sms.Verification.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
 
-        Get-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json `
+        (Get-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json) `
           -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
           -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
           | Set-Content -Path test/NhnToast.Sms.Tests/test.settings.json -Force
