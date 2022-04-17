@@ -6,6 +6,8 @@
 
     <AssemblyName>Toast.Sms.Verification</AssemblyName>
     <RootNamespace>Toast.Sms.Verification</RootNamespace>
+
+    <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>
 
   <ItemGroup>
