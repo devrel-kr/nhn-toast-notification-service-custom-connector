@@ -1,4 +1,4 @@
-name: Function apps deploy
+name: Release to GitHub
 
 on:
   push:
