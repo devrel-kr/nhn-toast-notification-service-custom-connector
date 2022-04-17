@@ -29,12 +29,7 @@ jobs:
       run: |
         dotnet restore .
 
-    - name: Build solution
-      shell: bash
-      run: |
-        dotnet build . -c Release
-
-    - name: Test solution
+    - name: Copy test.settings.json for tests
       shell: pwsh
       run: |
         Copy-Item -Path test/NhnToast.Sms.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Tests/test.settings.json -Force
@@ -52,8 +47,16 @@ jobs:
         (Get-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json) `
           -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
           -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
-          | Set-Content -Path test/NhnToast.Sms.Tests/test.settings.json -Force
+          | Set-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
 
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
         dotnet test . -c Release
 
     - name: Create FunctionApp artifact
