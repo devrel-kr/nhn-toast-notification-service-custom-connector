@@ -72,9 +72,13 @@ jobs:
             - sms-verification function app
           # body-path: path/.md
 
-      - run: |
-          zip ${{env.SMS_PUBLISH_NAME}}.zip ${{env.SMS_PUBLISH_NAME}}/* -r
-          zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/* -r
+      - name: make zip files
+        run: |
+            cd ${{env.SMS_PUBLISH_NAME}}
+            zip ../${{env.SMS_PUBLISH_NAME}}.zip ./* -r
+            cd ../${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+            zip ../${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ./* -r
+            cd ..
 
 
       - name: Deploy sms artifact in github release
