@@ -73,8 +73,8 @@ jobs:
           # body-path: path/.md
 
       - run: |
-          zip ${{env.SMS_PUBLISH_NAME}}.zip ${{env.SMS_PUBLISH_NAME}} -r
-          zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}} -r
+          zip ${{env.SMS_PUBLISH_NAME}}.zip ${{env.SMS_PUBLISH_NAME}}/* -r
+          zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/* -r
 
 
       - name: Deploy sms artifact in github release
