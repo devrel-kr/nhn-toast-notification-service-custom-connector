@@ -129,7 +129,7 @@ jobs:
       with:
         prerelease: false
         name: Release ${{ env.RELEASE_VERSION }}
-        body_path: release-notes/${{ env.RELEASE_VERSION }}.md
+        body_path: ${{ github.workspace }}/release-notes/${{ env.RELEASE_VERSION }}.md
         generate_release_notes: true
         files: |
           published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
