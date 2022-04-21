@@ -1,11 +1,6 @@
 name: Build and Test with pull-request
 
 on:
-  workflow_dispatch:
-    inputs:
-      tags:
-        description: 'Test scenario tags'
-        type: string 
   pull_request:
     types:
       - opened
