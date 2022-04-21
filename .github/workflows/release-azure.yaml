@@ -1,0 +1,136 @@
+name: Release to Azure
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test scenario tags'
+        type: string 
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+  
+env:
+  SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
+  SMS_VERIFICATION_PUBLISH_PATH: src/NhnToast.Sms.Verification/bin/Release/net6.0/publish/
+  SMS_PUBLISH_NAME: SmsApp
+  SMS_VERIFICATION_PUBLISH_NAME: SmsVerificationApp
+
+  AZURE_RESOURCEGROUP_NAME: testGroup # need to change
+
+jobs:
+  Continuous-Integration:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Copy test.settings.json for tests
+      shell: pwsh
+      run: |
+        Copy-Item -Path test/NhnToast.Sms.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Tests/test.settings.json -Force
+
+        (Get-Content -Path test/NhnToast.Sms.Tests/test.settings.json) `
+          -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
+          -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
+          -replace "{{requestId}}", "${{ secrets.REQUEST_ID }}" `
+          -replace "{{sendNo}}", "${{ secrets.SENDER_NO }}" `
+          -replace "{{recipientNo}}", "${{ secrets.RECIPIENT_NO }}" `
+          | Set-Content -Path test/NhnToast.Sms.Tests/test.settings.json -Force
+
+        Copy-Item -Path test/NhnToast.Sms.Verification.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
+
+        (Get-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json) `
+          -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
+          -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
+          | Set-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        dotnet publish -c Release
+    
+    - name: Upload SMS app artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.SMS_PUBLISH_NAME }}
+        path: ${{ github.workspace }}/${{ env.SMS_PUBLISH_PATH }}
+        retention-days: 7
+        
+    - name: Upload SMS Verification artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.SMS_VERIFICATION_PUBLISH_NAME }}
+        path: ${{ github.workspace }}/${{ env.SMS_VERIFICATION_PUBLISH_PATH }}
+        retention-days: 7
+
+  Continuous-Deployment:
+    runs-on: ubuntu-latest
+    needs: 
+    - Continuous-Integration
+    
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Download FunctionApp artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Zip FunctionApp artifacts
+      run: |
+          cd ${{env.SMS_PUBLISH_NAME}}
+          zip ${{env.SMS_PUBLISH_NAME}}.zip ./* -r
+          cd ${{ github.workspace }}
+
+          cd ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+          zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ./* -r
+          cd ${{ github.workspace }}
+
+          mkdir published
+          mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}.zip
+          mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
+
+    - name: Sign in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy FunctionApp artifacts to Azure
+      shell: bash
+      run: |
+          az functionapp deployment source config-zip \
+            -g ${{ env.AZURE_RESOURCEGROUP_NAME }} \
+            -n ${{ env.SMS_PUBLISH_NAME }} \
+            --src published/${{env.SMS_PUBLISH_NAME}}.zip
+          
+          az functionapp deployment source config-zip \
+            -g ${{ env.AZURE_RESOURCEGROUP_NAME }} \
+            -n ${{ env.SMS_VERIFICATION_PUBLISH_NAME }} \
+            --src published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
+          
+
+
+
+
