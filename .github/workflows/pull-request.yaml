@@ -1,9 +1,7 @@
 name: Build and Test with pull-request
 
 on:
-  pull_request:
-    types:
-      - opened
+  pull_request_target:
     branches:    
       - 'main'
 
