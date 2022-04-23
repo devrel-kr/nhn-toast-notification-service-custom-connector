@@ -1,7 +1,7 @@
 using SmartFormat;
 using SmartFormat.Core.Settings;
 
-namespace Toast.Sms.Configurations
+namespace Toast.Common.Configurations
 {
     /// <summary>
     /// This represents the app settings entity for Toast API.
@@ -34,13 +34,20 @@ namespace Toast.Sms.Configurations
         public virtual string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="SmsEndpointSettings"/> object.
-        /// </summary>
-        public virtual SmsEndpointSettings Endpoints { get; set; }
-
-        /// <summary>
         /// Gets the <see cref="SmartFormatter"/> instance.
         /// </summary>
         public virtual SmartFormatter Formatter { get; } = Smart.CreateDefaultSmartFormat(new SmartSettings() { CaseSensitivity = CaseSensitivityType.CaseInsensitive });
+    }
+
+    /// <summary>
+    /// This represents the app settings entity for Toast API.
+    /// </summary>
+    /// <typeparam name="T">Type of entyt representing the endpoints.</typeparam>
+    public class ToastSettings<T> : ToastSettings
+    {
+        /// <summary>
+        /// Gets or sets the endpoints object.
+        /// </summary>
+        public virtual T Endpoints { get; set; }
     }
 }
