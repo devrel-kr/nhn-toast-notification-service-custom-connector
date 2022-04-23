@@ -72,7 +72,7 @@ namespace Toast.Sms.Tests.Triggers
             var version = config.GetValue<string>("Toast:Version");
             var endpoint = config.GetValue<string>("Toast:Endpoints:ListMessages");
             var requestId = useRequestId ? config.GetValue<string>("Toast:Examples:RequestId") : null;
-            var options = new
+            var options = new ListMessagesOptions()
             {
                 version = version,
                 appKey = appKey,
