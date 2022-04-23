@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,19 +14,20 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Newtonsoft.Json;
+
 using SmartFormat;
 
-using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 
 namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
-        private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly ToastSettings _settings;
         private readonly ILogger<GetMessage> _logger;
 
-        public GetMessage(ToastSettings<SmsEndpointSettings> settings, ILogger<GetMessage> log)
+        public GetMessage(ToastSettings settings, ILogger<GetMessage> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._logger = log.ThrowIfNullOrDefault();
@@ -61,6 +63,7 @@ namespace Toast.Sms.Triggers
             var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+
 
             return new OkObjectResult(payload);
         }

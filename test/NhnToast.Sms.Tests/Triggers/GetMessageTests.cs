@@ -7,9 +7,7 @@ using FluentAssertions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using SmartFormat;
-
 using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Triggers
@@ -37,8 +35,9 @@ namespace Toast.Sms.Tests.Triggers
             {
                 version = version,
                 appKey = appKey,
-                requestId = requestId,
-                recipientSeq = recipientSeq
+                requestId= requestId,
+                recipientSeq= recipientSeq
+
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

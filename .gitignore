@@ -351,6 +351,3 @@ MigrationBackup/
 
 **/published/
 .DS_Store
-*.bak
-*.org
-*.orig
