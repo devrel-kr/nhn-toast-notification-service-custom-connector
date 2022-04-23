@@ -1,10 +1,16 @@
 name: Build and Test with pull-request
 
 on:
-  pull_request_target:
-    types: [assigned, opened, synchronize, reopened]
+  pull_request:
     branches:    
       - 'main'
+
+permissions:
+  actions: read|write
+  checks: read
+  contents: read
+  repository-projects: read
+  security-events: read
 
 jobs:
   Continuous-Integration:
