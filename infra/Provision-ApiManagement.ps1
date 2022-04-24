@@ -117,7 +117,7 @@ Param(
 
     [string]
     [Parameter(Mandatory=$false)]
-    [ValidationSet("rawxml", "rawxml-link", "xml", "xml-link")]
+    [ValidateSet("rawxml", "rawxml-link", "xml", "xml-link")]
     $ApiManagementPolicyFormat = "rawxml-link",
 
     [string]
