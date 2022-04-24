@@ -15,6 +15,7 @@ namespace Toast.Sms.Tests.Triggers
     [TestClass]
     public class ListMessageStatusTests
     {
+        [TestCategory("Integration")]
         [DataTestMethod]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", 1, 15, true)]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "LMS", 1, 15, true)]
