@@ -21,8 +21,15 @@ The elements in the green rectangle is the scope of this project.
 
 Following GitHub Secrets are required for CI/CD pipelines:
 
+* `AZURE_CREDENTIALS`: Credentials that Azure issues.
+* `AZURE_RESOURCE_NAME`: Resource name. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `nt` is the resource name.
+* `AZURE_ENVIRONMENT_CODE`: Environment code. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `dev` is the environment code.
+* `AZURE_LOCATION_CODE`: Location code. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `krc` is the location code.
 * `TOAST_APPKEY`: AppKey that NHN Toast issues.
 * `TOAST_SECRETKEY`: SecretKey that NHN Toast issues.
+
+The following GitHub Secrets will be deprecated soon.
+
 * `REQUEST_ID`: Any request ID that was used to send SMS messages for testing.
 * `SENDER_NO`: Any registered and verified sender number for integration tests.
 * `RECIPIENT_NO`: Any registered and verified recipient number for integration tests.
@@ -34,7 +41,7 @@ Following GitHub Secrets are required for CI/CD pipelines:
 
 #### Prerequisites for Local Development ####
 
-* [Visual Studio 2022 or later](https://visualstudio.microsoft.com/vs/?WT.mc_id=dotnet-58531-juyoo)
+* [Visual Studio 2022 or later](https://visualstudio.microsoft.com/vs/?WT.mc_id=dotnet-58531-juyoo) &ndash; Windows only
 * [Visual Studio Code](https://code.visualstudio.com/?WT.mc_id=dotnet-58531-juyoo)
 * [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local?WT.mc_id=dotnet-58531-juyoo)
 * [PowerShell](https://docs.microsoft.com/powershell/scripting/overview?WT.mc_id=dotnet-58531-juyoo)
