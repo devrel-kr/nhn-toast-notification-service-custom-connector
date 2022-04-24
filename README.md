@@ -41,7 +41,7 @@ The following GitHub Secrets will be deprecated soon.
 
 #### Prerequisites for Local Development ####
 
-* [Visual Studio 2022 or later](https://visualstudio.microsoft.com/vs/?WT.mc_id=dotnet-58531-juyoo)
+* [Visual Studio 2022 or later](https://visualstudio.microsoft.com/vs/?WT.mc_id=dotnet-58531-juyoo) &ndash; Windows only
 * [Visual Studio Code](https://code.visualstudio.com/?WT.mc_id=dotnet-58531-juyoo)
 * [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local?WT.mc_id=dotnet-58531-juyoo)
 * [PowerShell](https://docs.microsoft.com/powershell/scripting/overview?WT.mc_id=dotnet-58531-juyoo)
