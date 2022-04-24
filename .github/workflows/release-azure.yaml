@@ -61,7 +61,7 @@ jobs:
     - name: Test solution
       shell: bash
       run: |
-        dotnet test . -c Release
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
 
     - name: Create FunctionApp artifact
       shell: bash
