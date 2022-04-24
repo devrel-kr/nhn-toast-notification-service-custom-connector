@@ -9,18 +9,6 @@ jobs:
   Continuous-Integration:
     runs-on: ubuntu-latest
 
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      deployments: write
-      issues: write
-      packages: write
-      pull-requests: write
-      repository-projects: write
-      security-events: write
-      statuses: write
-
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v2
@@ -63,4 +51,4 @@ jobs:
     - name: Test solution
       shell: bash
       run: |
-        dotnet test . -c Release
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
