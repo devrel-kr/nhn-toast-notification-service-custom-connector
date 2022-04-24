@@ -1,20 +1,16 @@
-name: Build and Test with pull-request
+name: Pull Request
 
 on:
   pull_request:
     branches:    
-      - 'main'
-
-permissions:
-  actions: read|write
-  checks: read
-  contents: read
-  repository-projects: read
-  security-events: read
+    - main
 
 jobs:
   Continuous-Integration:
     runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
 
     steps:
     - name: Checkout the repo
@@ -59,4 +55,3 @@ jobs:
       shell: bash
       run: |
         dotnet test . -c Release
-

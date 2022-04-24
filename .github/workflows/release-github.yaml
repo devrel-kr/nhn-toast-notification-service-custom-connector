@@ -99,7 +99,8 @@ jobs:
 
   Continuous-Deployment:
     runs-on: ubuntu-latest
-    needs: Continuous-Integration
+    needs:
+    - Continuous-Integration
 
     steps:
     - name: Extract version from tag
@@ -119,17 +120,17 @@ jobs:
 
     - name: Zip FunctionApp artifacts
       run: |
-          cd ${{env.SMS_PUBLISH_NAME}}
-          zip ${{env.SMS_PUBLISH_NAME}}.zip ./* -r
-          cd ${{ github.workspace }}
+        cd ${{env.SMS_PUBLISH_NAME}}
+        zip ${{env.SMS_PUBLISH_NAME}}.zip ./* -r
+        cd ${{ github.workspace }}
 
-          cd ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
-          zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ./* -r
-          cd ${{ github.workspace }}
+        cd ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+        zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ./* -r
+        cd ${{ github.workspace }}
 
-          mkdir published
-          mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
-          mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
+        mkdir published
+        mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
+        mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
 
     - name: Release FunctionApp artifacts to GitHub
       uses: softprops/action-gh-release@v1
