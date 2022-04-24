@@ -1,16 +1,9 @@
-name: Build and Test with pull-request
+name: Pull Request
 
 on:
   pull_request:
     branches:    
-      - 'main'
-
-permissions:
-  actions: read|write
-  checks: read
-  contents: read
-  repository-projects: read
-  security-events: read
+    - main
 
 jobs:
   Continuous-Integration:
@@ -58,5 +51,4 @@ jobs:
     - name: Test solution
       shell: bash
       run: |
-        dotnet test . -c Release
-
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
