@@ -17,6 +17,7 @@ namespace Toast.Sms.Tests.Triggers
     [TestClass]
     public class SendMessagesTests
     {
+        [TestCategory("Integration")]
         [DataTestMethod]
         [DataRow(null, false, false, false)]
         [DataRow(null, false, true, false)]
