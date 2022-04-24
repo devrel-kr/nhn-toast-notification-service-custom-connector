@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 
 [assembly: FunctionsStartup(typeof(Toast.Sms.Startup))]
-
 namespace Toast.Sms
 {
     public class Startup : FunctionsStartup
@@ -30,7 +33,7 @@ namespace Toast.Sms
         {
             var toastSettings = services.BuildServiceProvider()
                                         .GetService<IConfiguration>()
-                                        .Get<ToastSettings<SmsEndpointSettings>>(ToastSettings.Name);
+                                        .Get<ToastSettings>(ToastSettings.Name);
             services.AddSingleton(toastSettings);
         }
 

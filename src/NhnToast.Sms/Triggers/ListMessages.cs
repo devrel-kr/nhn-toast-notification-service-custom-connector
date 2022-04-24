@@ -60,7 +60,7 @@ namespace Toast.Sms.Triggers
             var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
             var version = Environment.GetEnvironmentVariable("Toast__Version");
             var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__ListMessages");
-            var options = new ListMessagesOptions()
+            var options = new
             {
                 version = version,
                 appKey = appKey,
@@ -79,8 +79,8 @@ namespace Toast.Sms.Triggers
                 subResultCode = req.Query["subResultCode"].ToString(),
                 senderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 recipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                pageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                pageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
+                pageNum = req.Query["pageNum"].ToString().IsNullOrWhiteSpace() ? "1" : req.Query["pageNum"].ToString(),
+                pageSize = req.Query["pageSize"].ToString().IsNullOrWhiteSpace() ? "15" : req.Query["pageSize"].ToString()            
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

@@ -15,7 +15,6 @@ namespace Toast.Sms.Tests.Triggers
     [TestClass]
     public class ListMessagesTests
     {
-        [TestCategory("Integration")]
         [DataTestMethod]
         [DataRow(false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow(false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, false)]
@@ -73,7 +72,7 @@ namespace Toast.Sms.Tests.Triggers
             var version = config.GetValue<string>("Toast:Version");
             var endpoint = config.GetValue<string>("Toast:Endpoints:ListMessages");
             var requestId = useRequestId ? config.GetValue<string>("Toast:Examples:RequestId") : null;
-            var options = new ListMessagesOptions()
+            var options = new
             {
                 version = version,
                 appKey = appKey,
