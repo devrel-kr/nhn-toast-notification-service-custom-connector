@@ -11,6 +11,10 @@ param location string = resourceGroup().location
     'pjm'
 ])
 param env string = 'dev'
+param apiMgmtNameValueName string
+param apiMgmtNameValueDisplayName string
+@secure()
+param apiMgmtNameValueValue string
 @allowed([
     'http'
     'soap'
@@ -54,6 +58,9 @@ module apimapi './apiManagementApi.bicep' = {
         name: name
         location: location
         env: env
+        apiMgmtNameValueName: apiMgmtNameValueName
+        apiMgmtNameValueDisplayName: apiMgmtNameValueDisplayName
+        apiMgmtNameValueValue: apiMgmtNameValueValue
         apiMgmtApiType: apiMgmtApiType
         apiMgmtApiName: apiMgmtApiName
         apiMgmtApiDisplayName: apiMgmtApiDisplayName
