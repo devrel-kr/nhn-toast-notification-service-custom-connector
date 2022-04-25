@@ -2,7 +2,6 @@
 
 This is to provide [Microsoft Power Platform](http://powerplatform.microsoft.com/?WT.mc_id=dotnet-58531-juyoo) with a custom connector for NHN Toast Notification Services including [SMS/MMS](https://www.toast.com/kr/service/notification/sms) and [KakaoTalk messages](https://www.toast.com/kr/service/notification/kakaotalk-bizmessage).
 
-
 ## High-Level Architecture ##
 
 The elements in the green rectangle is the scope of this project.
