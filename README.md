@@ -20,7 +20,7 @@ The elements in the green rectangle is the scope of this project.
 
 Following GitHub Secrets are required for CI/CD pipelines:
 
-* `AZURE_CREDENTIALS`: Credentials that Azure issues.
+* `AZURE_CREDENTIALS`: Credentials that Azure issues. To get the Azure Credentials, refer to [this page](https://github.com/Azure/login#configure-deployment-credentials).
 * `AZURE_RESOURCE_NAME`: Resource name. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `nt` is the resource name.
 * `AZURE_ENVIRONMENT_CODE`: Environment code. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `dev` is the environment code.
 * `AZURE_LOCATION_CODE`: Location code. For example, if your Azure Resource Group is `rg-nt-dev-krc`, `krc` is the location code.
