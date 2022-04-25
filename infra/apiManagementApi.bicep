@@ -213,5 +213,6 @@ resource apimapioperations 'Microsoft.ApiManagement/service/apis/operations@2021
     }
 }]
 
-output id string = apim.id
-output name string = apim.name
+output id string = apimapi.id
+output name string = apimapi.name
+output path string = reference(apimapi.id).properties.path
