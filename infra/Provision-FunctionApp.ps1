@@ -127,6 +127,10 @@ Param(
 
     [switch]
     [Parameter(Mandatory=$false)]
+    $ProvisionedResults,
+
+    [switch]
+    [Parameter(Mandatory=$false)]
     $WhatIf,
 
     [switch]
@@ -161,6 +165,7 @@ function Show-Usage {
             [-FunctionWorkerRuntime <Function App worker runtime>] ``
             [-FunctionWorkerRuntimeVersion <Function App worker runtime version>] ``
 
+            [-ProvisionedResults] ``
             [-WhatIf] ``
             [-Help]
 
@@ -202,6 +207,7 @@ function Show-Usage {
         -FunctionWorkerRuntimeVersion     Function App worker runtime version.
                                           Default is 'v6.0'.
 
+        -ProvisionedResults               Show provisioned results.
         -WhatIf:                          Show what would happen without
                                           actually provisioning resources.
         -Help:                            Show this message.
@@ -266,6 +272,10 @@ if ($WhatIf -eq $true) {
 
         # -u https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-functionApp.json `
 
+    if ($ProvisionedResults -eq $true) {
+        Write-Output $provisioned
+    }
+    
     Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Resources have been provisioned"
 }
 
