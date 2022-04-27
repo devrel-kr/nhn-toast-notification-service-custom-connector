@@ -156,7 +156,7 @@ resource apimNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-08-01'
     name: '${apim.name}/resource_name'
     properties: {
         displayName: 'RESOURCE_NAME'
-        secret: false
+        secret: true
         value: apim.name
     }
 }
