@@ -62,6 +62,18 @@ Param(
     ### API Management ###
     [string]
     [Parameter(Mandatory=$false)]
+    $ApiManagementNameValueName = "",
+
+    [string]
+    [Parameter(Mandatory=$false)]
+    $ApiManagementNameValueDisplayName = "",
+
+    [string]
+    [Parameter(Mandatory=$false)]
+    $ApiManagementNameValueValue = "",
+
+    [string]
+    [Parameter(Mandatory=$false)]
     [ValidateSet("http", "soap", "websocket", "graphql")]
     $ApiManagementApiType = "http",
 
@@ -106,6 +118,10 @@ Param(
 
     [switch]
     [Parameter(Mandatory=$false)]
+    $ProvisionedResults,
+
+    [switch]
+    [Parameter(Mandatory=$false)]
     $WhatIf,
 
     [switch]
@@ -123,6 +139,9 @@ function Show-Usage {
             [-Location <location>] ``
             [-Environment <environment>] ``
 
+            [-ApiManagementNameValueName <API Management NameValue name>] ``
+            [-ApiManagementNameValueDisplayName <API Management NameValue display name>] ``
+            [-ApiManagementNameValueValue <API Management NameValue value>] ``
             [-ApiManagementApiType <API Management API type>] ``
             [-ApiManagementApiName <API Management API name>] ``
             [-ApiManagementApiDisplayName <API Management API display name>] ``
@@ -134,6 +153,7 @@ function Show-Usage {
             [-ApiManagementApiPolicyFormat <API Management API policy format>] ``
             [-ApiManagementApiPolicyValue <API Management API policy value>] ``
 
+            [-ProvisionedResults] ``
             [-WhatIf] ``
             [-Help] ``
 
@@ -146,6 +166,13 @@ function Show-Usage {
         -Environment                      environment.
                                           Default is 'dev'.
 
+        -ApiManagementNameValueName       API Management name/value name.
+                                          Default is empty string.
+        -ApiManagementNameValueDisplayName
+                                          API Management name/value display name.
+                                          Default is empty string.
+        -ApiManagementNameValueValue      API Management name/value value.
+                                          Default is empty string.
         -ApiManagementApiType             API Management API type.
                                           Default is 'http'.
         -ApiManagementApiName             API Management API name.
@@ -169,6 +196,7 @@ function Show-Usage {
         -ApiManagementApiPolicyValue      API Management API value.
                                           Default is empty string.
         
+        -ProvisionedResults               Show provisioned results.
         -WhatIf:                          Show what would happen without
                                           actually provisioning resources.
         -Help:                            Show this message.
@@ -179,6 +207,11 @@ function Show-Usage {
 
 # Show usage
 $needHelp = ($DeploymentName -eq "") -or ($ResourceGroupName -eq "") -or ($ResourceName -eq "") -or ($Help -eq $true)
+if ($needHelp -eq $true) {
+    Show-Usage
+    Exit 0
+}
+$needHelp = ($ApiManagementNameValueName -eq "") -or ($ApiManagementNameValueDisplayName -eq "") -or ($ApiManagementNameValueValue -eq "")
 if ($needHelp -eq $true) {
     Show-Usage
     Exit 0
@@ -195,6 +228,9 @@ $params = @{
     location = @{ value = $Location };
     env = @{ value = $Environment };
 
+    apiMgmtNameValueName = @{ value = $ApiManagementNameValueName };
+    apiMgmtNameValueDisplayName = @{ value = $ApiManagementNameValueDisplayName };
+    apiMgmtNameValueValue = @{ value = $ApiManagementNameValueValue };
     apiMgmtApiType = @{ value = $ApiManagementApiType };
     apiMgmtApiName = @{ value = $ApiManagementApiName };
     apiMgmtApiDisplayName = @{ value = $ApiManagementApiDisplayName };
@@ -231,6 +267,10 @@ if ($WhatIf -eq $true) {
         --verbose
 
         # -u https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagementApi.json `
+
+    if ($ProvisionedResults -eq $true) {
+        Write-Output $provisioned
+    }
 
     Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Resources have been provisioned"
 }
