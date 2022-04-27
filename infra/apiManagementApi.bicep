@@ -13,6 +13,11 @@ param location string = resourceGroup().location
 ])
 param env string = 'dev'
 
+param apiMgmtNameValueName string
+param apiMgmtNameValueDisplayName string
+@secure()
+param apiMgmtNameValueValue string
+
 @allowed([
     'http'
     'soap'
@@ -140,6 +145,9 @@ var apiManagement = {
     name: format(metadata.longName, 'apim')
     location: location
     type: apiMgmtApiType
+    nvName: apiMgmtNameValueName
+    nvDisplayName: apiMgmtNameValueDisplayName
+    nvValue: apiMgmtNameValueValue
     apiName: apiMgmtApiName
     displayName: apiMgmtApiDisplayName
     description: apiMgmtApiDescription
@@ -155,6 +163,15 @@ var apiManagement = {
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
     name: apiManagement.name
     scope: resourceGroup(apiManagement.groupName)
+}
+
+resource apimNamedValue 'Microsoft.ApiManagement/service/namedValues@2021-08-01' = {
+    name: '${apim.name}/${apiManagement.nvName}'
+    properties: {
+        displayName: apiManagement.nvDisplayName
+        secret: true
+        value: apiManagement.nvValue
+    }
 }
 
 resource apimapi 'Microsoft.ApiManagement/service/apis@2021-08-01' = {
@@ -213,5 +230,6 @@ resource apimapioperations 'Microsoft.ApiManagement/service/apis/operations@2021
     }
 }]
 
-output id string = apim.id
-output name string = apim.name
+output id string = apimapi.id
+output name string = apimapi.name
+output path string = reference(apimapi.id).path

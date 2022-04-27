@@ -127,6 +127,10 @@ Param(
 
     [switch]
     [Parameter(Mandatory=$false)]
+    $ProvisionedResults,
+
+    [switch]
+    [Parameter(Mandatory=$false)]
     $WhatIf,
 
     [switch]
@@ -161,6 +165,7 @@ function Show-Usage {
             [-ApiManagementPolicyFormat <API Management global policy format>] ``
             [-ApiManagementPolicyValue <API Management global policy value>] ``
 
+            [-ProvisionedResults] ``
             [-WhatIf] ``
             [-Help]
 
@@ -207,6 +212,7 @@ function Show-Usage {
         -ApiManagementPolicyValue         API Management API value.
                                           Default is 'https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-global-policy.xml'.
 
+        -ProvisionedResults               Show provisioned results.
         -WhatIf:                          Show what would happen without
                                           actually provisioning resources.
         -Help:                            Show this message.
@@ -276,6 +282,10 @@ if ($WhatIf -eq $true) {
 
         # -u https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagement.json `
 
+    if ($ProvisionedResults -eq $true) {
+        Write-Output $provisioned
+    }
+    
     Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Resources have been provisioned"
 }
 
