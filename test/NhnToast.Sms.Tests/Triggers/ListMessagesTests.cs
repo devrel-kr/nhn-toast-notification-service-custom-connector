@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartFormat;
 using WorldDomination.Net.Http;
+using Toast.Sms.Models;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -75,25 +76,25 @@ namespace Toast.Sms.Tests.Triggers
             var requestId = useRequestId ? config.GetValue<string>("Toast:Examples:RequestId") : null;
             var options = new ListMessagesOptions()
             {
-                version = version,
-                appKey = appKey,
-                requestId = requestId,
-                startRequestDate = startRequestDate,
-                endRequestDate = endRequestDate,
-                startCreateDate = startCreateDate,
-                endCreateDate = endCreateDate,
-                startResultDate = startResultDate,
-                endResultDate = endResultDate,
-                sendNo = sendNo,
-                recipientNo = recipientNo,
-                templateId = templateId,
-                msgStatus = msgStatus,
-                resultCode = resultCode,
-                subResultCode = subResultCode,
-                senderGroupingKey = senderGroupingKey,
-                recipientGroupingKey = recipientGroupingKey,
-                pageNum = pageNum,
-                pageSize = pageSize
+                Version = version,
+                AppKey = appKey,
+                RequestId = requestId,
+                StartRequestDate = startRequestDate,
+                EndRequestDate = endRequestDate,
+                StartCreateDate = startCreateDate,
+                EndCreateDate = endCreateDate,
+                StartResultDate = startResultDate,
+                EndResultDate = endResultDate,
+                SendNo = sendNo,
+                RecipientNo = recipientNo,
+                TemplateId = templateId,
+                MsgStatus = msgStatus,
+                ResultCode = resultCode,
+                SubResultCode = subResultCode,
+                SenderGroupingKey = senderGroupingKey,
+                RecipientGroupingKey = recipientGroupingKey,
+                PageNum = pageNum,
+                PageSize = pageSize
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
