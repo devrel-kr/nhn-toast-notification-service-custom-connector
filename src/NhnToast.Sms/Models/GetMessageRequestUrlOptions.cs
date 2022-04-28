@@ -1,5 +1,9 @@
-public class GetMessageRequestUrlOptions : RequestUrlOptions
-{
-    public string requestId { get; set; }
-    public int? recipientSeq { get; set; }
+using Toast.Common.Models;
+
+namespace Toast.Sms.Models {
+    public class GetMessageRequestUrlOptions : RequestUrlOptions
+    {
+        public string RequestId { get; set; }
+        public int? RecipientSeq { get; set; }
+    }
 }
