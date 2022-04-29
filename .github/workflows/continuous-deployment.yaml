@@ -1,0 +1,86 @@
+name: Continuous Deployment
+
+
+on:
+  workflow_call:
+    inputs:
+      action_name:
+        required: true
+        type: string
+      release_version:
+        required: false
+        type: string
+
+env:
+  SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
+  SMS_VERIFICATION_PUBLISH_PATH: src/NhnToast.Sms.Verification/bin/Release/net6.0/publish/
+  SMS_PUBLISH_NAME: SmsApp
+  SMS_VERIFICATION_PUBLISH_NAME: SmsVerificationApp
+
+  AZURE_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZURE_RESOURCE_NAME }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
+  AZURE_FUNCTION_APP_SMS_NAME: 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-sms-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
+  AZURE_FUNCTION_APP_SMS_VERIFICATION_NAME: 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-sms-verify-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
+
+
+jobs:
+  Continuous-Deployment:
+    runs-on: ubuntu-latest
+
+    - name: Download FunctionApp artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Zip FunctionApp artifacts
+      run: |
+        cd ${{env.SMS_PUBLISH_NAME}}
+        zip ${{env.SMS_PUBLISH_NAME}}.zip ./* -r
+        cd ${{ github.workspace }}
+
+        cd ${{env.SMS_VERIFICATION_PUBLISH_NAME}}
+        zip ${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip ./* -r
+        cd ${{ github.workspace }}
+
+        mkdir published
+        mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}.zip
+        mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip
+      
+    - name: Add release-version to zip
+      if: ${{ startsWith(inputs.action_name, 'github') }}    
+      run: |
+        mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ inputs.release_version }}.zip
+        mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ inputs.release_version }}.zip
+
+    - name: Release FunctionApp artifacts to GitHub
+      if: ${{ startsWith(inputs.action_name, 'github') }}
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: false
+        name: Release ${{ inputs.release_version }}
+        body_path: ${{ github.workspace }}/release-notes/${{ inputs.release_version }}.md
+        generate_release_notes: true
+        files: |
+          published/${{env.SMS_PUBLISH_NAME}}-${{ inputs.release_version }}.zip
+          published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ inputs.release_version }}.zip
+
+    - name: Sign in to Azure
+      if: ${{ endsWith(inputs.action_name, 'azure') }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy FunctionApp artifacts to Azure
+      if: ${{ endsWith(inputs.action_name, 'azure') }}
+      shell: bash
+      run: |
+        az functionapp deploy \
+          -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
+          -n ${{ env.AZURE_FUNCTION_APP_SMS_NAME }} \
+          --src-path published/${{env.SMS_PUBLISH_NAME}}.zip \
+          --type zip \
+          --verbose
+
+        az functionapp deploy \
+          -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
+          -n ${{ env.AZURE_FUNCTION_APP_SMS_VERIFICATION_NAME }} \
+          --src-path published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip \
+          --type zip \
+          --verbose
