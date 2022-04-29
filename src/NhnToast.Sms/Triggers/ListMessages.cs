@@ -18,20 +18,30 @@ using Newtonsoft.Json;
 
 using SmartFormat;
 
+using Toast.Common.Configurations;
+using Toast.Sms.Configurations;
+
+
 namespace Toast.Sms.Triggers
 {
     public class ListMessages
     {
+        private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly HttpClient _http;
         private readonly ILogger<ListMessages> _logger;
 
-        public ListMessages(ILogger<ListMessages> log)
+        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessages> log)
         {
-            _logger = log;
+            this._settings = settings.ThrowIfNullOrDefault();
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
+            this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(ListMessages))]
         [OpenApiOperation(operationId: "Messages.List", tags: new[] { "messages" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "RequestId to search. `requestId` or `startRequestDate` + `endRequestDate` or `startCreateDate` + `endCreateDate` must be filled")]
         [OpenApiParameter(name: "startRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending request start date (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "endRequestDate", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Message sending request end date (`yyyy-MM-dd HH:mm:ss`)")]
@@ -55,11 +65,11 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
-            var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
-            var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
-            var version = Environment.GetEnvironmentVariable("Toast__Version");
-            var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__ListMessages");
+            var appKey = req.Headers["x-app-key"].ToString();
+            var secretKey = req.Headers["x-secreet-key"].ToString();
+            var baseUrl = this._settings.BaseUrl;
+            var version = this._settings.Version;
+            var endpoint = this._settings.Endpoints.ListMessages;
             var options = new ListMessagesOptions()
             {
                 version = version,
@@ -82,12 +92,10 @@ namespace Toast.Sms.Triggers
                 pageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
                 pageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
             };
-            var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
-            var http = new HttpClient();
-
-            http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
-            var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
 

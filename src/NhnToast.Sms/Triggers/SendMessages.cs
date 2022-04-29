@@ -20,19 +20,28 @@ using Newtonsoft.Json;
 using SmartFormat;
 using System.Net.Http.Formatting;
 
+using Toast.Common.Configurations;
+using Toast.Sms.Configurations;
+
 namespace Toast.Sms.Triggers
 {
     public class SendMessages
     {
+        private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly HttpClient _http;
         private readonly ILogger<SendMessages> _logger;
 
-        public SendMessages(ILogger<SendMessages> log)
+        public SendMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<SendMessages> log)
         {
-            _logger = log;
+            this._settings = settings.ThrowIfNullOrDefault();
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("senders");
+            this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(SendMessages))]
         [OpenApiOperation(operationId: "Messages.Send", tags: new[] { "messages" })]
+        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description ="Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
@@ -41,11 +50,11 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var appKey = Environment.GetEnvironmentVariable("Toast__AppKey");
-            var secretKey = Environment.GetEnvironmentVariable("Toast__SecretKey");
-            var baseUrl = Environment.GetEnvironmentVariable("Toast__BaseUrl");
-            var version = Environment.GetEnvironmentVariable("Toast__Version");
-            var endpoint = Environment.GetEnvironmentVariable("Toast__Endpoints__SendMessages");
+            var appKey = req.Headers["x-app-key"].ToString();
+            var secretKey = req.Headers["x-secreet-key"].ToString();
+            var baseUrl = this._settings.BaseUrl;
+            var version = this._settings.Version;
+            var endpoint = this._settings.Endpoints.SendMessages;
             var options = new
             {
                 version = version,
@@ -59,15 +68,13 @@ namespace Toast.Sms.Triggers
                 data = JsonConvert.DeserializeObject<object>(json);
             }
 
-            var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
-
-            var http = new HttpClient();
+            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
             var content = new ObjectContent<object>(data, new JsonMediaTypeFormatter(), "application/json");
 
             // Act
-            http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
-            var result = await http.PostAsync(requestUrl, content).ConfigureAwait(false);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
 
