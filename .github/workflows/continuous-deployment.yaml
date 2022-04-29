@@ -39,6 +39,9 @@ jobs:
       shell: bash
       run: |
         echo ${{ env.RELEASE_VERSION }}
+
+    - name: Checkout the repo
+      uses: actions/checkout@v2  
     
     - name: Download FunctionApp artifacts
       uses: actions/download-artifact@v3
@@ -60,8 +63,8 @@ jobs:
     - name: Add release-version to zip
       if: ${{ endsWith(inputs.action_name, 'github') }}    
       run: |
-        mv ${{env.SMS_PUBLISH_NAME}}/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
-        mv ${{env.SMS_VERIFICATION_PUBLISH_NAME}}/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
+        mv published/${{env.SMS_PUBLISH_NAME}}.zip published/${{env.SMS_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
+        mv published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}.zip published/${{env.SMS_VERIFICATION_PUBLISH_NAME}}-${{ env.RELEASE_VERSION }}.zip
 
     - name: Release FunctionApp artifacts to GitHub
       if: ${{ endsWith(inputs.action_name, 'github') }}
