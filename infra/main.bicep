@@ -1,12 +1,10 @@
 param name string
 param apiMgmtPublisherName string
 param apiMgmtPublisherEmail string
-
 param location string = resourceGroup().location
-param suffix string = ''
-param suffixNames array = [
-  ''
-  '-verify'
+param suffixes array = [
+  'sms'
+  'sms-verify'
 ]
 
 @allowed([
@@ -32,12 +30,12 @@ module provisonapimgmt './provision-apiManagement.bicep' = {
   }
 }
 
-module provisionfncapp './provision-functionApp.bicep' = [for suffixName in suffixNames: {
-  name: 'Provision-FunctionApp${suffix}${suffixName}'
+module provisionfncapp './provision-functionApp.bicep' = [for suffix in suffixes: {
+  name: 'Provision-FunctionApp${suffix}'
   params: {
     name: name
     location: location
-    suffix: '${suffix}${suffixName}'
+    suffix: suffix
     env: env
   }
   dependsOn:[
