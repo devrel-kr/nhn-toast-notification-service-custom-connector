@@ -10,3 +10,9 @@ jobs:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: pull_request
+    secrets:
+      TOAST_APPKEY: ${{ secrets.TOAST_APPKEY }}
+      TOAST_SECRETKEY: ${{ secrets.TOAST_SECRETKEY }}
+      REQUEST_ID: ${{ secrets.REQUEST_ID }}
+      SENDER_NO: ${{ secrets.SENDER_NO }}
+      RECIPIENT_NO: ${{ secrets.RECIPIENT_NO }}

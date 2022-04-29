@@ -10,6 +10,15 @@ on:
       tag:
         required: false
         type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: false
+      AZURE_ENVIRONMENT_CODE:
+        required: false
+      AZURE_LOCATION_CODE:
+        required: false
+      AZURE_RESOURCE_NAME:
+        required: false
 
 env:
   SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
