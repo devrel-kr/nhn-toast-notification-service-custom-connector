@@ -15,7 +15,7 @@ env:
   SMS_VERIFICATION_PUBLISH_NAME: SmsVerificationApp
 
 jobs:
-  Continuous Integration:
+  Continuous-Integration:
     runs-on: ubuntu-latest
 
     steps:

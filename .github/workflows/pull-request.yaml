@@ -1,13 +1,12 @@
 name: Pull Request
 
 on:
-  workflow_dispatch:
   pull_request:
     branches:    
     - main
 
 jobs:
-  call-CI-part:
+  call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: pull_request

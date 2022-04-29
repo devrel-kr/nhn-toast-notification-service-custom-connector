@@ -1,20 +1,19 @@
 name: Release to Azure
 
 on:
-  workflow_dispatch:
   push:
     branches:
     - main
   
 jobs:
-  call-CI-part:
+  call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_azure
 
   call_CD_azure:
     needs: 
-    - call-CI-part
+    - call_CI_part
     uses: ./.github/workflows/continuous-deployment.yaml
     with:
       action_name: release_azure

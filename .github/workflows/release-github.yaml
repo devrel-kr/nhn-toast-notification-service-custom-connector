@@ -6,32 +6,15 @@ on:
     - 'v*'
 
 jobs:
-  extract-version:
-    runs-on: ubuntu-latest    
-    steps:
-    - name: Extract version from tag
-      shell: pwsh
-      run: |
-        $version = (echo ${{ github.ref }}) -replace "refs/tags/", ""
-
-        echo "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
-
-    - name: Check environment variables
-      shell: bash
-      run: |
-        echo ${{ env.RELEASE_VERSION }}
-
-  call-CI-part:
+  call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_github
     
-
   call_CD_github:
     needs: 
-    - call-CI-part
-    - extract-version
+    - call_CI_part
     uses: ./.github/workflows/continuous-deployment.yaml
     with:
-      action_name: release_azure
-      release_version: ${{ env.RELEASE_VERSION }}
+      action_name: release_github
+      tag: ${{ github.ref }}
