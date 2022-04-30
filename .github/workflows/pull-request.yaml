@@ -6,49 +6,7 @@ on:
     - main
 
 jobs:
-  Continuous-Integration:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v2
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.x
-
-    - name: Restore NuGet packages
-      shell: bash
-      run: |
-        dotnet restore .
-
-    - name: Copy test.settings.json for tests
-      shell: pwsh
-      run: |
-        Copy-Item -Path test/NhnToast.Sms.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Tests/test.settings.json -Force
-
-        (Get-Content -Path test/NhnToast.Sms.Tests/test.settings.json) `
-          -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
-          -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
-          -replace "{{requestId}}", "${{ secrets.REQUEST_ID }}" `
-          -replace "{{sendNo}}", "${{ secrets.SENDER_NO }}" `
-          -replace "{{recipientNo}}", "${{ secrets.RECIPIENT_NO }}" `
-          | Set-Content -Path test/NhnToast.Sms.Tests/test.settings.json -Force
-
-        Copy-Item -Path test/NhnToast.Sms.Verification.Tests/test.settings.sample.json -Destination test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
-
-        (Get-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json) `
-          -replace "{{appKey}}", "${{ secrets.TOAST_APPKEY }}" `
-          -replace "{{secretKey}}", "${{ secrets.TOAST_SECRETKEY }}" `
-          | Set-Content -Path test/NhnToast.Sms.Verification.Tests/test.settings.json -Force
-
-    - name: Build solution
-      shell: bash
-      run: |
-        dotnet build . -c Release
-
-    - name: Test solution
-      shell: bash
-      run: |
-        dotnet test . -c Release --filter:"TestCategory!=Integration"
+  call_CI_part:
+    uses: ./.github/workflows/continuous-integration.yaml
+    with:
+      action_name: pull_request
