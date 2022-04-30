@@ -13,17 +13,13 @@ jobs:
 
 
   call_CD_azure:
+    uses: ./.github/workflows/continuous-deployment.yaml
     needs: 
     - call_CI_part
-    uses: ./.github/workflows/continuous-deployment.yaml
     with:
       action_name: release_azure
-      tag: empty
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
       AZURE_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE }}
       AZURE_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}
-      AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
-
-    
-   
