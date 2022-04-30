@@ -10,12 +10,7 @@ jobs:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_azure
-    secrets:
-      TOAST_APPKEY: ${{ secrets.TOAST_APPKEY }}
-      TOAST_SECRETKEY: ${{ secrets.TOAST_SECRETKEY }}
-      REQUEST_ID: ${{ secrets.REQUEST_ID }}
-      SENDER_NO: ${{ secrets.SENDER_NO }}
-      RECIPIENT_NO: ${{ secrets.RECIPIENT_NO }}
+
 
   call_CD_azure:
     needs: 
@@ -23,6 +18,7 @@ jobs:
     uses: ./.github/workflows/continuous-deployment.yaml
     with:
       action_name: release_azure
+      tag: empty
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE }}

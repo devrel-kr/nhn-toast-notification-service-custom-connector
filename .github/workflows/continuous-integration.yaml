@@ -7,17 +7,7 @@ on:
       action_name:
         required: true
         type: string
-    secrets:
-      TOAST_APPKEY:
-        required: true
-      TOAST_SECRETKEY:
-        required: true
-      REQUEST_ID:
-        required: true
-      SENDER_NO:
-        required: true
-      RECIPIENT_NO:
-        required: true
+
 
 env:
   SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
