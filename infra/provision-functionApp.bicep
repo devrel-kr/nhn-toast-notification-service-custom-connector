@@ -99,7 +99,7 @@ param functionWorkerRuntime string = 'dotnet'
 param functionWorkerVersion string = 'v6.0'
 
 module st './storageAccount.bicep' = {
-    name: 'StorageAccount${suffix}'
+    name: 'StorageAccount_${suffix}'
     params: {
         name: name
         suffix: suffix
@@ -112,7 +112,7 @@ module st './storageAccount.bicep' = {
 }
 
 module wrkspc './logAnalyticsWorkspace.bicep' = {
-    name: 'LogAnalyticsWorkspace${suffix}'
+    name: 'LogAnalyticsWorkspace_${suffix}'
     params: {
         name: name
         suffix: suffix
@@ -123,7 +123,7 @@ module wrkspc './logAnalyticsWorkspace.bicep' = {
 }
 
 module appins './appInsights.bicep' = {
-    name: 'ApplicationInsights${suffix}'
+    name: 'ApplicationInsights_${suffix}'
     params: {
         name: name
         suffix: suffix
@@ -136,7 +136,7 @@ module appins './appInsights.bicep' = {
 }
 
 module csplan './consumptionPlan.bicep' = {
-    name: 'ConsumptionPlan${suffix}'
+    name: 'ConsumptionPlan_${suffix}'
     params: {
         name: name
         suffix: suffix
@@ -147,7 +147,7 @@ module csplan './consumptionPlan.bicep' = {
 }
 
 module fncapp './functionApp.bicep' = {
-    name: 'FunctionApp${suffix}'
+    name: 'FunctionApp_${suffix}'
     params: {
         name: name
         suffix: suffix
