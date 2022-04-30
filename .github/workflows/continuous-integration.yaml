@@ -7,13 +7,14 @@ on:
       action_name:
         required: true
         type: string
+      function_apps:
+        required: false
+        type: string
+        default: '["Sms", "Sms.Verification"]'
+        description: function-app name array, format of a string JSON array
 
 
 env:
-  SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
-  SMS_VERIFICATION_PUBLISH_PATH: src/NhnToast.Sms.Verification/bin/Release/net6.0/publish/
-  SMS_PUBLISH_NAME: SmsApp
-  SMS_VERIFICATION_PUBLISH_NAME: SmsVerificationApp
 
 jobs:
   Continuous-Integration:
@@ -68,23 +69,7 @@ jobs:
       shell: bash
       run: |
         dotnet publish -c Release
-    
-    - name: Upload SMS app artifact
-      if: ${{ startsWith(inputs.action_name, 'release') }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ env.SMS_PUBLISH_NAME }}
-        path: ${{ github.workspace }}/${{ env.SMS_PUBLISH_PATH }}
-        retention-days: 7
-        
-    - name: Upload SMS Verification artifact
-      if: ${{ startsWith(inputs.action_name, 'release') }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ env.SMS_VERIFICATION_PUBLISH_NAME }}
-        path: ${{ github.workspace }}/${{ env.SMS_VERIFICATION_PUBLISH_PATH }}
-        retention-days: 7
-        
+
     - name: Upload release notes
       if: ${{ startsWith(inputs.action_name, 'release') }}
       uses: actions/upload-artifact@v2
@@ -92,3 +77,29 @@ jobs:
         name: release-notes
         path: ${{ github.workspace }}/release-notes
         retention-days: 7
+
+  Upload-Apps:
+    if: ${{ startsWith(inputs.action_name, 'release') }}
+
+    runs-on: ubuntu-latest
+    needs: 
+    - Continuous-Integration
+
+    strategy:
+      matrix:
+        app-name: ${{ fromJson(inputs.function_apps) }}
+
+    - name: Add function-app path to env
+      shell: pwsh
+      run: |
+        $path = "src/NhnToast.${{ matrix.app-name }}/bin/Release/net6.0/publish/"
+
+        echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Upload app artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.app-name }}
+        path: ${{ github.workspace }}/${{ env.APP_PATH }}
+        retention-days: 7
+       

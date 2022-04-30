@@ -4,12 +4,17 @@ on:
   push:
     branches:
     - main
+    - 'feature/*'
+
+env:
+  function_apps: '["Sms", "Sms.Verification"]'
   
 jobs:
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_azure
+      function_apps: ${{ env.function_apps }}
 
 
   call_CD_azure:
@@ -18,7 +23,7 @@ jobs:
     uses: ./.github/workflows/continuous-deployment.yaml
     with:
       action_name: release_azure
-      tag: empty
+      function_apps: ${{ env.function_apps }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE }}
