@@ -9,70 +9,70 @@ namespace Toast.Sms.Models {
         /// <summary>
         /// Gets or sets the request id.
         /// </summary>
-        public string requestId { get; set; }
+        public string RequestId { get; set; }
         /// <summary>
         /// Gets or sets the start request date.
         /// </summary>
-        public string startRequestDate { get; set; }
+        public string StartRequestDate { get; set; }
         /// <summary>
         /// Gets or sets the end request date.
         /// </summary>
-        public string endRequestDate { get; set; }
+        public string EndRequestDate { get; set; }
         /// <summary>
         /// Gets or sets the start create date.
         /// </summary>
-        public string startCreateDate { get; set; }
+        public string StartCreateDate { get; set; }
         /// <summary>
         /// Gets or sets the end create date.
         /// </summary>
-        public string endCreateDate { get; set; }
+        public string EndCreateDate { get; set; }
         /// <summary>
         /// Gets or sets the start result date.
         /// </summary>
-        public string startResultDate { get; set; }
+        public string StartResultDate { get; set; }
         /// <summary>
         /// Gets or sets the end result date.
         /// </summary>
-        public string endResultDate { get; set; }
+        public string EndResultDate { get; set; }
         /// <summary>
         /// Gets or sets the send number.
         /// </summary>
-        public string sendNo { get; set; }
+        public string SendNo { get; set; }
         /// <summary>
         /// Gets or sets the recipient number.
         /// </summary>
-        public string recipientNo { get; set; }
+        public string RecipientNo { get; set; }
         /// <summary>
         /// Gets or sets the template id.
         /// </summary>
-        public string templateId { get; set; }
+        public string TemplateId { get; set; }
         /// <summary>
         /// Gets or sets the message status.
         /// </summary>
-        public string msgStatus { get; set; }
+        public string MsgStatus { get; set; }
         /// <summary>
         /// Gets or sets the result code.
         /// </summary>
-        public string resultCode { get; set; }
+        public string ResultCode { get; set; }
         /// <summary>
         /// Gets or sets the sub result code.
         /// </summary>
-        public string subResultCode { get; set; }
+        public string SubResultCode { get; set; }
         /// <summary>
         /// Gets or sets the sender grouping key.
         /// </summary>
-        public string senderGroupingKey { get; set; }
+        public string SenderGroupingKey { get; set; }
         /// <summary>
         /// Gets or sets the recipient grouping key.
         /// </summary>
-        public string recipientGroupingKey { get; set; }
+        public string RecipientGroupingKey { get; set; }
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
-        public int? pageNum { get; set; }
+        public int? PageNum { get; set; }
         /// <summary>
         /// Gets or sets the page size.
         /// </summary>
-        public int? pageSize { get; set; }
+        public int? PageSize { get; set; }
     }
 }
