@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - main
-    - 'feature/*'
   
 jobs:
   call_CI_part:

@@ -80,7 +80,7 @@ jobs:
       shell: pwsh
       run: |
         $name = 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.app-name }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
-        $name = (echo $name) -replace ".", "-"
+        $name = $name.replace('.','-')
 
         echo "AZURE_FUNCTION_APP_NAME=$name" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
