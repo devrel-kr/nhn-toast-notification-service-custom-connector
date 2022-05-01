@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartFormat;
 using WorldDomination.Net.Http;
+using Toast.Sms.Models;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -39,13 +40,13 @@ namespace Toast.Sms.Tests.Triggers
             var endpoint = config.GetValue<string>("Toast:Endpoints:ListMessageStatus");
             var options = new ListMessageStatusRequestUrlOptions()
             {
-                version = version,
-                appKey = appKey,
-                startUpdateDate = startUpdateDate,
-                endUpdateDate = endUpdatedate,
-                messageType = messageType,
-                pageNum = pageNum,
-                pageSize = pageSize
+                Version = version,
+                AppKey = appKey,
+                StartUpdateDate = startUpdateDate,
+                EndUpdateDate = endUpdatedate,
+                MessageType = messageType,
+                PageNum = pageNum,
+                PageSize = pageSize
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

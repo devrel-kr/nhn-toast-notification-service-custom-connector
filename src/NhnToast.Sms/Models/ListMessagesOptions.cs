@@ -1,21 +1,25 @@
-public class ListMessagesOptions : RequestUrlOptions
-{
-    public string requestId { get; set; }
-    public string startRequestDate { get; set; }
-    public string endRequestDate { get; set; }
-    public string startCreateDate { get; set; }
-    public string endCreateDate { get; set; }
-    public string startResultDate { get; set; }
-    public string endResultDate { get; set; }
-    public string sendNo { get; set; }
-    public string recipientNo { get; set; }
-    public string templateId { get; set; }
-    public string msgStatus { get; set; }
-    public string resultCode { get; set; }
-    public string subResultCode { get; set; }
-    public string senderGroupingKey { get; set; }
-    public string recipientGroupingKey { get; set; }
-    public int? pageNum { get; set; }
-    public int? pageSize { get; set; }
+using Toast.Common.Models;
 
+namespace Toast.Sms.Models {
+    public class ListMessagesOptions : RequestUrlOptions
+    {
+        public string RequestId { get; set; }
+        public string StartRequestDate { get; set; }
+        public string EndRequestDate { get; set; }
+        public string StartCreateDate { get; set; }
+        public string EndCreateDate { get; set; }
+        public string StartResultDate { get; set; }
+        public string EndResultDate { get; set; }
+        public string SendNo { get; set; }
+        public string RecipientNo { get; set; }
+        public string TemplateId { get; set; }
+        public string MsgStatus { get; set; }
+        public string ResultCode { get; set; }
+        public string SubResultCode { get; set; }
+        public string SenderGroupingKey { get; set; }
+        public string RecipientGroupingKey { get; set; }
+        public int? PageNum { get; set; }
+        public int? PageSize { get; set; }
+
+    }
 }
