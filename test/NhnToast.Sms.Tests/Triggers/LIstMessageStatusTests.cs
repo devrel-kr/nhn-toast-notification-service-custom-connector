@@ -7,8 +7,11 @@ using FluentAssertions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using SmartFormat;
+
 using WorldDomination.Net.Http;
+
 using Toast.Sms.Models;
 
 namespace Toast.Sms.Tests.Triggers
