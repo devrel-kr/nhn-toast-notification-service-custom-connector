@@ -61,14 +61,6 @@ jobs:
       run: |
         dotnet test . -c Release --filter:"TestCategory!=Integration"
 
-    - name: Upload release notes
-      if: ${{ startsWith(inputs.action_name, 'release') }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: release-notes
-        path: ${{ github.workspace }}/release-notes
-        retention-days: 7
-
   Upload-App:
     if: ${{ startsWith(inputs.action_name, 'release') }}
     needs: 
