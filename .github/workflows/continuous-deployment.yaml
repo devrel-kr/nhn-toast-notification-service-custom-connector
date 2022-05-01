@@ -84,11 +84,11 @@ jobs:
     - name: Zip FunctionApp artifacts
       run: |
         cd ${{matrix.fncapp-name}}
-        zip ${{matrix.src_path}}.zip ./* -r
+        zip ${{matrix.src-path}}.zip ./* -r
         cd ${{ github.workspace }}
 
         mkdir published
-        mv ${{matrix.fncapp-name}}/${{matrix.src_path}}.zip published/${{matrix.src_path}}.zip
+        mv ${{matrix.fncapp-name}}/${{matrix.src-path}}.zip published/${{matrix.src-path}}.zip
 
     - name: Extract version from tag
       if: ${{ endsWith(inputs.action_name, 'github') }}    
@@ -101,7 +101,7 @@ jobs:
     - name: Add release-version to zip
       if: ${{ endsWith(inputs.action_name, 'github') }}    
       run: |
-        mv published/${{matrix.src_path}}.zip published/${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
+        mv published/${{matrix.src-path}}.zip published/${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
   
     - name: Release FunctionApp artifact to GitHub
       if: ${{ endsWith(inputs.action_name, 'github') }}
@@ -110,8 +110,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ needs.Pre-Work.outputs.release_url }}
-        asset_path: published/${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
-        asset_name: ${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
+        asset_path: published/${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
+        asset_name: ${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
         asset_content_type: application/gzip
 
     - name: Sign in to Azure
@@ -127,6 +127,6 @@ jobs:
         az functionapp deploy \
           -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
           -n ${{ env.AZURE_FUNCTION_APP_NAME }} \
-          --src-path published/${{matrix.src_path}}.zip \
+          --src-path published/${{matrix.src-path}}.zip \
           --type zip \
           --verbose

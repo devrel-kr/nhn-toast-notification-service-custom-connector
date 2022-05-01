@@ -2,9 +2,6 @@ name: Release to GitHub
 
 on:
   push:
-    branches:
-    - 'feature/*'
-  push:
     tags:
     - 'v*'
 

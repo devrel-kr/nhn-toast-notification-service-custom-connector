@@ -62,7 +62,7 @@ jobs:
     - name: Add function-app path to env
       shell: pwsh
       run: |
-        $path = "src/NhnToast.${{ matrix.src_path }}/bin/Release/net6.0/publish/"
+        $path = "src/NhnToast.${{ matrix.src-path" }}/bin/Release/net6.0/publish/"
 
         echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
