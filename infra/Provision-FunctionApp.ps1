@@ -1,4 +1,4 @@
-# Provisions resources based on Flags
+# Provisions the Azure Functions app and other relevant resources.
 Param(
     [string]
     [Parameter(Mandatory=$false)]
