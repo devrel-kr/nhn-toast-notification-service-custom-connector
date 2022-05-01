@@ -26,8 +26,8 @@
         <header>*</header>
       </expose-headers>
     </cors>
-    <check-header name="x-app-key" failed-check-httpcode="404" failed-check-error-message="Not Found" ignore-case="true" />
-    <check-header name="x-secret-key" failed-check-httpcode="401" failed-check-error-message="Unauthorized" ignore-case="true" />
+    <!-- <check-header name="x-app-key" failed-check-httpcode="404" failed-check-error-message="Not Found" ignore-case="true" />
+    <check-header name="x-secret-key" failed-check-httpcode="401" failed-check-error-message="Unauthorized" ignore-case="true" /> -->
   </inbound>
   <backend>
     <forward-request />

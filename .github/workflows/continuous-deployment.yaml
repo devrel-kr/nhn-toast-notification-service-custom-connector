@@ -1,15 +1,15 @@
 name: Continuous Deployment
 
-
 on:
   workflow_call:
     inputs:
       action_name:
-        required: true
         type: string
+        required: true
       tag:
-        required: true
         type: string
+        required: false
+        default: ""
     secrets:
       AZURE_CREDENTIALS:
         required: false
