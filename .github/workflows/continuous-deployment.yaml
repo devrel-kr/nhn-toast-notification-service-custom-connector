@@ -1,20 +1,19 @@
 name: Continuous Deployment
 
-
 on:
   workflow_call:
     inputs:
       action_name:
-        required: true
         type: string
+        required: true
       function_apps:
         required: true
         type: string
         default: '["Sms", "Sms.Verification"]'
         description: function-app name array, format of a string JSON array
       tag:
-        required: false
         type: string
+        required: false
         default: ""
     secrets:
       TOKEN:
@@ -41,7 +40,7 @@ jobs:
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v2
-
+      
     - name: Extract version from tag
       if: ${{ endsWith(inputs.action_name, 'github') }}    
       shell: pwsh

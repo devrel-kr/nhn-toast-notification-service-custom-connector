@@ -12,11 +12,10 @@ jobs:
       action_name: release_github
       function_apps: '["Sms", "Sms.Verification"]'
 
-    
   call_CD_github:
+    uses: ./.github/workflows/continuous-deployment.yaml
     needs: 
     - call_CI_part
-    uses: ./.github/workflows/continuous-deployment.yaml
     with:
       action_name: release_github
       tag: ${{ github.ref }}
