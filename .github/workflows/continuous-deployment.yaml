@@ -17,7 +17,7 @@ on:
         type: string
         default: ""
     secrets:
-      GITHUB_TOKEN:
+      TOKEN:
         required: false
       AZURE_CREDENTIALS:
         required: false
@@ -111,7 +111,7 @@ jobs:
       if: ${{ endsWith(inputs.action_name, 'github') }}
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ needs.Pre-Work.outputs.release_url }}
         asset_path: published/${{matrix.app-name}}-${{ env.RELEASE_VERSION }}.zip
