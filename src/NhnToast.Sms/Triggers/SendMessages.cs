@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Text;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +11,12 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
 using SmartFormat;
-using System.Net.Http.Formatting;
 
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
@@ -43,7 +41,7 @@ namespace Toast.Sms.Triggers
         [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description ="Message payload to send")]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description = "Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "messages")] HttpRequest req)
@@ -62,7 +60,7 @@ namespace Toast.Sms.Triggers
             };
 
             var data = default(object);
-            using (var reader  = new StreamReader(req.Body))
+            using (var reader = new StreamReader(req.Body))
             {
                 var json = await reader.ReadToEndAsync().ConfigureAwait(false);
                 data = JsonConvert.DeserializeObject<object>(json);
@@ -77,7 +75,6 @@ namespace Toast.Sms.Triggers
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
-
 
             return new OkObjectResult(payload);
         }

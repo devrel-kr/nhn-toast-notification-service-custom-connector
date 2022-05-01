@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,17 +9,15 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-using Newtonsoft.Json;
-
 using SmartFormat;
+
 
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
-
+using Toast.Sms.Models;
 
 namespace Toast.Sms.Triggers
 {
@@ -72,25 +69,25 @@ namespace Toast.Sms.Triggers
             var endpoint = this._settings.Endpoints.ListMessages;
             var options = new ListMessagesOptions()
             {
-                version = version,
-                appKey = appKey,
-                requestId = req.Query["requestId"].ToString(),
-                startRequestDate = req.Query["startRequestDate"].ToString(),
-                endRequestDate = req.Query["endRequestDate"].ToString(),
-                startCreateDate = req.Query["startCreateDate"].ToString(),
-                endCreateDate = req.Query["endCreateDate"].ToString(),
-                startResultDate = req.Query["startResultDate"].ToString(),
-                endResultDate = req.Query["endResultDate"].ToString(),
-                sendNo = req.Query["sendNo"].ToString(),
-                recipientNo = req.Query["recipientNo"].ToString(),
-                templateId = req.Query["templateId"].ToString(),
-                msgStatus = req.Query["msgStatus"].ToString(),
-                resultCode = req.Query["resultCode"].ToString(),
-                subResultCode = req.Query["subResultCode"].ToString(),
-                senderGroupingKey = req.Query["senderGroupingKey"].ToString(),
-                recipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                pageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                pageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
+                Version = version,
+                AppKey = appKey,
+                RequestId = req.Query["requestId"].ToString(),
+                StartRequestDate = req.Query["startRequestDate"].ToString(),
+                EndRequestDate = req.Query["endRequestDate"].ToString(),
+                StartCreateDate = req.Query["startCreateDate"].ToString(),
+                EndCreateDate = req.Query["endCreateDate"].ToString(),
+                StartResultDate = req.Query["startResultDate"].ToString(),
+                EndResultDate = req.Query["endResultDate"].ToString(),
+                SendNo = req.Query["sendNo"].ToString(),
+                RecipientNo = req.Query["recipientNo"].ToString(),
+                TemplateId = req.Query["templateId"].ToString(),
+                MsgStatus = req.Query["msgStatus"].ToString(),
+                ResultCode = req.Query["resultCode"].ToString(),
+                SubResultCode = req.Query["subResultCode"].ToString(),
+                SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
+                RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
+                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
+                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
@@ -98,7 +95,6 @@ namespace Toast.Sms.Triggers
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
-
 
             return new OkObjectResult(payload);
         }

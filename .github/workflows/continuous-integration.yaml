@@ -1,0 +1,72 @@
+name: Continuous Integration
+
+on:
+  workflow_call:
+    inputs:
+      action_name:
+        type: string
+        required: true
+
+env:
+  SMS_PUBLISH_PATH: src/NhnToast.Sms/bin/Release/net6.0/publish/
+  SMS_VERIFICATION_PUBLISH_PATH: src/NhnToast.Sms.Verification/bin/Release/net6.0/publish/
+  SMS_PUBLISH_NAME: SmsApp
+  SMS_VERIFICATION_PUBLISH_NAME: SmsVerificationApp
+
+jobs:
+  Continuous-Integration:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
+
+    - name: Create FunctionApp artifact
+      if: ${{ startsWith(inputs.action_name, 'release') }}
+      shell: bash
+      run: |
+        dotnet publish -c Release
+    
+    - name: Upload SMS app artifact
+      if: ${{ startsWith(inputs.action_name, 'release') }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.SMS_PUBLISH_NAME }}
+        path: ${{ github.workspace }}/${{ env.SMS_PUBLISH_PATH }}
+        retention-days: 7
+        
+    - name: Upload SMS Verification artifact
+      if: ${{ startsWith(inputs.action_name, 'release') }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.SMS_VERIFICATION_PUBLISH_NAME }}
+        path: ${{ github.workspace }}/${{ env.SMS_VERIFICATION_PUBLISH_PATH }}
+        retention-days: 7
+        
+    - name: Upload release notes
+      if: ${{ startsWith(inputs.action_name, 'release') }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-notes
+        path: ${{ github.workspace }}/release-notes
+        retention-days: 7

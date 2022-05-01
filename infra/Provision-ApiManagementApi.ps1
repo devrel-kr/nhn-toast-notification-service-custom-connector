@@ -1,4 +1,4 @@
-# Provisions resources based on Flags
+# Provisions API to the API Management service instance.
 Param(
     [string]
     [Parameter(Mandatory=$false)]

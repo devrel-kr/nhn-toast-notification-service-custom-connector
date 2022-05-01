@@ -7,8 +7,12 @@ using FluentAssertions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using SmartFormat;
+
 using WorldDomination.Net.Http;
+
+using Toast.Sms.Models;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -32,7 +36,6 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, false)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15, false)]
-
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, null, null, "2022-03-22 22:00:00", "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, "2022-03-22 18:00:00", "2022-03-22 22:00:00", null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
@@ -61,8 +64,7 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, "MTR2_1", null, null, 1, 15, true)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, "testGroupKey", null, 1, 15, true)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, "testGroupKey", 1, 15, true)]
-
-        public async Task Given_Parameters_When_ListMessages_Invoked_Then_It_Should_Return_Result(bool useRequestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate, 
+        public async Task Given_Parameters_When_ListMessages_Invoked_Then_It_Should_Return_Result(bool useRequestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate,
             string startResultDate, string endResultDate, string sendNo, string recipientNo, string templateId, string msgStatus, string resultCode, string subResultCode, string senderGroupingKey, string recipientGroupingKey, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
@@ -75,25 +77,25 @@ namespace Toast.Sms.Tests.Triggers
             var requestId = useRequestId ? config.GetValue<string>("Toast:Examples:RequestId") : null;
             var options = new ListMessagesOptions()
             {
-                version = version,
-                appKey = appKey,
-                requestId = requestId,
-                startRequestDate = startRequestDate,
-                endRequestDate = endRequestDate,
-                startCreateDate = startCreateDate,
-                endCreateDate = endCreateDate,
-                startResultDate = startResultDate,
-                endResultDate = endResultDate,
-                sendNo = sendNo,
-                recipientNo = recipientNo,
-                templateId = templateId,
-                msgStatus = msgStatus,
-                resultCode = resultCode,
-                subResultCode = subResultCode,
-                senderGroupingKey = senderGroupingKey,
-                recipientGroupingKey = recipientGroupingKey,
-                pageNum = pageNum,
-                pageSize = pageSize
+                Version = version,
+                AppKey = appKey,
+                RequestId = requestId,
+                StartRequestDate = startRequestDate,
+                EndRequestDate = endRequestDate,
+                StartCreateDate = startCreateDate,
+                EndCreateDate = endCreateDate,
+                StartResultDate = startResultDate,
+                EndResultDate = endResultDate,
+                SendNo = sendNo,
+                RecipientNo = recipientNo,
+                TemplateId = templateId,
+                MsgStatus = msgStatus,
+                ResultCode = resultCode,
+                SubResultCode = subResultCode,
+                SenderGroupingKey = senderGroupingKey,
+                RecipientGroupingKey = recipientGroupingKey,
+                PageNum = pageNum,
+                PageSize = pageSize
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
