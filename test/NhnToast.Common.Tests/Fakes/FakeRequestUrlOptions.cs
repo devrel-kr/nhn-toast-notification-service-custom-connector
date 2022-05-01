@@ -1,4 +1,4 @@
-﻿namespace Toast.Common.Tests.Fakes
+namespace Toast.Common.Tests.Fakes
 {
     public class FakeRequestUrlOptions
     {

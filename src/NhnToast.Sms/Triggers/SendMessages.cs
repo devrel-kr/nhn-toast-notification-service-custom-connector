@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Text;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +11,15 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
 using SmartFormat;
-using System.Net.Http.Formatting;
+
+using Toast.Common.Configurations;
+using Toast.Sms.Configurations;
 
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
@@ -78,7 +79,6 @@ namespace Toast.Sms.Triggers
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
-
 
             return new OkObjectResult(payload);
         }
