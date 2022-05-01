@@ -1,4 +1,4 @@
-# Download OpenAPI document from APIM
+# Download OpenAPI document from Azure API Management.
 Param(
     [string]
     [Parameter(Mandatory=$false)]
