@@ -4,13 +4,14 @@ on:
   push:
     branches:
     - main
+    - 'feature/*'
   
 jobs:
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_azure
-      function_apps: '["Sms", "Sms.Verification"]'
+      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
 
   call_CD_azure:
     uses: ./.github/workflows/continuous-deployment.yaml
@@ -18,7 +19,7 @@ jobs:
     - call_CI_part
     with:
       action_name: release_azure
-      function_apps: '["Sms", "Sms.Verification"]'
+      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}

@@ -9,8 +9,8 @@ on:
       function_apps:
         required: true
         type: string
-        default: '["Sms", "Sms.Verification"]'
-        description: function-app name array, format of a string JSON array
+        default: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+        description: function-app name and source-folder name array, format of a string JSON array
       tag:
         type: string
         required: false
@@ -63,8 +63,7 @@ jobs:
     needs: 
     - Pre-Work
     strategy:
-      matrix:
-        app-name: ${{ fromJson(inputs.function_apps) }}
+      matrix: ${{ fromJson(inputs.function_apps) }}
 
     runs-on: ubuntu-latest
 
@@ -78,19 +77,18 @@ jobs:
     - name: Set azure-function-app name
       shell: pwsh
       run: |
-        $name = 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.app-name }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
-        $name = $name.replace('.','-')
+        $name = 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.fncapp-name }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
 
         echo "AZURE_FUNCTION_APP_NAME=$name" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
     - name: Zip FunctionApp artifacts
       run: |
-        cd ${{matrix.app-name}}
-        zip ${{matrix.app-name}}.zip ./* -r
+        cd ${{matrix.fncapp-name}}
+        zip ${{matrix.src_path}}.zip ./* -r
         cd ${{ github.workspace }}
 
         mkdir published
-        mv ${{matrix.app-name}}/${{matrix.app-name}}.zip published/${{matrix.app-name}}.zip
+        mv ${{matrix.fncapp-name}}/${{matrix.src_path}}.zip published/${{matrix.src_path}}.zip
 
     - name: Extract version from tag
       if: ${{ endsWith(inputs.action_name, 'github') }}    
@@ -103,7 +101,7 @@ jobs:
     - name: Add release-version to zip
       if: ${{ endsWith(inputs.action_name, 'github') }}    
       run: |
-        mv published/${{matrix.app-name}}.zip published/${{matrix.app-name}}-${{ env.RELEASE_VERSION }}.zip
+        mv published/${{matrix.src_path}}.zip published/${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
   
     - name: Release FunctionApp artifact to GitHub
       if: ${{ endsWith(inputs.action_name, 'github') }}
@@ -112,8 +110,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ needs.Pre-Work.outputs.release_url }}
-        asset_path: published/${{matrix.app-name}}-${{ env.RELEASE_VERSION }}.zip
-        asset_name: ${{matrix.app-name}}-${{ env.RELEASE_VERSION }}.zip
+        asset_path: published/${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
+        asset_name: ${{matrix.src_path}}-${{ env.RELEASE_VERSION }}.zip
         asset_content_type: application/gzip
 
     - name: Sign in to Azure
@@ -129,6 +127,6 @@ jobs:
         az functionapp deploy \
           -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
           -n ${{ env.AZURE_FUNCTION_APP_NAME }} \
-          --src-path published/${{matrix.app-name}}.zip \
+          --src-path published/${{matrix.src_path}}.zip \
           --type zip \
           --verbose

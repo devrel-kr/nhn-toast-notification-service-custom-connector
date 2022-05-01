@@ -9,8 +9,8 @@ on:
       function_apps:
         required: false
         type: string
-        default: '["Sms", "Sms.Verification"]'
-        description: function-app name array, format of a string JSON array
+        default: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+        description: function-app name and source-folder name array, format of a string JSON array
 
 jobs:
   Continuous-Integration:
@@ -47,8 +47,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix:
-        app-name: ${{ fromJson(inputs.function_apps) }}
+      matrix: ${{ fromJson(inputs.function_apps) }}
 
     steps:
     - name: Checkout the repo
@@ -63,14 +62,14 @@ jobs:
     - name: Add function-app path to env
       shell: pwsh
       run: |
-        $path = "src/NhnToast.${{ matrix.app-name }}/bin/Release/net6.0/publish/"
+        $path = "src/NhnToast.${{ matrix.src_path }}/bin/Release/net6.0/publish/"
 
         echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
     - name: Upload app artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ matrix.app-name }}
+        name: ${{ matrix.fncapp-name }}
         path: ${{ github.workspace }}/${{ env.APP_PATH }}
         retention-days: 7
        
