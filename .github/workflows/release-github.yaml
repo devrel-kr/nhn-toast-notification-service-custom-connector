@@ -1,23 +1,16 @@
 name: Release to GitHub
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-    - 'feature/*'  
     tags:
     - 'v*'
-
-
-env:
-  function_apps: '["Sms", "Sms.Verification"]'
 
 jobs:
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_github
-      function_apps: ${{ env.function_apps }}
+      function_apps: '["Sms", "Sms.Verification"]'
 
     
   call_CD_github:
@@ -27,7 +20,7 @@ jobs:
     with:
       action_name: release_github
       tag: ${{ github.ref }}
-      function_apps: ${{ env.function_apps }}
+      function_apps: '["Sms", "Sms.Verification"]'
     secrets:
-      GITHUB_TOKEN: ${{ github.token }}    
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}  
       
