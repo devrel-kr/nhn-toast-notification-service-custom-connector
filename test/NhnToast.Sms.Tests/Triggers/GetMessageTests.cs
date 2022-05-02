@@ -12,6 +12,8 @@ using SmartFormat;
 
 using WorldDomination.Net.Http;
 
+using Toast.Sms.Models;
+
 namespace Toast.Sms.Tests.Triggers
 {
     [TestClass]
@@ -36,10 +38,10 @@ namespace Toast.Sms.Tests.Triggers
             var requestId = useRequestId ? config.GetValue<string>("Toast:Examples:RequestId") : null;
             var options = new GetMessageRequestUrlOptions()
             {
-                version = version,
-                appKey = appKey,
-                requestId = requestId,
-                recipientSeq = recipientSeq
+                Version = version,
+                AppKey = appKey,
+                RequestId = requestId,
+                RecipientSeq = recipientSeq
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
