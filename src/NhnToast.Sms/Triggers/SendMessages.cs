@@ -22,10 +22,6 @@ using SmartFormat;
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 
-using Toast.Common.Configurations;
-using Toast.Sms.Configurations;
-using Toast.Sms.Models;
-
 namespace Toast.Sms.Triggers
 {
     public class SendMessages

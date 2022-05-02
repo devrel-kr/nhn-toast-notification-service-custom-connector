@@ -1,6 +1,7 @@
 using Toast.Common.Models;
 
-namespace Toast.Sms.Models {
+namespace Toast.Sms.Models 
+{
     /// <summary>
     /// This represents the options for ListMessages request url.
     /// </summary>
