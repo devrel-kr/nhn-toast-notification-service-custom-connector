@@ -1,4 +1,4 @@
-# Provisions the API Management service instance and other relevant resources.
+# Provisions resources based on Flags
 Param(
     [string]
     [Parameter(Mandatory=$false)]

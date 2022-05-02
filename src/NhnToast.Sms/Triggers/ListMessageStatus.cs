@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,9 +14,12 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Newtonsoft.Json;
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+
+using SmartFormat;
 
 namespace Toast.Sms.Triggers
 {
@@ -46,7 +51,6 @@ namespace Toast.Sms.Triggers
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/status")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
             var appKey = req.Headers["x-app-key"].ToString();
             var secretKey = req.Headers["x-secret-key"].ToString();
             var baseUrl = this._settings.BaseUrl;
@@ -59,7 +63,7 @@ namespace Toast.Sms.Triggers
                 StartUpdateDate = req.Query["startUpdateDate"].ToString(),
                 EndUpdateDate = req.Query["endUpdateDate"].ToString(),
                 MessageType = req.Query["messageType"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
+                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1, 
                 PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);

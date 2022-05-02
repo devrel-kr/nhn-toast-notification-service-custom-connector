@@ -1,7 +1,6 @@
 using Toast.Common.Models;
 
-namespace Toast.Sms.Models
-{
+namespace Toast.Sms.Models {
     public class ListMessagesOptions : RequestUrlOptions
     {
         public string RequestId { get; set; }
@@ -21,5 +20,6 @@ namespace Toast.Sms.Models
         public string RecipientGroupingKey { get; set; }
         public int? PageNum { get; set; }
         public int? PageSize { get; set; }
+
     }
 }

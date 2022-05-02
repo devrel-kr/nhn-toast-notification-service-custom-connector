@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,11 +10,14 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Newtonsoft.Json;
 using SmartFormat;
-
+using Toast.Common.Configurations;
+using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 
 namespace Toast.Sms.Triggers
@@ -78,7 +82,7 @@ namespace Toast.Sms.Triggers
                 SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
                 PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
+                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
             };
             var requestUrl = Smart.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
@@ -88,6 +92,7 @@ namespace Toast.Sms.Triggers
             var result = await http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+
 
             return new OkObjectResult(payload);
         }
