@@ -15,7 +15,7 @@ on:
         required: false
         default: ""
     secrets:
-      TOKEN:
+      GH_TOKEN:
         required: false
       AZURE_CREDENTIALS:
         required: false
