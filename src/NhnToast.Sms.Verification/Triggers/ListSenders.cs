@@ -1,6 +1,9 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+
+using Aliencube.AzureFunctions.Extensions.Common;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using Toast.Common.Configurations;
+using Toast.Common.Models;
+using Toast.Common.Validators;
 using Toast.Sms.Verification.Configurations;
 
 namespace Toast.Sms.Verification.Triggers
@@ -32,7 +37,9 @@ namespace Toast.Sms.Verification.Triggers
 
         [FunctionName(nameof(ListSenders))]
         [OpenApiOperation(operationId: "Senders.List", tags: new[] { "senders" })]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
+        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
         [OpenApiParameter(name: "sendNo", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Sender's phone number")]
         [OpenApiParameter(name: "useYn", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Value indicating whether the number is used or not")]
         [OpenApiParameter(name: "blockYn", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Value indicating whether the number is blocked or not")]
@@ -43,6 +50,16 @@ namespace Toast.Sms.Verification.Triggers
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "senders")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var headers = default(RequestHeaderModel);
+            try
+            {
+                headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var appKey = this._settings.AppKey;
             var secretKey = this._settings.SecretKey;
