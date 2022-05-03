@@ -78,7 +78,7 @@ namespace Toast.Sms.Triggers
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
-            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
             dynamic payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
