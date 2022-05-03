@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NhnToast.Common\NhnToast.Common.csproj" />
+    <ProjectReference Include="..\..\src\nt-common\NhnToast.Common.csproj" />
   </ItemGroup>
 
 </Project>

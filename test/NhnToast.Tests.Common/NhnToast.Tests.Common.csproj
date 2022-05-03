@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <AssemblyName>Toast.Tests.Common</AssemblyName>
+    <RootNamespace>Toast.Tests.Common</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\nt-common\NhnToast.Common.csproj" />
+  </ItemGroup>
+
+</Project>
