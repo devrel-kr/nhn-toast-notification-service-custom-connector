@@ -10,16 +10,15 @@ jobs:
     uses: ./.github/workflows/continuous-integration.yaml
     with:
       action_name: release_github
-      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+      matrix_json: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
 
   call_CD_github:
-    uses: ./.github/workflows/continuous-deployment.yaml
+    uses: ./.github/workflows/continuous-deployment-github.yaml
     needs: 
     - call_CI_part
     with:
-      action_name: release_github
       tag: ${{ github.ref }}
-      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+      matrix_json: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
       

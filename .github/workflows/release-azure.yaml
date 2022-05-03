@@ -4,23 +4,58 @@ on:
   push:
     branches:
     - main
+    - 'feature/*'
   
 jobs:
+  make_fncapp_json:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix_json: ${{ steps.make_json.outputs.fncapp_json }}
+
+    steps:
+    - name: Make function-apps JSON string array
+      id: make_json
+      shell: bash
+      run: |
+        # list of function apps with a format of ("source-path", "azure-fncapp-name")
+        cnt_apps=2
+        array_app1=("Sms","sms")
+        array_app2=("Sms.Verification","sms-verify")
+
+        #{\"include\":[{\"src-path\":\"Sms\",\"fncapp-name\":\"sms\"},{\"src-path\":\"Sms.Verification\",\"fncapp-name\":\"sms-verify\"}]}
+        JSON="{\"include\":["
+
+        for i in {1..$cnt_apps}
+        do
+          if [$i != 1]
+          then
+            JSON=$JSON,
+
+          JSON=$JSON{\"src-path\":\"${array_app$i[0]}\",\"fncapp-name\":\"${array_app$i[1]}\"}
+        done
+        JSON=$JSON]}
+
+        echo "::set-output name=fncapp_json::$JSON"
+
+
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
+    needs: 
+    - make_fncapp_json
     with:
       action_name: release_azure
-      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+      matrix_json: ${{ needs.make_fncapp_json.outputs.matrix_json }}
 
   call_CD_azure:
-    uses: ./.github/workflows/continuous-deployment.yaml
+    uses: ./.github/workflows/continuous-deployment-azure.yaml
     needs: 
+    - make_fncapp_json
     - call_CI_part
     with:
-      action_name: release_azure
-      function_apps: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+      matrix_json: ${{ needs.make_fncapp_json.outputs.matrix_json }}
     secrets:
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      AZURE_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
-      AZURE_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE }}
-      AZURE_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}
+      AZ_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+      AZ_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE }}
+      AZ_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}

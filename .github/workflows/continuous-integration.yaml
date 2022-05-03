@@ -6,7 +6,7 @@ on:
       action_name:
         type: string
         required: true
-      function_apps:
+      matrix_json:
         required: false
         type: string
         default: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix: ${{ fromJson(inputs.function_apps) }}
+      matrix: ${{ fromJson(inputs.matrix_json) }}
 
     steps:
     - name: Checkout the repo

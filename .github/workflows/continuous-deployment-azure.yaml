@@ -1,0 +1,66 @@
+name: Continuous Deployment
+
+on:
+  workflow_call:
+    inputs:
+      matrix_json:
+        required: true
+        type: string
+        description: function-app name and source-folder name array, format of a string JSON array
+    secrets:
+      AZ_CREDENTIALS:
+        required: true
+      AZ_ENVIRONMENT_CODE:
+        required: true
+      AZ_LOCATION_CODE:
+        required: true
+      AZ_RESOURCE_NAME:
+        required: true
+
+env:
+  AZ_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZ_RESOURCE_NAME }}-${{ secrets.AZ_ENVIRONMENT_CODE }}-${{ secrets.AZ_LOCATION_CODE }}'
+
+jobs:
+  Continuous-Deployment-Azure:
+    strategy:
+      matrix: ${{ fromJson(inputs.matrix_json) }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Download FunctionApp artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Set azure-function-app name
+      shell: pwsh
+      run: |
+        $name = 'fncapp-${{ secrets.AZ_RESOURCE_NAME }}-${{ matrix.fncapp-name }}-${{ secrets.AZ_ENVIRONMENT_CODE }}-${{ secrets.AZ_LOCATION_CODE }}'
+
+        echo "AZ_FUNCTION_APP_NAME=$name" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Zip FunctionApp artifacts
+      run: |
+        cd ${{matrix.fncapp-name}}
+        zip ${{matrix.src-path}}.zip ./* -r
+        cd ${{ github.workspace }}
+
+        mkdir published
+        mv ${{matrix.fncapp-name}}/${{matrix.src-path}}.zip published/${{matrix.src-path}}.zip
+
+    - name: Sign in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZ_CREDENTIALS }}
+
+    - name: Deploy FunctionApp artifact to Azure
+      shell: bash
+      run: |
+        az functionapp deploy \
+          -g ${{ env.AZ_RESOURCE_GROUP_NAME }} \
+          -n ${{ env.AZ_FUNCTION_APP_NAME }} \
+          --src-path published/${{matrix.src-path}}.zip \
+          --type zip \
+          --verbose
