@@ -21,6 +21,7 @@ using SmartFormat;
 
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
+using Toast.Common.Models;
 
 namespace Toast.Sms.Triggers
 {
@@ -54,10 +55,10 @@ namespace Toast.Sms.Triggers
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.SendMessages;
-            var options = new
+            var options = new RequestUrlOptions()
             {
-                version = version,
-                appKey = appKey
+                Version = version,
+                AppKey = appKey
             };
 
             var data = default(object);
