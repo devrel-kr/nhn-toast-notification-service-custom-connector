@@ -1,51 +1,5 @@
-# Provisions resources based on Flags
+# Purges the deleted the API Management instance.
 Param(
-    [string]
-    [Parameter(Mandatory=$false)]
-    $ResourceName = "",
-
-    [string]
-    [Parameter(Mandatory=$false)]
-    [ValidateSet(
-        "australiacentral",
-        "australiaeast",
-        "australiasoutheast",
-        "brazilsouth",
-        "canadacentral",
-        "canadaeast",
-        "centralindia",
-        "centralus",
-        "eastasia",
-        "eastus",
-        "eastus2",
-        "francecentral",
-        "germanywestcentral",
-        "japaneast",
-        "japanwest",
-        "jioindianorthwest",
-        "koreacentral",
-        "koreasouth",
-        "northcentralus",
-        "northeurope",
-        "norwayeast",
-        "southafricanorth",
-        "southcentralus",
-        "southindia",
-        "southeastasia",
-        "swedencentral",
-        "switzerlandnorth",
-        "uaenorth",
-        "uksouth",
-        "ukwest",
-        "westcentralus",
-        "westeurope",
-        "westindia",
-        "westus",
-        "westus2",
-        "westus3"
-    )]
-    $Location = "koreacentral",
-
     [string]
     [Parameter(Mandatory=$false)]
     $ApiVersion = "2021-08-01",
@@ -59,15 +13,11 @@ function Show-Usage {
     Write-Output "    This permanently deletes the API Management instance
 
     Usage: $(Split-Path $MyInvocation.ScriptName -Leaf) ``
-            -ResourceName <resource name> ``
-            [-Location <location>] ``
             [-ApiVersion <API version>] ``
 
             [-Help]
 
     Options:
-        -ResourceName   Resource name.
-        -Location       Location. Default is `koreacentral`.
         -ApiVersion     REST API version. Default is `2021-08-01`.
 
         -Help:          Show this message.
@@ -77,7 +27,7 @@ function Show-Usage {
 }
 
 # Show usage
-$needHelp = ($ResourceName -eq "") -or ($Help -eq $true)
+$needHelp = $Help -eq $true
 if ($needHelp -eq $true) {
     Show-Usage
     Exit 0
@@ -85,19 +35,51 @@ if ($needHelp -eq $true) {
 
 $account = $(az account show | ConvertFrom-Json)
 
-$url = "https://management.azure.com/subscriptions/$($account.id)/providers/Microsoft.ApiManagement/locations/$($Location)/deletedservices/$($ResourceName)?api-version=$($ApiVersion)"
+$url = "https://management.azure.com/subscriptions/$($account.id)/providers/Microsoft.ApiManagement/deletedservices?api-version=$($ApiVersion)"
 
 # Uncomment to debug
 # $url
 
-Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Checking whether deleted API Management instance exists ..."
-$apim = $(az rest -m get -u $url)
+$apims = $(az rest -m get -u $url --query "value" | ConvertFrom-Json)
+if ($apims -eq $null) {
+    Write-Output "No soft-deleted API Management instance found to purge"
+    Exit 0
+}
 
-if ($apim -ne $null) {
-    Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Purging deleted API Management instance ..."
-    az rest -m delete -u $url --verbose
-
-    Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] Deleted API Management instance has been purged"
+$options = ""
+if ($apims.Count -eq 1) {
+    $name = $apims.name
+    $options += "    1: $name `n"
 } else {
-    Write-Output "[$(Get-Date -Format "yyyy-MM-dd HH:mm:ss")] No deleted API Management instance found to purge"
+    $apims | ForEach-Object {
+        $i = $apims.IndexOf($_)
+        $name = $_.name
+        $options += "    $($i +1): $name `n"
+    }
+}
+$options += "    q: Quit`n"
+
+$input = Read-Host "Select the number to purge the soft-deleted API Management instance or 'q' to quit: `n`n$options"
+if ($input -eq "q") {
+    Exit 0
+}
+$parsed = $input -as [int]
+if ($parsed -eq $null) {
+    Write-Output "Invalid input"
+    Exit 0
+}
+if ($parsed -gt $apims.Count) {
+    Write-Output "Invalid input"
+    Exit 0
+}
+$index = $parsed - 1
+
+$url = "https://management.azure.com$($apims[$index].id)?api-version=$($ApiVersion)"
+
+# Uncomment to debug
+# $url
+
+$apim = $(az rest -m get -u $url)
+if ($apim -ne $null) {
+    $deleted = $(az rest -m delete -u $url)
 }
