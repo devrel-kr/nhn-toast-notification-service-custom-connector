@@ -17,11 +17,11 @@ using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
-using SmartFormat;
-
-using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
+using Toast.Common.Configurations;
 using Toast.Common.Models;
+using Toast.Common.Validators;
+using Aliencube.AzureFunctions.Extensions.Common;
 
 namespace Toast.Sms.Triggers
 {
@@ -49,6 +49,16 @@ namespace Toast.Sms.Triggers
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "messages")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var headers = default(RequestHeaderModel);
+            try
+            {
+                headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var appKey = req.Headers["x-app-key"].ToString();
             var secretKey = req.Headers["x-secreet-key"].ToString();
