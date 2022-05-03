@@ -9,6 +9,7 @@ namespace Toast.Common.Models
         /// Gets or sets the version.
         /// </summary>
         public virtual string Version { get; set; }
+
         /// <summary>
         /// Gets or sets the appkey.
         /// </summary>

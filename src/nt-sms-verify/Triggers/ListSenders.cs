@@ -61,8 +61,8 @@ namespace Toast.Sms.Verification.Triggers
                 return new BadRequestResult();
             }
 
-            var appKey = this._settings.AppKey;
-            var secretKey = this._settings.SecretKey;
+            var appKey = headers.AppKey;
+            var secretKey = headers.SecretKey;
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.ListSenders;

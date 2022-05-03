@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
 
-    <AssemblyName>Toast.Sms.Verification</AssemblyName>
-    <RootNamespace>Toast.Sms.Verification</RootNamespace>
+    <AssemblyName>Toast.Sms</AssemblyName>
+    <RootNamespace>Toast.Sms</RootNamespace>
 
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NhnToast.Common\NhnToast.Common.csproj" />
+    <ProjectReference Include="..\nt-common\NhnToast.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

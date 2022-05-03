@@ -14,16 +14,6 @@ namespace Toast.Common.Configurations
         public const string Name = "Toast";
 
         /// <summary>
-        /// Gets or sets the app key.
-        /// </summary>
-        public virtual string AppKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the secret key.
-        /// </summary>
-        public virtual string SecretKey { get; set; }
-
-        /// <summary>
         /// Gets or sets the base URL.
         /// </summary>
         public virtual string BaseUrl { get; set; }

@@ -77,7 +77,7 @@ namespace Toast.Sms.Triggers
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.ListMessages;
-            var options = new ListMessagesOptions()
+            var options = new ListMessagesRequestUrlOptions()
             {
                 Version = version,
                 AppKey = headers.AppKey,
