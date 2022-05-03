@@ -28,5 +28,5 @@ do
     fi
     fncappUrl="https://$fncappName.azurewebsites.net/api/openapi/v3.json"
     smsapp=$(az functionapp deploy -g rg-nt-$environment-krc -n $fncappName --src-url $smszip --type zip)
-    az deployment group create -n ApiManagement_Api-$name -g rg-nt-$environment-krc -u https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagementApi.json -p name=nt -p env=$environment -p apiMgmtNameValueName=apiMgmtNameValueName -p apiMgmtNameValueDisplayName=apiMgmtNameValueDisplayName -p apiMgmtNameValueValue=apiMgmtNameValueValue -p apiMgmtApiName=apiMgmtApiName -p apiMgmtApiDisplayName=apiMgmtApiDisplayName -p apiMgmtApiDescription=apiMgmtApiDescription -p apiMgmtApiPath=apiMgmtApiPath -p apiMgmtApiValue=$fncappUrl
+    az deployment group create -n ApiManagement_Api-$name -g rg-nt-$environment-krc -u https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagementApi.json -p name=nt -p env=$environment -p apiMgmtNameValueName=$fncappName -p apiMgmtNameValueDisplayName=$fncappName -p apiMgmtNameValueValue=$fncappName -p apiMgmtApiName=$fncappName -p apiMgmtApiDisplayName=$fncappName -p apiMgmtApiDescription=$fncappName -p apiMgmtApiPath=$fncappName -p apiMgmtApiValue=$fncappUrl
 done
