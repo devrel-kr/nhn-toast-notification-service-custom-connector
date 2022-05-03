@@ -106,7 +106,7 @@ jobs:
       if: ${{ endsWith(inputs.action_name, 'github') }}
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ needs.Pre-Work.outputs.release_url }}
         asset_path: published/${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
