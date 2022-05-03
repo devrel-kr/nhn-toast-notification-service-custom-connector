@@ -3,6 +3,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Aliencube.AzureFunctions.Extensions.Common;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -13,13 +15,11 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-using Toast.Sms.Models;
-using Toast.Sms.Configurations;
-using Toast.Common.Models;
 using Toast.Common.Configurations;
+using Toast.Common.Models;
 using Toast.Common.Validators;
-using Aliencube.AzureFunctions.Extensions.Common;
-
+using Toast.Sms.Configurations;
+using Toast.Sms.Models;
 
 namespace Toast.Sms.Triggers
 {
@@ -74,15 +74,13 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var appKey = req.Headers["x-app-key"].ToString();
-            var secretKey = req.Headers["x-secreet-key"].ToString();
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.ListMessages;
             var options = new ListMessagesOptions()
             {
                 Version = version,
-                AppKey = appKey,
+                AppKey = headers.AppKey,
                 RequestId = req.Query["requestId"].ToString(),
                 StartRequestDate = req.Query["startRequestDate"].ToString(),
                 EndRequestDate = req.Query["endRequestDate"].ToString(),
@@ -103,7 +101,7 @@ namespace Toast.Sms.Triggers
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
-            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);

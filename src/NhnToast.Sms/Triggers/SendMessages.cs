@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 
+using Aliencube.AzureFunctions.Extensions.Common;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -17,11 +19,10 @@ using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json;
 
-using Toast.Sms.Configurations;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
-using Aliencube.AzureFunctions.Extensions.Common;
+using Toast.Sms.Configurations;
 
 namespace Toast.Sms.Triggers
 {
@@ -60,15 +61,13 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var appKey = req.Headers["x-app-key"].ToString();
-            var secretKey = req.Headers["x-secreet-key"].ToString();
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.SendMessages;
             var options = new RequestUrlOptions()
             {
                 Version = version,
-                AppKey = appKey
+                AppKey = headers.AppKey
             };
 
             var data = default(object);
@@ -83,7 +82,7 @@ namespace Toast.Sms.Triggers
             var content = new ObjectContent<object>(data, new JsonMediaTypeFormatter(), "application/json");
 
             // Act
-            this._http.DefaultRequestHeaders.Add("X-Secret-Key", secretKey);
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
             var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
