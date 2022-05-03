@@ -1,7 +1,6 @@
 using Toast.Common.Models;
 
-namespace Toast.Sms.Models
-{
+namespace Toast.Sms.Models {
     /// <summary>
     /// This represents the options for GetMessage request url.
     /// </summary>
@@ -11,7 +10,6 @@ namespace Toast.Sms.Models
         /// Gets or sets the request id.
         /// </summary>
         public string RequestId { get; set; }
-
         /// <summary>
         /// Gets or sets the recipient sequence.
         /// </summary>
