@@ -1,6 +1,9 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+
+using Aliencube.AzureFunctions.Extensions.Common;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,8 @@ using Microsoft.OpenApi.Models;
 using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Common.Models;
+using Toast.Common.Validators;
 
 namespace Toast.Sms.Triggers
 {
@@ -33,9 +38,9 @@ namespace Toast.Sms.Triggers
 
         [FunctionName(nameof(ListMessageStatus))]
         [OpenApiOperation(operationId: "Messages.Status", tags: new[] { "messages" })]
-        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
+        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
         [OpenApiParameter(name: "startUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "StartDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "endUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "endDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "messageType", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "message type (`SMS`/`LMS`/`MMS`/`AUTH`)")]
@@ -46,6 +51,16 @@ namespace Toast.Sms.Triggers
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/status")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var headers = default(RequestHeaderModel);
+            try
+            {
+                headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var appKey = req.Headers["x-app-key"].ToString();
             var secretKey = req.Headers["x-secret-key"].ToString();
