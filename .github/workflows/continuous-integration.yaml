@@ -9,7 +9,7 @@ on:
       function_apps:
         required: false
         type: string
-        default: '{"fncapp_infos":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
+        default: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
         description: function-app name and source-folder name array, format of a string JSON array
 
 jobs:
