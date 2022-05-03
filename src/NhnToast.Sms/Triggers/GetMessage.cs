@@ -16,10 +16,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 using Toast.Common.Configurations;
-using Toast.Sms.Configurations;
-using Toast.Sms.Models;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Configurations;
+using Toast.Sms.Models;
+
 
 namespace Toast.Sms.Triggers
 {
@@ -60,15 +61,13 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var appKey = req.Headers["x-app-key"].ToString();
-            var secretKey = req.Headers["x-secret-key"].ToString();
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.GetMessage;
             var options = new GetMessageRequestUrlOptions()
             {
                 Version = version,
-                AppKey = appKey,
+                AppKey = headers.AppKey,
                 RequestId = requestId,
                 RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
             };
