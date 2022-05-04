@@ -20,20 +20,16 @@ jobs:
         # list of function-app names
         array_app_name=("sms" "sms-verify")
 
-        #'["sms","sms-verify"]'
         JSON="["
-
         for i in ${!array_app_name[@]}; do
-
           if [ $i -eq 0 ]; then
             JSON=$JSON\"${array_app_name[$i]}\"
           else
             JSON=$JSON,\"${array_app_name[$i]}\"
           fi
-
         done
-
         JSON=$JSON]
+        
         echo "::set-output name=fncapp_json::$JSON"
 
   call_CI_part:
