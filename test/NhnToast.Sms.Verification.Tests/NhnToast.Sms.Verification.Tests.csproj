@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NhnToast.Sms.Verification\NhnToast.Sms.Verification.csproj" />
+    <ProjectReference Include="..\..\src\nt-sms-verify\NhnToast.Sms.Verification.csproj" />
+    <ProjectReference Include="..\NhnToast.Tests.Common\NhnToast.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
