@@ -18,26 +18,24 @@ jobs:
       id: make_json
       shell: bash
       run: |
-        # list of function apps with a format of ("source-path", "azure-fncapp-name")
-        cnt_apps=2
-        array_app1=("Sms","sms")
-        array_app2=("Sms.Verification","sms-verify")
+        # list of function-app names
+        array_app_name=("sms" "sms-verify")
 
-        #{\"include\":[{\"src-path\":\"Sms\",\"fncapp-name\":\"sms\"},{\"src-path\":\"Sms.Verification\",\"fncapp-name\":\"sms-verify\"}]}
-        JSON="{\"include\":["
+        #'["sms","sms-verify"]'
+        JSON="["
 
-        for i in {1..$cnt_apps}
-        do
-          if [$i != 1]
-          then
-            JSON=$JSON,
+        for i in ${!array_app_name[@]}; do
 
-          JSON=$JSON{\"src-path\":\"${array_app$i[0]}\",\"fncapp-name\":\"${array_app$i[1]}\"}
+          if [ $i -eq 0 ]; then
+            JSON=$JSON\"${array_app_name[$i]}\"
+          else
+            JSON=$JSON,\"${array_app_name[$i]}\"
+          fi
+
         done
-        JSON=$JSON]}
 
+        JSON=$JSON]
         echo "::set-output name=fncapp_json::$JSON"
-
 
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml

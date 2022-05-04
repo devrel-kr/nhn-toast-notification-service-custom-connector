@@ -9,8 +9,8 @@ on:
       matrix_json:
         required: false
         type: string
-        default: '{"include":[{"src-path":"Sms","fncapp-name":"sms"},{"src-path":"Sms.Verification","fncapp-name":"sms-verify"}]}'
-        description: function-app name and source-folder name array, format of a string JSON array
+        default: '["sms","sms-verify"]'
+        description: function-app name array, format of a string JSON array
 
 jobs:
   Continuous-Integration:
@@ -47,7 +47,8 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix: ${{ fromJson(inputs.matrix_json) }}
+      matrix: 
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     steps:
     - name: Checkout the repo
@@ -62,7 +63,7 @@ jobs:
     - name: Add function-app path to env
       shell: pwsh
       run: |
-        $path = "src/NhnToast.${{ matrix.src-path }}/bin/Release/net6.0/publish/"
+        $path = "src/nt-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
 
         echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 

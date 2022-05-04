@@ -6,7 +6,7 @@ on:
       matrix_json:
         required: true
         type: string
-        description: function-app name and source-folder name array, format of a string JSON array
+        description: function-app name array, format of a string JSON array
     secrets:
       AZ_CREDENTIALS:
         required: true
@@ -23,7 +23,8 @@ env:
 jobs:
   Continuous-Deployment-Azure:
     strategy:
-      matrix: ${{ fromJson(inputs.matrix_json) }}
+      matrix: 
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     runs-on: ubuntu-latest
 
@@ -44,11 +45,11 @@ jobs:
     - name: Zip FunctionApp artifacts
       run: |
         cd ${{matrix.fncapp-name}}
-        zip ${{matrix.src-path}}.zip ./* -r
+        zip ${{matrix.fncapp-name}}.zip ./* -r
         cd ${{ github.workspace }}
 
         mkdir published
-        mv ${{matrix.fncapp-name}}/${{matrix.src-path}}.zip published/${{matrix.src-path}}.zip
+        mv ${{matrix.fncapp-name}}/${{matrix.fncapp-name}}.zip published/${{matrix.fncapp-name}}.zip
 
     - name: Sign in to Azure
       uses: azure/login@v1
@@ -61,6 +62,6 @@ jobs:
         az functionapp deploy \
           -g ${{ env.AZ_RESOURCE_GROUP_NAME }} \
           -n ${{ env.AZ_FUNCTION_APP_NAME }} \
-          --src-path published/${{matrix.src-path}}.zip \
+          --src-path published/${{matrix.fncapp-name}}.zip \
           --type zip \
           --verbose

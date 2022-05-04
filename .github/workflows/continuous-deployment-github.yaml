@@ -6,7 +6,7 @@ on:
       matrix_json:
         required: true
         type: string
-        description: function-app name and source-folder name array, format of a string JSON array
+        description: function-app name array, format of a string JSON array
       tag:
         type: string
         required: true
@@ -45,7 +45,8 @@ jobs:
     needs: 
     - Pre-Work
     strategy:
-      matrix: ${{ fromJson(inputs.matrix_json) }}
+      matrix: 
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     runs-on: ubuntu-latest
 
@@ -66,15 +67,15 @@ jobs:
     - name: Zip FunctionApp artifacts
       run: |
         cd ${{matrix.fncapp-name}}
-        zip ${{matrix.src-path}}.zip ./* -r
+        zip ${{matrix.fncapp-name}}.zip ./* -r
         cd ${{ github.workspace }}
 
         mkdir published
-        mv ${{matrix.fncapp-name}}/${{matrix.src-path}}.zip published/${{matrix.src-path}}.zip
+        mv ${{matrix.fncapp-name}}/${{matrix.fncapp-name}}.zip published/${{matrix.fncapp-name}}.zip
 
     - name: Add release-version to zip
       run: |
-        mv published/${{matrix.src-path}}.zip published/${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
+        mv published/${{matrix.fncapp-name}}.zip published/${{matrix.fncapp-name}}-${{ env.RELEASE_VERSION }}.zip
   
     - name: Release FunctionApp artifact to GitHub
       uses: actions/upload-release-asset@v1
@@ -82,6 +83,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ needs.Pre-Work.outputs.release_url }}
-        asset_path: published/${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
-        asset_name: ${{matrix.src-path}}-${{ env.RELEASE_VERSION }}.zip
+        asset_path: published/${{matrix.fncapp-name}}-${{ env.RELEASE_VERSION }}.zip
+        asset_name: ${{matrix.fncapp-name}}-${{ env.RELEASE_VERSION }}.zip
         asset_content_type: application/gzip
