@@ -19,7 +19,7 @@ namespace Toast.Sms.Validators
             var instance = await queries.ConfigureAwait(false);
 
             instance.PageNumber ??= 1;
-            instance.PageSi ??= 15;
+            instance.PageSize ??= 15;
 
             return instance;
         }

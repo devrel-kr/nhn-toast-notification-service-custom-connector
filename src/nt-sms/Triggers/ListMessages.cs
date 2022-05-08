@@ -108,7 +108,7 @@ namespace Toast.Sms.Triggers
                 SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
                 PageNum = queries.PageNumber,
-                PageSize = queries.PageSi         
+                PageSize = queries.PageSize       
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
