@@ -20,7 +20,7 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
-
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
@@ -61,6 +61,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var queries = default(GetMessageRequestQueries);
+            try 
+            {
+                queries = await req.To<GetMessageRequestQueries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.GetMessage;
@@ -69,7 +79,8 @@ namespace Toast.Sms.Triggers
                 Version = version,
                 AppKey = headers.AppKey,
                 RequestId = requestId,
-                RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
+                //RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
+                RecipientSeq = queries.RecipientSequence
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

@@ -20,6 +20,7 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 
 namespace Toast.Sms.Triggers
@@ -63,6 +64,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var queries = default(ListMessageStatusRequestQuries);
+            try
+            {
+                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.GetMessage;
@@ -70,11 +81,11 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                StartUpdateDate = req.Query["startUpdateDate"].ToString(),
-                EndUpdateDate = req.Query["endUpdateDate"].ToString(),
+                StartUpdateDate = queries.StartUpdateDay,
+                EndUpdateDate = queries.EndUpdateDay,
                 MessageType = req.Query["messageType"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
+                PageNum = queries.PageNumber,
+                PageSize = queries.PageSize
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
