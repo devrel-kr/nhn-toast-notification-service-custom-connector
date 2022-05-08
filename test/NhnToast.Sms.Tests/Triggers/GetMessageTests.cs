@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Configurations;
 using Toast.Common.Models;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
@@ -52,14 +53,11 @@ namespace Toast.Sms.Tests.Triggers
         public async Task Given_Parameters_When_GetMessage_Invoked_Then_It_Should_Return_Result(bool useRequestId, int? recipientSeq, bool expected)
         {
             // Arrange
-            var options = new GetMessageRequestUrlOptions()
-            {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey,
-                RequestId = useRequestId ? this._settings.Examples.RequestId : null,
-                RecipientSeq = recipientSeq
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.GetMessage.TrimStart('/')}", options);
+            GetMessageRequestUrlBuilder bulder = new GetMessageRequestUrlBuilder().WithSettings(this._settings).WithHeaders(this._headers);
+            bulder._options.RequestId = useRequestId ? this._settings.Examples.RequestId : null;
+            bulder._options.RecipientSeq = recipientSeq;
+
+            var requestUrl = bulder.Build();
 
             var http = new HttpClient();
 

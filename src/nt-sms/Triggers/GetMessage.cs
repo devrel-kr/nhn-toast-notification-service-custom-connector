@@ -18,8 +18,8 @@ using Microsoft.OpenApi.Models;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
-using Toast.Sms.Models;
 
 
 namespace Toast.Sms.Triggers
@@ -61,7 +61,7 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
+            /*var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.GetMessage;
             var options = new GetMessageRequestUrlOptions()
@@ -72,7 +72,9 @@ namespace Toast.Sms.Triggers
                 RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            */
 
+            var requestUrl = new GetMessageRequestUrlBuilder().WithSettings(this._settings).WithHeaders(headers).WithQueries(req, requestId).Build();
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 

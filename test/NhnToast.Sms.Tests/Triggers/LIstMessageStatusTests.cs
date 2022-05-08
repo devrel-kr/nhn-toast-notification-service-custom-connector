@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
-using Toast.Sms.Models;
+using Toast.Sms.Bulder;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
 
@@ -55,21 +55,16 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", null, 0, 15, true)]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", null, 15, false)]
         [DataRow("2018-10-04 16:16:00", "2018-10-04 16:17:10", "SMS", 1, null, false)]
-        public async Task Given_Parameters_When_ListMessagesStatus_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdatedate, string? messageType, int? pageNum, int? pageSize, bool expected)
+        public async Task Given_Parameters_When_ListMessagesStatus_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdateDate, string? messageType, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            var options = new ListMessageStatusRequestUrlOptions()
-            {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey,
-                StartUpdateDate = startUpdateDate,
-                EndUpdateDate = endUpdatedate,
-                MessageType = messageType,
-                PageNum = pageNum,
-                PageSize = pageSize
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessageStatus.TrimStart('/')}", options);
-
+            var builder = new ListMessageStatusRequestUrlBuilder().WithSettings(this._settings).WithHeaders(this._headers);
+            builder._options.StartUpdateDate = startUpdateDate;
+            builder._options.EndUpdateDate = endUpdateDate;
+            builder._options.MessageType = messageType;
+            builder._options.PageNum = pageNum;
+            builder._options.PageSize = pageSize;
+            var requestUrl = builder.Build();
             var http = new HttpClient();
 
             // Act

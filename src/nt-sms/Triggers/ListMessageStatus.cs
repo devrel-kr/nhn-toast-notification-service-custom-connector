@@ -18,8 +18,8 @@ using Microsoft.OpenApi.Models;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
-using Toast.Sms.Models;
 
 
 namespace Toast.Sms.Triggers
@@ -63,20 +63,7 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.GetMessage;
-            var options = new ListMessageStatusRequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey,
-                StartUpdateDate = req.Query["startUpdateDate"].ToString(),
-                EndUpdateDate = req.Query["endUpdateDate"].ToString(),
-                MessageType = req.Query["messageType"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
-            };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = new ListMessagesRequestUrlBuilder().WithSettings(this._settings).WithHeaders(headers).WithQueries(req).Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

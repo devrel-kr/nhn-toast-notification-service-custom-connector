@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
 
 namespace Toast.Sms.Triggers
@@ -61,15 +62,6 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.SendMessages;
-            var options = new RequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey
-            };
-
             var data = default(object);
             using (var reader = new StreamReader(req.Body))
             {
@@ -77,7 +69,7 @@ namespace Toast.Sms.Triggers
                 data = JsonConvert.DeserializeObject<object>(json);
             }
 
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = new SendMessagesRequestUrlBuilder().WithSettings(this._settings).WithHeaders(headers).Build();
 
             var content = new ObjectContent<object>(data, new JsonMediaTypeFormatter(), "application/json");
 

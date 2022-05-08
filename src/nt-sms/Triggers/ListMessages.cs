@@ -18,8 +18,9 @@ using Microsoft.OpenApi.Models;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
-using Toast.Sms.Models;
+
 
 namespace Toast.Sms.Triggers
 {
@@ -73,33 +74,8 @@ namespace Toast.Sms.Triggers
             {
                 return new BadRequestResult();
             }
-
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.ListMessages;
-            var options = new ListMessagesRequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey,
-                RequestId = req.Query["requestId"].ToString(),
-                StartRequestDate = req.Query["startRequestDate"].ToString(),
-                EndRequestDate = req.Query["endRequestDate"].ToString(),
-                StartCreateDate = req.Query["startCreateDate"].ToString(),
-                EndCreateDate = req.Query["endCreateDate"].ToString(),
-                StartResultDate = req.Query["startResultDate"].ToString(),
-                EndResultDate = req.Query["endResultDate"].ToString(),
-                SendNo = req.Query["sendNo"].ToString(),
-                RecipientNo = req.Query["recipientNo"].ToString(),
-                TemplateId = req.Query["templateId"].ToString(),
-                MsgStatus = req.Query["msgStatus"].ToString(),
-                ResultCode = req.Query["resultCode"].ToString(),
-                SubResultCode = req.Query["subResultCode"].ToString(),
-                SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
-                RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
-            };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            
+            var requestUrl = new ListMessagesRequestUrlBuilder().WithSettings(this._settings).WithHeaders(headers).WithQueries(req).Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

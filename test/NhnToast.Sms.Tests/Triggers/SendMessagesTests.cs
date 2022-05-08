@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Configurations;
 using Toast.Common.Models;
+using Toast.Sms.Bulder;
 using Toast.Sms.Configurations;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
@@ -58,12 +59,8 @@ namespace Toast.Sms.Tests.Triggers
             var sendNo = useSendNo ? this._settings.Examples.SendNo : null;
             var recipientNo = useRecipientNo ? this._settings.Examples.RecipientNo : null;
             var json = $"{{ \"body\": \"{body}\", \"sendNo\": \"{sendNo}\", \"recipientList\": [ {{\"recipientNo\": \"{recipientNo}\" }} ] }}";
-            var options = new RequestUrlOptions
-            {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.SendMessages.TrimStart('/')}", options);
+            
+            var requestUrl = new SendMessagesRequestUrlBuilder().WithSettings(this._settings).WithHeaders(this._headers).Build();
 
             var http = new HttpClient();
 
