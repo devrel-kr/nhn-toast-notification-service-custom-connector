@@ -18,8 +18,6 @@ namespace Toast.Sms.Validators
         {
             var instance = await queries.ConfigureAwait(false);
 
-            instance.RecipientSequence ??= 0;
-
             return instance;
         }
     }

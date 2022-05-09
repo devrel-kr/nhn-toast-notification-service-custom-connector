@@ -79,8 +79,7 @@ namespace Toast.Sms.Triggers
                 Version = version,
                 AppKey = headers.AppKey,
                 RequestId = requestId,
-                //RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
-                RecipientSeq = queries.RecipientSequence
+                RecipientSeq = queries.RecipientSequenceNumber
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 

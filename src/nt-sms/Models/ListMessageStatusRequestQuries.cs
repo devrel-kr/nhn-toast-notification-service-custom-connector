@@ -10,19 +10,24 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the start update date.
         /// </summary>
-        [JsonProperty("StartUpdateDate")]
-        public virtual string StartUpdateDay { get; set; }
+        [JsonProperty("startUpdateDate")]
+        public virtual string StartUpdateDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end update date.
         /// </summary>
-        [JsonProperty("EndUpdateDate")]
-        public virtual string EndUpdateDay { get; set; }
+        [JsonProperty("endUpdateDate")]
+        public virtual string EndUpdateDate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the message type.
+        /// </summary>
+        [JsonProperty("messageType")]
+        public virtual string MessageType { get; set; }
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
-        [JsonProperty("PageNum")]
+        [JsonProperty("pageNum")]
         public virtual int? PageNumber { get; set; }
 
         /// <summary>

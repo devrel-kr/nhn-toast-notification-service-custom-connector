@@ -81,9 +81,9 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                StartUpdateDate = queries.StartUpdateDay,
-                EndUpdateDate = queries.EndUpdateDay,
-                MessageType = req.Query["messageType"].ToString(),
+                StartUpdateDate = queries.StartUpdateDate,
+                EndUpdateDate = queries.EndUpdateDate,
+                MessageType = queries.MessageType,
                 PageNum = queries.PageNumber,
                 PageSize = queries.PageSize
             };

@@ -10,7 +10,7 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the recipient sequence.
         /// </summary>
-        [JsonProperty("RecipientSeq")]
-        public virtual int? RecipientSequence { get; set; }
+        [JsonProperty("recipientSeq")]
+        public virtual int RecipientSequenceNumber { get; set; }
     }
 }
