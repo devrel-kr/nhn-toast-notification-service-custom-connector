@@ -7,14 +7,17 @@ on:
         type: string
         required: true
       matrix_json:
-        required: false
+        required: true
         type: string
-        default: '["sms","sms-verify"]'
         description: function-app name array, format of a string JSON array
 
 jobs:
   Continuous-Integration:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix: 
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     steps:
     - name: Checkout the repo
@@ -40,20 +43,6 @@ jobs:
       run: |
         dotnet test . -c Release --filter:"TestCategory!=Integration"
 
-  Upload-App:
-    if: ${{ startsWith(inputs.action_name, 'release') }}
-    needs: 
-    - Continuous-Integration
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix: 
-        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
-
-    steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v2
-
     - name: Create FunctionApp artifact
       if: ${{ startsWith(inputs.action_name, 'release') }}
       shell: bash
@@ -61,6 +50,7 @@ jobs:
         dotnet publish -c Release
 
     - name: Add function-app path to env
+      if: ${{ startsWith(inputs.action_name, 'release') }}
       shell: pwsh
       run: |
         $path = "src/nt-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
@@ -68,9 +58,10 @@ jobs:
         echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
     - name: Upload app artifact
+      if: ${{ startsWith(inputs.action_name, 'release') }}
       uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.fncapp-name }}
         path: ${{ github.workspace }}/${{ env.APP_PATH }}
         retention-days: 7
-       
+        

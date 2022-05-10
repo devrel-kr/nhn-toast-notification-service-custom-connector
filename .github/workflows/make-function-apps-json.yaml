@@ -6,6 +6,9 @@ on:
      matrix_json:
       description: "function-apps with a format of JSON string array"
       value: ${{ jobs.make_fncapp_json.outputs.matrix_json }}
+    secrets:
+      AZ_APP_SUFFIXES:
+        required: true
     
 
 jobs:
@@ -20,17 +23,20 @@ jobs:
       id: make_json
       shell: bash
       run: |
-        # list of function-app names
-        array_app_name=("sms" "sms-verify")
+        string_fncapps={{ secrets.AZ_APP_SUFFIXES }}
+        name_fncapps=$(echo $string_fncapps | tr " " "\n" ",")
 
         JSON="["
-        for i in ${!array_app_name[@]}; do
-          if [ $i -eq 0 ]; then
-            JSON=$JSON\"${array_app_name[$i]}\"
+        is_first=1
+        for name in $name_fncapps; do
+          if [ $is_first -eq 1 ]; then
+            JSON=$JSON\"$name\"
+            is_first=0
           else
-            JSON=$JSON,\"${array_app_name[$i]}\"
+            JSON=$JSON,\"$name\"
           fi
         done
         JSON=$JSON]
         
         echo "::set-output name=fncapp_json::$JSON"
+        

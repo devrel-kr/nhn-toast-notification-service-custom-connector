@@ -4,10 +4,13 @@ on:
   push:
     branches:
     - main
+    - 'feature/*'
   
 jobs:
   make_fncapp_json:
-    uses: ./.github/workflows/input-function-apps-json.yaml
+    uses: ./.github/workflows/make-function-apps-json.yaml
+    secrets: 
+      AZ_APP_SUFFIXES: ${{ secrets.AZURE_APP_SUFFIXES }}  
 
   call_CI_part:
     uses: ./.github/workflows/continuous-integration.yaml
