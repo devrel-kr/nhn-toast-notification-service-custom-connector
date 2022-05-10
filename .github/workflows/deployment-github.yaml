@@ -40,7 +40,7 @@ jobs:
 
         $matrix | foreach-object{ 
           $fncapp_name=$_
-          $destination_path=published/$fncapp_name-$RELEASE_VERSION.zip
+          $destination_path="published/" + $fncapp_name + "-${{ env.RELEASE_VERSION }}.zip"
           Compress-Archive -Path $fncapp_name/* -DestinationPath $destination_path
 
           if ( $is_first )
