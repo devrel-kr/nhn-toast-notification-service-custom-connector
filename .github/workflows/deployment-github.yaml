@@ -37,7 +37,7 @@ jobs:
 
         $matrix="${{ inputs.matrix_json }}" | convertfrom-json
         $is_first=$true
-        $version="${{ env.RELEASE_VERSION }}"
+        $version="${Env:RELEASE_VERSION}"
 
         $matrix | foreach-object{ 
           $fncapp_name=$_
