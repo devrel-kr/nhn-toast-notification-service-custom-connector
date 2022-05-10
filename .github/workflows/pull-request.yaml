@@ -7,6 +7,4 @@ on:
 
 jobs:
   call_CI_part:
-    uses: ./.github/workflows/continuous-integration.yaml
-    with:
-      action_name: pull_request
+    uses: ./.github/workflows/build-test.yaml

@@ -1,0 +1,64 @@
+name: Continuous Integration for release
+
+on:
+  workflow_call:
+    inputs:
+      matrix_json:
+        required: true
+        type: string
+        description: function-app name array, format of a string JSON array
+    secrets:
+      AZ_RESOURCE_NAME:
+        required: true
+
+jobs:
+  Build-Test-Upload:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix: 
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        dotnet publish -c Release
+
+    - name: Add function-app path to env
+      shell: pwsh
+      run: |
+        $path = "src/${{ secrets.AZ_RESOURCE_NAME }}-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
+
+        echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Upload app artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.fncapp-name }}
+        path: ${{ github.workspace }}/${{ env.APP_PATH }}
+        retention-days: 3
+        
