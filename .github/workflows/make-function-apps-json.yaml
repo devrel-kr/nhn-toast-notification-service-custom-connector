@@ -22,7 +22,7 @@ jobs:
       id: make_json
       shell: bash
       run: |
-        string_fncapps=${{ secrets.AZ_APP_SUFFIXES }}
+        string_fncapps="${{ secrets.AZ_APP_SUFFIXES }}"
         string_fncapps=$(echo $string_fncapps | tr "," " ")
         string_fncapps=$(echo $string_fncapps | tr " " "\n")
 
