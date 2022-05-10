@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - 'feature/*'
   
 jobs:
   call_make_function_apps_matrix:
