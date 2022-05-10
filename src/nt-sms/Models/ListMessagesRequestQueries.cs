@@ -15,7 +15,6 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the start request date.
         /// </summary>
-        [JsonProperty("startRequestDate")]
         public virtual string StartRequestDate { get; set; }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace Toast.Sms.Models
         public virtual string MessageStatus { get; set; }
 
         /// <summary>
-        /// Gets or sets the reusult code.
+        /// Gets or sets the result code.
         /// </summary>
         public virtual string ResultCode { get; set; }
 

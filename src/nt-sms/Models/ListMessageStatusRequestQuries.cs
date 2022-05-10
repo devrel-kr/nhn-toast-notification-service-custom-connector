@@ -20,8 +20,8 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the message type.
         /// </summary>
-        [JsonProperty("messageType")]
         public virtual string MessageType { get; set; }
+
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
