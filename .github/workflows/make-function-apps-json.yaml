@@ -2,14 +2,13 @@ name: Make function-apps json
 
 on:
   workflow_call:
+    secrets:
+      AZ_APP_SUFFIXES:
+        required: true
     outputs:
      matrix_json:
       description: "function-apps with a format of JSON string array"
       value: ${{ jobs.make_fncapp_json.outputs.matrix_json }}
-    secrets:
-      AZ_APP_SUFFIXES:
-        required: true
-    
 
 jobs:
   make_fncapp_json:

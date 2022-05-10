@@ -9,7 +9,7 @@ on:
 jobs:
   make_fncapp_json:
     uses: ./.github/workflows/make-function-apps-json.yaml
-    with: 
+    secrets: 
       AZ_APP_SUFFIXES: ${{ secrets.AZURE_APP_SUFFIXES }}  
 
   call_CI_part:

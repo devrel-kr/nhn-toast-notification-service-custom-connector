@@ -11,5 +11,3 @@ on:
 jobs:
   call_CI_part:
     uses: ./.github/workflows/build-test.yaml
-    with:
-      action_name: pull_request
