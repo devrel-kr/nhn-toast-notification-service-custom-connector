@@ -1,0 +1,42 @@
+name: Release to Azure PROD and GitHub Release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  call_make_function_apps_matrix:
+    uses: ./.github/workflows/make-function-apps-matrix.yaml
+    secrets: 
+      AZ_APP_SUFFIXES: ${{ secrets.AZURE_APP_SUFFIXES }}
+
+  call_build_test_upload:
+    uses: ./.github/workflows/build-test-upload.yaml
+    needs: 
+    - call_make_function_apps_matrix
+    with:
+      matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
+    secrets: 
+      AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+
+  # call_deployment_azure_prod:
+  #   uses: ./.github/workflows/deployment-azure.yaml
+  #   needs: 
+  #   - call_build_test_upload
+  #   with:
+  #     gh_environment: PROD
+  #     matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
+  #   secrets:
+  #     AZ_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  #     AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+  #     AZ_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE_PROD }}
+  #     AZ_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}
+
+  call_deployment_github:
+    uses: ./.github/workflows/deployment-github.yaml
+    needs: 
+    - call_build_test_upload
+    with:
+      gh_tag: ${{ github.ref }}
+      matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}

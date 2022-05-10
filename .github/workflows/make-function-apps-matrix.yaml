@@ -1,4 +1,4 @@
-name: Make function-apps json
+name: Function Apps Matrix
 
 on:
   workflow_call:
@@ -6,19 +6,19 @@ on:
       AZ_APP_SUFFIXES:
         required: true
     outputs:
-     matrix_json:
-      description: "function-apps with a format of JSON string array"
-      value: ${{ jobs.make_fncapp_json.outputs.matrix_json }}
+      matrix_json:
+        description: function app names in the format of JSON string array
+        value: ${{ jobs.make_matrix.outputs.matrix_json }}
 
 jobs:
-  make_fncapp_json:
+  make_matrix:
     runs-on: ubuntu-latest
 
     outputs:
-      matrix_json: ${{ steps.make_json.outputs.fncapp_json }}
+      matrix_json: ${{ steps.make_json.outputs.matrix_json }}
 
     steps:
-    - name: Make function-apps JSON string array
+    - name: Make Function apps JSON string array
       id: make_json
       shell: bash
       run: |
@@ -38,5 +38,4 @@ jobs:
         done
         JSON=$JSON]
         
-        echo "::set-output name=fncapp_json::$JSON"
-        
+        echo "::set-output name=matrix_json::$JSON"
