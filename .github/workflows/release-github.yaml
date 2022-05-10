@@ -28,6 +28,4 @@ jobs:
     with:
       tag: ${{ github.ref }}
       matrix_json: ${{ needs.make_fncapp_json.outputs.matrix_json }}
-    secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
       

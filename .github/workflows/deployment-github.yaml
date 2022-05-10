@@ -10,9 +10,6 @@ on:
       tag:
         type: string
         required: true
-    secrets:
-      GH_TOKEN:
-        required: true
 
 jobs:
   Deployment-Github:
