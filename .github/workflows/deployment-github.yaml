@@ -55,7 +55,9 @@ jobs:
           }
         }
 
-        echo "FNCAPP_PATHS=$fncapp_paths" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+        echo "FNCAPP_PATHS<<EOF" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+        echo "$fncapp_paths" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+        echo "EOF" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
   
     - name: Release FunctionApp artifact to GitHub
       id: create_release
