@@ -30,9 +30,8 @@ do
 
     api_key=$(az functionapp keys list -g $resource_group -n $fncapp_name --query "functionKeys.default" -o tsv)
     api_path=$(echo ${fncapp_suffixes[$value]} | tr '-' '/')
-    api_value=$(echo ${fncapp_suffixes[$value]} | tr '[a-z]' '[A-Z]')
-    api_value=$(echo $api_value | tr '-' '_')
-    api_value="X_FUNCTIONS_KEY_$api_value"
+    api_upper_suffix=$(echo ${fncapp_suffixes[$value]} | tr '[a-z]' '[A-Z]' | tr '-' '_')
+    api_name="X_FUNCTIONS_KEY_$api_upper_suffix"
 
     # Provision APIs to APIM
     az deployment group create \
@@ -41,22 +40,22 @@ do
     -u $bicep_url \
     -p name=$AZ_RESOURCE_NAME \
     -p env=$AZ_ENVIRONMENT_CODE \
-    -p apiMgmtNameValueName=$api_value \
-    -p apiMgmtNameValueDisplayName=$api_value \
+    -p apiMgmtNameValueName=$api_name \
+    -p apiMgmtNameValueDisplayName=$api_name \
     -p apiMgmtNameValueValue=$api_key \
-    -p apiMgmtApiName=$api_value \
-    -p apiMgmtApiDisplayName=$api_value \
-    -p apiMgmtApiDescription=$api_value \
+    -p apiMgmtApiName=$api_upper_suffix \
+    -p apiMgmtApiDisplayName=$api_upper_suffix \
+    -p apiMgmtApiDescription=$api_upper_suffix \
     -p apiMgmtApiPath=$api_path \
     -p apiMgmtApiValue=$fncapp_url
 
-    api_url="https://apim-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE.azure-api.net/$api_path"
+    apim_url="https://apim-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE.azure-api.net/$api_path"
     setting_list=$(az functionapp config appsettings list -g $resource_group -n $fncapp_name | jq '.[] | select(.name == "OpenApi__HostNames") | .value' -r)
     if [ "$setting_list" == "" ]
     then
-        api_host_names=$api_url
+        api_host_names=$apim_url
     else
-        api_host_names=$api_url,$setting_list
+        api_host_names=$apim_url,$setting_list
     fi
 
     # Update app settings on function apps
