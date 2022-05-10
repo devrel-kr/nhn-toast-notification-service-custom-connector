@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Deployment for azure
 
 on:
   workflow_call:
@@ -21,7 +21,7 @@ env:
   AZ_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZ_RESOURCE_NAME }}-${{ secrets.AZ_ENVIRONMENT_CODE }}-${{ secrets.AZ_LOCATION_CODE }}'
 
 jobs:
-  Continuous-Deployment-Azure:
+  Deployment-Azure:
     strategy:
       matrix: 
         fncapp-name: ${{ fromJson(inputs.matrix_json) }}

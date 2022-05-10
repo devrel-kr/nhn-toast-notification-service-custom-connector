@@ -24,16 +24,17 @@ jobs:
       shell: bash
       run: |
         string_fncapps={{ secrets.AZ_APP_SUFFIXES }}
-        name_fncapps=$(echo $string_fncapps | tr " " "\n" ",")
+        string_fncapps=$(echo $string_fncapps | tr "," " ")
+        string_fncapps=$(echo $string_fncapps | tr " " "\n")
 
         JSON="["
         is_first=1
-        for name in $name_fncapps; do
+        for name in $string_fncapps; do
           if [ $is_first -eq 1 ]; then
-            JSON=$JSON\"$name\"
+            JSON=$JSON\'$name\'
             is_first=0
           else
-            JSON=$JSON,\"$name\"
+            JSON=$JSON,\'$name\'
           fi
         done
         JSON=$JSON]

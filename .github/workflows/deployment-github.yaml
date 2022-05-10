@@ -1,0 +1,71 @@
+name: Continuous Deployment for github release
+
+on:
+  workflow_call:
+    inputs:
+      matrix_json:
+        required: true
+        type: string
+        description: function-app name array, format of a string JSON array
+      tag:
+        type: string
+        required: true
+    secrets:
+      GH_TOKEN:
+        required: true
+
+jobs:
+  Deployment-Github:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Extract version from tag
+      id: extract_version
+      shell: pwsh
+      run: |
+        $version = (echo ${{ inputs.tag }}) -replace "refs/tags/", ""
+
+        echo "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Download FunctionApp artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Zip FunctionApp artifacts
+      shell: pwsh
+      run: |
+        mkdir published
+
+        $matrix="${{ inputs.matrix_json }}" | convertfrom-json
+        $is_first=$true
+
+        $matrix | foreach-object{ 
+          $fncapp_name=$_
+          $destination_path=published/$fncapp_name-$RELEASE_VERSION.zip
+          Compress-Archive -Path $fncapp_name/* -DestinationPath $destination_path
+
+          if ( $is_first )
+          {
+            $fncapp_paths=$destination_path
+            $is_first=$false
+          }
+          else
+          {
+            $fncapp_paths=$fncapp_paths + "`r`n" + $destination_path
+          }
+        }
+
+        echo "FNCAPP_PATHS=$fncapp_paths" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+  
+    - name: Release FunctionApp artifact to GitHub
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: false
+        name: Release ${{ env.RELEASE_VERSION }}
+        body_path: ${{ github.workspace }}/release-notes/${{ env.RELEASE_VERSION }}.md
+        generate_release_notes: true
+        files: |
+          ${{ env.FNCAPP_PATHS }}
