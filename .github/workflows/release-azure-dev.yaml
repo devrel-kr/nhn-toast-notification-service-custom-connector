@@ -23,7 +23,8 @@ jobs:
 
   call_deployment_azure_dev:
     uses: ./.github/workflows/deployment-azure.yaml
-    needs: 
+    needs:
+    # - call_make_function_apps_matrix
     - call_build_test_upload
     with:
       gh_environment: DEV

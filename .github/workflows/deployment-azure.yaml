@@ -27,10 +27,10 @@ env:
 jobs:
   deploy_azure:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.gh_environment }}
+    # environment: ${{ inputs.gh_environment }}
 
     strategy:
-      matrix: 
+      matrix:
         fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     steps:

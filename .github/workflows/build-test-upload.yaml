@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix: 
+      matrix:
         fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     steps:
