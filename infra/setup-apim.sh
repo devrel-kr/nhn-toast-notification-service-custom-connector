@@ -51,7 +51,7 @@ do
 
     apim_url="https://apim-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE.azure-api.net/$api_path"
     app_setting_list=$(az functionapp config appsettings list -g $resource_group -n $fncapp_name | jq '.[] | select(.name == "OpenApi__HostNames") | .value' -r)
-    if [ "$setting_list" == "" ]
+    if [ "$app_setting_list" == "" ]
     then
         api_host_names=$apim_url
     else
