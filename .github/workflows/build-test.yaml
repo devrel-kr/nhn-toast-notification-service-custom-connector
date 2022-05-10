@@ -1,0 +1,32 @@
+name: Continuous Integration
+
+on:
+  workflow_call:
+
+jobs:
+  Build-Test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release --filter:"TestCategory!=Integration"

@@ -6,15 +6,26 @@ on:
     - 'v*'
 
 jobs:
+  make_fncapp_json:
+    uses: ./.github/workflows/make-function-apps-json.yaml
+    secrets: 
+      AZ_APP_SUFFIXES: ${{ secrets.AZURE_APP_SUFFIXES }}  
+
   call_CI_part:
-    uses: ./.github/workflows/continuous-integration.yaml
-    with:
-      action_name: release_github
-    
-  call_CD_github:
-    uses: ./.github/workflows/continuous-deployment.yaml
+    uses: ./.github/workflows/build-test-upload.yaml
     needs: 
+    - make_fncapp_json
+    with:
+      matrix_json: ${{ needs.make_fncapp_json.outputs.matrix_json }}
+    secrets: 
+      AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+
+  call_CD_github:
+    uses: ./.github/workflows/deployment-github.yaml
+    needs: 
+    - make_fncapp_json
     - call_CI_part
     with:
-      action_name: release_github
       tag: ${{ github.ref }}
+      matrix_json: ${{ needs.make_fncapp_json.outputs.matrix_json }}
+      
