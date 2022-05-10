@@ -20,6 +20,7 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
@@ -74,6 +75,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var queries = default(ListMessagesRequestQueries);
+            try
+            {
+                queries = await req.To<ListMessagesRequestQueries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.ListMessages;
@@ -81,23 +92,23 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                RequestId = req.Query["requestId"].ToString(),
-                StartRequestDate = req.Query["startRequestDate"].ToString(),
-                EndRequestDate = req.Query["endRequestDate"].ToString(),
-                StartCreateDate = req.Query["startCreateDate"].ToString(),
-                EndCreateDate = req.Query["endCreateDate"].ToString(),
-                StartResultDate = req.Query["startResultDate"].ToString(),
-                EndResultDate = req.Query["endResultDate"].ToString(),
-                SendNo = req.Query["sendNo"].ToString(),
-                RecipientNo = req.Query["recipientNo"].ToString(),
-                TemplateId = req.Query["templateId"].ToString(),
-                MsgStatus = req.Query["msgStatus"].ToString(),
-                ResultCode = req.Query["resultCode"].ToString(),
-                SubResultCode = req.Query["subResultCode"].ToString(),
-                SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
-                RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
+                RequestId = queries.RequestIden,
+                StartRequestDate = queries.StartReqDate,
+                EndRequestDate = queries.EndReqDate,
+                StartCreateDate = queries.StartCreDate,
+                EndCreateDate = queries.EndCreDate,
+                StartResultDate = queries.StartResultDate,
+                EndResultDate = queries.EndResultDate,
+                SendNo = queries.SendNumber,
+                RecipientNo = queries.RecipientNumber,
+                TemplateId = queries.TemplateId,
+                MsgStatus = queries.MessageStatus,
+                ResultCode = queries.ResultCode,
+                SubResultCode = queries.SubResultCode,
+                SenderGroupingKey = queries.SenderGroupingKey,
+                RecipientGroupingKey = queries.RecipientGroupingKey,
+                PageNum = queries.PageNumber,
+                PageSize = queries.PageSize       
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
