@@ -18,10 +18,15 @@ namespace Toast.Sms.Validators
         {
             var instance = await queries.ConfigureAwait(false);
 
-            instance.PageNumber ??= 1;
-            instance.PageSize ??= 15;
+            if(instance.RequestId.Length > 0 && instance.RequestId.Length <= 25)
+            {
+                instance.PageNumber ??= 1;
+                instance.PageSize ??= 15;
+                return instance;
+            }
 
             return instance;
+
         }
     }
 }

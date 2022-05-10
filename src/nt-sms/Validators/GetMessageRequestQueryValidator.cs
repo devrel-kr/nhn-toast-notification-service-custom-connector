@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 
+using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
 namespace Toast.Sms.Validators
@@ -18,7 +19,12 @@ namespace Toast.Sms.Validators
         {
             var instance = await queries.ConfigureAwait(false);
 
-            return instance;
+            if(instance.RecipientSequenceNumber > 0)
+            {
+                return instance;
+            }
+
+            throw new RequestQueryNotValidException("Not Found") { StatusCode = System.Net.HttpStatusCode.BadRequest };
         }
     }
 }
