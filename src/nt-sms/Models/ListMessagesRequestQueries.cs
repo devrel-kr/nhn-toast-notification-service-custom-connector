@@ -25,13 +25,11 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the start create date.
         /// </summary>
-        [JsonProperty("startCreateDate")]
         public virtual string StartCreateDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end create date.
         /// </summary>
-        [JsonProperty("endCreateDate")]
         public virtual string EndCreateDate { get; set; }
 
         /// <summary>
