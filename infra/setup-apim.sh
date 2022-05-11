@@ -1,8 +1,6 @@
 #!/bin/bash
 
-bicep_url="https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagementApi.json"
-
-resource_group="rg-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE"
+set -e
 
 declare -a fncapp_suffixes
 suffix_index=1
@@ -16,8 +14,10 @@ done
 suffix_index=`expr $suffix_index - 2`
 
 urls=$(curl -H "Accept: application/vnd.github.v3+json" \
-https://api.github.com/repos/devrel-kr/nhn-toast-notification-service-custom-connector/releases/latest| \
-jq '[.assets[] | .browser_download_url]')
+    https://api.github.com/repos/devrel-kr/nhn-toast-notification-service-custom-connector/releases/latest | \
+    jq '[.assets[] | .browser_download_url]')
+resource_group="rg-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE"
+bicep_url="https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/provision-apiManagementApi.json"
 
 for value in `eval echo {0..$suffix_index}`
 do
