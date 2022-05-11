@@ -6,5 +6,5 @@ on:
     - main
 
 jobs:
-  call_CI_part:
+  call_build_test:
     uses: ./.github/workflows/build-test.yaml

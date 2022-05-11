@@ -1,12 +1,6 @@
 param name string
-param apiMgmtPublisherName string
-param apiMgmtPublisherEmail string
 param location string = resourceGroup().location
-param suffixes array = [
-    'sms'
-    'sms-verify'
-]
-
+param suffixes string = 'sms,sms-verify'
 @allowed([
     'dev'
     'test'
@@ -18,19 +12,32 @@ param suffixes array = [
     'pjm'
 ])
 param env string = 'dev'
+param apiMgmtPublisherName string
+param apiMgmtPublisherEmail string
+@allowed([
+    'Device'
+    'ForeignGroup'
+    'Group'
+    'ServicePrincipal'
+    'User'
+])
+param deploymentScriptPrincipalType string = 'ServicePrincipal'
+param deploymentScriptAzureCliVersion string = '2.33.1'
 
 module apim './provision-apiManagement.bicep' = {
     name: 'Provision-ApiManagement'
     params: {
         name: name
-        apiMgmtPublisherEmail: apiMgmtPublisherEmail
-        apiMgmtPublisherName: apiMgmtPublisherName
         location: location
         env: env
+        apiMgmtPublisherEmail: apiMgmtPublisherEmail
+        apiMgmtPublisherName: apiMgmtPublisherName
+        apiMgmtPolicyFormat: 'xml-link'
+        apiMgmtPolicyValue: 'https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-global-policy.xml'
     }
 }
 
-module fncapp './provision-functionApp.bicep' = [for suffix in suffixes: {
+module fncapps './provision-functionApp.bicep' = [for suffix in split(suffixes, ','): {
     name: 'Provision-FunctionApp_${suffix}'
     dependsOn: [
         apim
@@ -42,3 +49,19 @@ module fncapp './provision-functionApp.bicep' = [for suffix in suffixes: {
         env: env
     }
 }]
+
+module uai './deploymentScript.bicep' = {
+    name: 'Provision-DeploymentScript'
+    dependsOn: [
+        apim
+        fncapps
+    ]
+    params: {
+        name: name
+        location: location
+        env: env
+        principalType: deploymentScriptPrincipalType
+        azureCliVersion: deploymentScriptAzureCliVersion
+        functionAppSuffixes: suffixes
+    }
+}

@@ -1,0 +1,3021 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.6.1.6515",
+      "templateHash": "15414107879549049163"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "Korea Central",
+      "allowedValues": [
+        "Australia Central",
+        "Australia East",
+        "Australia Southeast",
+        "Brazil South",
+        "Canada Central",
+        "Canada East",
+        "Central India",
+        "Central US",
+        "East Asia",
+        "East US",
+        "East US 2",
+        "France Central",
+        "Germany West Central",
+        "Japan East",
+        "Japan West",
+        "Jio India West",
+        "Korea Central",
+        "Korea South",
+        "North Central US",
+        "North Europe",
+        "Norway East",
+        "South Africa North",
+        "South Central US",
+        "South India",
+        "Southeast Asia",
+        "Sweden Central",
+        "Switzerland North",
+        "UAE North",
+        "UK South",
+        "UK West",
+        "West Central US",
+        "West Europe",
+        "West India",
+        "West US",
+        "West US 2",
+        "West US 3"
+      ]
+    },
+    "env": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "test",
+        "prod",
+        "kdy",
+        "kms",
+        "lsw",
+        "pjm"
+      ]
+    },
+    "apiManagementPublisherName": {
+      "type": "string"
+    },
+    "apiManagementPublisherEmail": {
+      "type": "string"
+    },
+    "deploymentScriptAzureCliVersion": {
+      "type": "string",
+      "defaultValue": "2.33.1"
+    },
+    "functionAppNames": {
+      "type": "string",
+      "defaultValue": "sms,sms-verify"
+    }
+  },
+  "variables": {
+    "locationCodeMap": {
+      "australiacentral": "auc",
+      "Australia Central": "auc",
+      "australiaeast": "aue",
+      "Australia East": "aue",
+      "australiasoutheast": "ause",
+      "Australia Southeast": "ause",
+      "brazilsouth": "brs",
+      "Brazil South": "brs",
+      "canadacentral": "cac",
+      "Canada Central": "cac",
+      "canadaeast": "cae",
+      "Canada East": "cae",
+      "centralindia": "cin",
+      "Central India": "cin",
+      "centralus": "cus",
+      "Central US": "cus",
+      "eastasia": "ea",
+      "East Asia": "ea",
+      "eastus": "eus",
+      "East US": "eus",
+      "eastus2": "eus2",
+      "East US 2": "eus2",
+      "francecentral": "frc",
+      "France Central": "frc",
+      "germanywestcentral": "dewc",
+      "Germany West Central": "dewc",
+      "japaneast": "jpe",
+      "Japan East": "jpe",
+      "japanwest": "jpw",
+      "Japan West": "jpw",
+      "jioindianorthwest": "jinw",
+      "Jio India North West": "jinw",
+      "koreacentral": "krc",
+      "Korea Central": "krc",
+      "koreasouth": "krs",
+      "Korea South": "krs",
+      "northcentralus": "ncus",
+      "North Central US": "ncus",
+      "northeurope": "neu",
+      "North Europe": "neu",
+      "norwayeast": "noe",
+      "Norway East": "noe",
+      "southafricanorth": "zan",
+      "South Africa North": "zan",
+      "southcentralus": "scus",
+      "South Central US": "scus",
+      "southindia": "sin",
+      "South India": "sin",
+      "southeastasia": "sea",
+      "Southeast Asia": "sea",
+      "swedencentral": "sec",
+      "Sweden Central": "sec",
+      "switzerlandnorth": "chn",
+      "Switzerland North": "chn",
+      "uaenorth": "uaen",
+      "UAE North": "uaen",
+      "uksouth": "uks",
+      "UK South": "uks",
+      "ukwest": "ukw",
+      "UK West": "ukw",
+      "westcentralus": "wcus",
+      "West Central US": "wcus",
+      "westeurope": "weu",
+      "West Europe": "weu",
+      "westindia": "win",
+      "West India": "win",
+      "westus": "wus",
+      "West US": "wus",
+      "westus2": "wus2",
+      "West US 2": "wus2",
+      "westus3": "wus3",
+      "West US 3": "wus3"
+    },
+    "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+    "metadata": {
+      "longName": "[format('{{0}}-{0}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+      "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[format(variables('metadata').longName, 'rg')]",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "Resources",
+      "resourceGroup": "[format(variables('metadata').longName, 'rg')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[parameters('name')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "suffixes": {
+            "value": "[parameters('functionAppNames')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
+          },
+          "apiMgmtPublisherName": {
+            "value": "[parameters('apiManagementPublisherName')]"
+          },
+          "apiMgmtPublisherEmail": {
+            "value": "[parameters('apiManagementPublisherEmail')]"
+          },
+          "deploymentScriptAzureCliVersion": {
+            "value": "[parameters('deploymentScriptAzureCliVersion')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.6.1.6515",
+              "templateHash": "11292308876110684884"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "suffixes": {
+              "type": "string",
+              "defaultValue": "sms,sms-verify"
+            },
+            "env": {
+              "type": "string",
+              "defaultValue": "dev",
+              "allowedValues": [
+                "dev",
+                "test",
+                "prod",
+                "kdy",
+                "kms",
+                "lsw",
+                "pjm"
+              ]
+            },
+            "apiMgmtPublisherName": {
+              "type": "string"
+            },
+            "apiMgmtPublisherEmail": {
+              "type": "string"
+            },
+            "deploymentScriptPrincipalType": {
+              "type": "string",
+              "defaultValue": "ServicePrincipal",
+              "allowedValues": [
+                "Device",
+                "ForeignGroup",
+                "Group",
+                "ServicePrincipal",
+                "User"
+              ]
+            },
+            "deploymentScriptAzureCliVersion": {
+              "type": "string",
+              "defaultValue": "2.33.1"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "Provision-ApiManagement",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "env": {
+                    "value": "[parameters('env')]"
+                  },
+                  "apiMgmtPublisherEmail": {
+                    "value": "[parameters('apiMgmtPublisherEmail')]"
+                  },
+                  "apiMgmtPublisherName": {
+                    "value": "[parameters('apiMgmtPublisherName')]"
+                  },
+                  "apiMgmtPolicyFormat": {
+                    "value": "xml-link"
+                  },
+                  "apiMgmtPolicyValue": {
+                    "value": "https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-global-policy.xml"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.6.1.6515",
+                      "templateHash": "5122653110487926498"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "suffix": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "env": {
+                      "type": "string",
+                      "defaultValue": "dev",
+                      "allowedValues": [
+                        "dev",
+                        "test",
+                        "prod",
+                        "kdy",
+                        "kms",
+                        "lsw",
+                        "pjm"
+                      ]
+                    },
+                    "storageAccountSku": {
+                      "type": "string",
+                      "defaultValue": "Standard_LRS",
+                      "allowedValues": [
+                        "Standard_LRS",
+                        "Standard_ZRS",
+                        "Standard_GRS",
+                        "Standard_GZRS",
+                        "Standard_RAGRS",
+                        "Standard_RAGZRS",
+                        "Premium_LRS",
+                        "Premium_ZRS"
+                      ]
+                    },
+                    "storageAccountBlobContainers": {
+                      "type": "array",
+                      "defaultValue": []
+                    },
+                    "storageAccountTables": {
+                      "type": "array",
+                      "defaultValue": []
+                    },
+                    "workspaceSku": {
+                      "type": "string",
+                      "defaultValue": "PerGB2018",
+                      "allowedValues": [
+                        "Free",
+                        "Standard",
+                        "Premium",
+                        "Standalone",
+                        "LACluster",
+                        "PerGB2018",
+                        "PerNode",
+                        "CapacityReservation"
+                      ]
+                    },
+                    "appInsightsType": {
+                      "type": "string",
+                      "defaultValue": "web",
+                      "allowedValues": [
+                        "web",
+                        "other"
+                      ]
+                    },
+                    "appInsightsIngestionMode": {
+                      "type": "string",
+                      "defaultValue": "LogAnalytics",
+                      "allowedValues": [
+                        "ApplicationInsights",
+                        "ApplicationInsightsWithDiagnosticSettings",
+                        "LogAnalytics"
+                      ]
+                    },
+                    "apiMgmtSkuName": {
+                      "type": "string",
+                      "defaultValue": "Consumption",
+                      "allowedValues": [
+                        "Consumption",
+                        "Isolated",
+                        "Developer",
+                        "Basic",
+                        "Standard",
+                        "Premium"
+                      ]
+                    },
+                    "apiMgmtSkuCapacity": {
+                      "type": "int",
+                      "defaultValue": 0
+                    },
+                    "apiMgmtPublisherName": {
+                      "type": "string"
+                    },
+                    "apiMgmtPublisherEmail": {
+                      "type": "string"
+                    },
+                    "apiMgmtPolicyFormat": {
+                      "type": "string",
+                      "defaultValue": "xml",
+                      "allowedValues": [
+                        "rawxml",
+                        "rawxml-link",
+                        "xml",
+                        "xml-link"
+                      ]
+                    },
+                    "apiMgmtPolicyValue": {
+                      "type": "string",
+                      "defaultValue": "<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound></inbound>\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound></outbound>\r\n</policies>"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "StorageAccount",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "storageAccountSku": {
+                            "value": "[parameters('storageAccountSku')]"
+                          },
+                          "storageAccountBlobContainers": {
+                            "value": "[parameters('storageAccountBlobContainers')]"
+                          },
+                          "storageAccountTables": {
+                            "value": "[parameters('storageAccountTables')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "4849314940898448807"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "storageAccountSku": {
+                              "type": "string",
+                              "defaultValue": "Standard_LRS",
+                              "allowedValues": [
+                                "Standard_LRS",
+                                "Standard_ZRS",
+                                "Standard_GRS",
+                                "Standard_GZRS",
+                                "Standard_RAGRS",
+                                "Standard_RAGZRS",
+                                "Premium_LRS",
+                                "Premium_ZRS"
+                              ]
+                            },
+                            "storageAccountBlobContainers": {
+                              "type": "array",
+                              "defaultValue": []
+                            },
+                            "storageAccountTables": {
+                              "type": "array",
+                              "defaultValue": []
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "storage": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').shortName, 'st', ''), format(variables('metadata').shortName, 'st', replace(parameters('suffix'), '-', '')))]",
+                              "location": "[parameters('location')]",
+                              "sku": "[parameters('storageAccountSku')]",
+                              "blob": {
+                                "containers": "[parameters('storageAccountBlobContainers')]"
+                              },
+                              "table": {
+                                "tables": "[parameters('storageAccountTables')]"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Storage/storageAccounts",
+                              "apiVersion": "2021-06-01",
+                              "name": "[variables('storage').name]",
+                              "location": "[variables('storage').location]",
+                              "kind": "StorageV2",
+                              "sku": {
+                                "name": "[variables('storage').sku]"
+                              },
+                              "properties": {
+                                "supportsHttpsTrafficOnly": true
+                              }
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').blob.containers), 0)]",
+                              "type": "Microsoft.Storage/storageAccounts/blobServices",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/default', variables('storage').name)]",
+                              "properties": {
+                                "deleteRetentionPolicy": {
+                                  "enabled": false
+                                }
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').blob.containers), 0)]",
+                              "copy": {
+                                "name": "stblobcontainer",
+                                "count": "[length(variables('storage').blob.containers)]"
+                              },
+                              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()])]",
+                              "properties": {
+                                "immutableStorageWithVersioning": {
+                                  "enabled": false
+                                },
+                                "defaultEncryptionScope": "$account-encryption-key",
+                                "denyEncryptionScopeOverride": false,
+                                "publicAccess": "None"
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').table.tables), 0)]",
+                              "type": "Microsoft.Storage/storageAccounts/tableServices",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/default', variables('storage').name)]",
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').table.tables), 0)]",
+                              "copy": {
+                                "name": "sttabletable",
+                                "count": "[length(variables('storage').table.tables)]"
+                              },
+                              "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').table.tables[copyIndex()])]",
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
+                              ]
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('storage').name]"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "LogAnalyticsWorkspace",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "workspaceSku": {
+                            "value": "[parameters('workspaceSku')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "17446263208441877968"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "workspaceSku": {
+                              "type": "string",
+                              "defaultValue": "PerGB2018",
+                              "allowedValues": [
+                                "Free",
+                                "Standard",
+                                "Premium",
+                                "Standalone",
+                                "LACluster",
+                                "PerGB2018",
+                                "PerNode",
+                                "CapacityReservation"
+                              ]
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "workspace": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'wrkspc', ''), format(variables('metadata').longName, 'wrkspc', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "sku": "[parameters('workspaceSku')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.OperationalInsights/workspaces",
+                              "apiVersion": "2021-06-01",
+                              "name": "[variables('workspace').name]",
+                              "location": "[variables('workspace').location]",
+                              "properties": {
+                                "sku": {
+                                  "name": "[variables('workspace').sku]"
+                                },
+                                "retentionInDays": 30,
+                                "workspaceCapping": {
+                                  "dailyQuotaGb": -1
+                                },
+                                "publicNetworkAccessForIngestion": "Enabled",
+                                "publicNetworkAccessForQuery": "Enabled"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspace').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('workspace').name]"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "ApplicationInsights",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "appInsightsType": {
+                            "value": "[parameters('appInsightsType')]"
+                          },
+                          "appInsightsIngestionMode": {
+                            "value": "[parameters('appInsightsIngestionMode')]"
+                          },
+                          "workspaceId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogAnalyticsWorkspace')).outputs.id.value]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "150568585374633849"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "appInsightsType": {
+                              "type": "string",
+                              "defaultValue": "web",
+                              "allowedValues": [
+                                "web",
+                                "other"
+                              ]
+                            },
+                            "appInsightsIngestionMode": {
+                              "type": "string",
+                              "defaultValue": "LogAnalytics",
+                              "allowedValues": [
+                                "ApplicationInsights",
+                                "ApplicationInsightsWithDiagnosticSettings",
+                                "LogAnalytics"
+                              ]
+                            },
+                            "workspaceId": {
+                              "type": "string"
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "workspace": {
+                              "id": "[parameters('workspaceId')]"
+                            },
+                            "appInsights": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'appins', ''), format(variables('metadata').longName, 'appins', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "appType": "[parameters('appInsightsType')]",
+                              "ingestionMode": "[parameters('appInsightsIngestionMode')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Insights/components",
+                              "apiVersion": "2020-02-02",
+                              "name": "[variables('appInsights').name]",
+                              "location": "[variables('appInsights').location]",
+                              "kind": "web",
+                              "properties": {
+                                "Application_Type": "[variables('appInsights').appType]",
+                                "Flow_Type": "Bluefield",
+                                "IngestionMode": "[variables('appInsights').ingestionMode]",
+                                "Request_Source": "rest",
+                                "WorkspaceResourceId": "[variables('workspace').id]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Insights/components', variables('appInsights').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('appInsights').name]"
+                            },
+                            "instrumentationKey": {
+                              "type": "string",
+                              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsights').name)).InstrumentationKey]"
+                            }
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', 'LogAnalyticsWorkspace')]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "ApiManagement",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "appInsightsId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')).outputs.id.value]"
+                          },
+                          "appInsightsInstrumentationKey": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')).outputs.instrumentationKey.value]"
+                          },
+                          "apiMgmtSkuName": {
+                            "value": "[parameters('apiMgmtSkuName')]"
+                          },
+                          "apiMgmtSkuCapacity": {
+                            "value": "[parameters('apiMgmtSkuCapacity')]"
+                          },
+                          "apiMgmtPublisherName": {
+                            "value": "[parameters('apiMgmtPublisherName')]"
+                          },
+                          "apiMgmtPublisherEmail": {
+                            "value": "[parameters('apiMgmtPublisherEmail')]"
+                          },
+                          "apiMgmtPolicyFormat": {
+                            "value": "[parameters('apiMgmtPolicyFormat')]"
+                          },
+                          "apiMgmtPolicyValue": {
+                            "value": "[parameters('apiMgmtPolicyValue')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "9037175543653242597"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "appInsightsId": {
+                              "type": "string"
+                            },
+                            "appInsightsInstrumentationKey": {
+                              "type": "secureString"
+                            },
+                            "apiMgmtSkuName": {
+                              "type": "string",
+                              "defaultValue": "Consumption",
+                              "allowedValues": [
+                                "Consumption",
+                                "Isolated",
+                                "Developer",
+                                "Basic",
+                                "Standard",
+                                "Premium"
+                              ]
+                            },
+                            "apiMgmtSkuCapacity": {
+                              "type": "int",
+                              "defaultValue": 0
+                            },
+                            "apiMgmtPublisherName": {
+                              "type": "string"
+                            },
+                            "apiMgmtPublisherEmail": {
+                              "type": "string"
+                            },
+                            "apiMgmtPolicyFormat": {
+                              "type": "string",
+                              "defaultValue": "xml",
+                              "allowedValues": [
+                                "rawxml",
+                                "rawxml-link",
+                                "xml",
+                                "xml-link"
+                              ]
+                            },
+                            "apiMgmtPolicyValue": {
+                              "type": "string",
+                              "defaultValue": "<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound></inbound>\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound></outbound>\r\n</policies>"
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "appInsights": {
+                              "id": "[parameters('appInsightsId')]",
+                              "name": "[format(variables('metadata').longName, 'appins')]",
+                              "instrumentationKey": "[parameters('appInsightsInstrumentationKey')]"
+                            },
+                            "apiManagement": {
+                              "name": "[format(variables('metadata').longName, 'apim')]",
+                              "location": "[parameters('location')]",
+                              "skuName": "[parameters('apiMgmtSkuName')]",
+                              "skuCapacity": "[parameters('apiMgmtSkuCapacity')]",
+                              "publisherName": "[parameters('apiMgmtPublisherName')]",
+                              "publisherEmail": "[parameters('apiMgmtPublisherEmail')]",
+                              "policyFormat": "[parameters('apiMgmtPolicyFormat')]",
+                              "policyValue": "[parameters('apiMgmtPolicyValue')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.ApiManagement/service",
+                              "apiVersion": "2021-08-01",
+                              "name": "[variables('apiManagement').name]",
+                              "location": "[variables('apiManagement').location]",
+                              "sku": {
+                                "name": "[variables('apiManagement').skuName]",
+                                "capacity": "[variables('apiManagement').skuCapacity]"
+                              },
+                              "properties": {
+                                "publisherName": "[variables('apiManagement').publisherName]",
+                                "publisherEmail": "[variables('apiManagement').publisherEmail]"
+                              }
+                            },
+                            {
+                              "type": "Microsoft.ApiManagement/service/namedValues",
+                              "apiVersion": "2021-08-01",
+                              "name": "[format('{0}/RESOURCE_NAME', variables('apiManagement').name)]",
+                              "properties": {
+                                "displayName": "RESOURCE_NAME",
+                                "secret": true,
+                                "value": "[variables('apiManagement').name]"
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.ApiManagement/service', variables('apiManagement').name)]"
+                              ]
+                            },
+                            {
+                              "type": "Microsoft.ApiManagement/service/loggers",
+                              "apiVersion": "2021-08-01",
+                              "name": "[format('{0}/{1}', variables('apiManagement').name, variables('appInsights').name)]",
+                              "properties": {
+                                "loggerType": "applicationInsights",
+                                "resourceId": "[variables('appInsights').id]",
+                                "credentials": {
+                                  "instrumentationKey": "[variables('appInsights').instrumentationKey]"
+                                }
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.ApiManagement/service', variables('apiManagement').name)]"
+                              ]
+                            },
+                            {
+                              "type": "Microsoft.ApiManagement/service/policies",
+                              "apiVersion": "2021-08-01",
+                              "name": "[format('{0}/policy', variables('apiManagement').name)]",
+                              "properties": {
+                                "format": "[variables('apiManagement').policyFormat]",
+                                "value": "[variables('apiManagement').policyValue]"
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.ApiManagement/service', variables('apiManagement').name)]"
+                              ]
+                            },
+                            {
+                              "type": "Microsoft.ApiManagement/service/products",
+                              "apiVersion": "2021-08-01",
+                              "name": "[format('{0}/default', variables('apiManagement').name)]",
+                              "properties": {
+                                "displayName": "Default Product",
+                                "description": "This is the default product created by the template, which includes all APIs.",
+                                "state": "published",
+                                "subscriptionRequired": false
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.ApiManagement/service', variables('apiManagement').name)]"
+                              ]
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.ApiManagement/service', variables('apiManagement').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('apiManagement').name]"
+                            }
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')]"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "copy": {
+                "name": "fncapps",
+                "count": "[length(split(parameters('suffixes'), ','))]"
+              },
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "[format('Provision-FunctionApp_{0}', split(parameters('suffixes'), ',')[copyIndex()])]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "suffix": {
+                    "value": "[split(parameters('suffixes'), ',')[copyIndex()]]"
+                  },
+                  "env": {
+                    "value": "[parameters('env')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.6.1.6515",
+                      "templateHash": "6541209081916479712"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "suffix": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "env": {
+                      "type": "string",
+                      "defaultValue": "dev",
+                      "allowedValues": [
+                        "dev",
+                        "test",
+                        "prod",
+                        "kdy",
+                        "kms",
+                        "lsw",
+                        "pjm"
+                      ]
+                    },
+                    "storageAccountSku": {
+                      "type": "string",
+                      "defaultValue": "Standard_LRS",
+                      "allowedValues": [
+                        "Standard_LRS",
+                        "Standard_ZRS",
+                        "Standard_GRS",
+                        "Standard_GZRS",
+                        "Standard_RAGRS",
+                        "Standard_RAGZRS",
+                        "Premium_LRS",
+                        "Premium_ZRS"
+                      ]
+                    },
+                    "storageAccountBlobContainers": {
+                      "type": "array",
+                      "defaultValue": []
+                    },
+                    "storageAccountTables": {
+                      "type": "array",
+                      "defaultValue": []
+                    },
+                    "workspaceSku": {
+                      "type": "string",
+                      "defaultValue": "PerGB2018",
+                      "allowedValues": [
+                        "Free",
+                        "Standard",
+                        "Premium",
+                        "Standalone",
+                        "LACluster",
+                        "PerGB2018",
+                        "PerNode",
+                        "CapacityReservation"
+                      ]
+                    },
+                    "appInsightsType": {
+                      "type": "string",
+                      "defaultValue": "web",
+                      "allowedValues": [
+                        "web",
+                        "other"
+                      ]
+                    },
+                    "appInsightsIngestionMode": {
+                      "type": "string",
+                      "defaultValue": "LogAnalytics",
+                      "allowedValues": [
+                        "ApplicationInsights",
+                        "ApplicationInsightsWithDiagnosticSettings",
+                        "LogAnalytics"
+                      ]
+                    },
+                    "consumptionPlanIsLinux": {
+                      "type": "bool",
+                      "defaultValue": false
+                    },
+                    "functionEnvironment": {
+                      "type": "string",
+                      "defaultValue": "Production",
+                      "allowedValues": [
+                        "Development",
+                        "Staging",
+                        "Production"
+                      ]
+                    },
+                    "functionExtensionVersion": {
+                      "type": "string",
+                      "defaultValue": "v4",
+                      "allowedValues": [
+                        "v3",
+                        "v4"
+                      ]
+                    },
+                    "functionWorkerRuntime": {
+                      "type": "string",
+                      "defaultValue": "dotnet",
+                      "allowedValues": [
+                        "dotnet",
+                        "dotnet-isolated",
+                        "java",
+                        "node",
+                        "python",
+                        "poweshell"
+                      ]
+                    },
+                    "functionWorkerVersion": {
+                      "type": "string",
+                      "defaultValue": "v6.0",
+                      "allowedValues": [
+                        "v6.0",
+                        "v8",
+                        "v11",
+                        "v12",
+                        "v14",
+                        "v16",
+                        "v3.7",
+                        "v3.8",
+                        "v3.9",
+                        "v7"
+                      ]
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "[format('StorageAccount_{0}', parameters('suffix'))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "storageAccountSku": {
+                            "value": "[parameters('storageAccountSku')]"
+                          },
+                          "storageAccountBlobContainers": {
+                            "value": "[parameters('storageAccountBlobContainers')]"
+                          },
+                          "storageAccountTables": {
+                            "value": "[parameters('storageAccountTables')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "4849314940898448807"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "storageAccountSku": {
+                              "type": "string",
+                              "defaultValue": "Standard_LRS",
+                              "allowedValues": [
+                                "Standard_LRS",
+                                "Standard_ZRS",
+                                "Standard_GRS",
+                                "Standard_GZRS",
+                                "Standard_RAGRS",
+                                "Standard_RAGZRS",
+                                "Premium_LRS",
+                                "Premium_ZRS"
+                              ]
+                            },
+                            "storageAccountBlobContainers": {
+                              "type": "array",
+                              "defaultValue": []
+                            },
+                            "storageAccountTables": {
+                              "type": "array",
+                              "defaultValue": []
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "storage": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').shortName, 'st', ''), format(variables('metadata').shortName, 'st', replace(parameters('suffix'), '-', '')))]",
+                              "location": "[parameters('location')]",
+                              "sku": "[parameters('storageAccountSku')]",
+                              "blob": {
+                                "containers": "[parameters('storageAccountBlobContainers')]"
+                              },
+                              "table": {
+                                "tables": "[parameters('storageAccountTables')]"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Storage/storageAccounts",
+                              "apiVersion": "2021-06-01",
+                              "name": "[variables('storage').name]",
+                              "location": "[variables('storage').location]",
+                              "kind": "StorageV2",
+                              "sku": {
+                                "name": "[variables('storage').sku]"
+                              },
+                              "properties": {
+                                "supportsHttpsTrafficOnly": true
+                              }
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').blob.containers), 0)]",
+                              "type": "Microsoft.Storage/storageAccounts/blobServices",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/default', variables('storage').name)]",
+                              "properties": {
+                                "deleteRetentionPolicy": {
+                                  "enabled": false
+                                }
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').blob.containers), 0)]",
+                              "copy": {
+                                "name": "stblobcontainer",
+                                "count": "[length(variables('storage').blob.containers)]"
+                              },
+                              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()])]",
+                              "properties": {
+                                "immutableStorageWithVersioning": {
+                                  "enabled": false
+                                },
+                                "defaultEncryptionScope": "$account-encryption-key",
+                                "denyEncryptionScopeOverride": false,
+                                "publicAccess": "None"
+                              },
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').table.tables), 0)]",
+                              "type": "Microsoft.Storage/storageAccounts/tableServices",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/default', variables('storage').name)]",
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                              ]
+                            },
+                            {
+                              "condition": "[greater(length(variables('storage').table.tables), 0)]",
+                              "copy": {
+                                "name": "sttabletable",
+                                "count": "[length(variables('storage').table.tables)]"
+                              },
+                              "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+                              "apiVersion": "2021-06-01",
+                              "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').table.tables[copyIndex()])]",
+                              "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
+                              ]
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('storage').name]"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "[format('LogAnalyticsWorkspace_{0}', parameters('suffix'))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "workspaceSku": {
+                            "value": "[parameters('workspaceSku')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "17446263208441877968"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "workspaceSku": {
+                              "type": "string",
+                              "defaultValue": "PerGB2018",
+                              "allowedValues": [
+                                "Free",
+                                "Standard",
+                                "Premium",
+                                "Standalone",
+                                "LACluster",
+                                "PerGB2018",
+                                "PerNode",
+                                "CapacityReservation"
+                              ]
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "workspace": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'wrkspc', ''), format(variables('metadata').longName, 'wrkspc', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "sku": "[parameters('workspaceSku')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.OperationalInsights/workspaces",
+                              "apiVersion": "2021-06-01",
+                              "name": "[variables('workspace').name]",
+                              "location": "[variables('workspace').location]",
+                              "properties": {
+                                "sku": {
+                                  "name": "[variables('workspace').sku]"
+                                },
+                                "retentionInDays": 30,
+                                "workspaceCapping": {
+                                  "dailyQuotaGb": -1
+                                },
+                                "publicNetworkAccessForIngestion": "Enabled",
+                                "publicNetworkAccessForQuery": "Enabled"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspace').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('workspace').name]"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "[format('ApplicationInsights_{0}', parameters('suffix'))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "appInsightsType": {
+                            "value": "[parameters('appInsightsType')]"
+                          },
+                          "appInsightsIngestionMode": {
+                            "value": "[parameters('appInsightsIngestionMode')]"
+                          },
+                          "workspaceId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('LogAnalyticsWorkspace_{0}', parameters('suffix')))).outputs.id.value]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "150568585374633849"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "appInsightsType": {
+                              "type": "string",
+                              "defaultValue": "web",
+                              "allowedValues": [
+                                "web",
+                                "other"
+                              ]
+                            },
+                            "appInsightsIngestionMode": {
+                              "type": "string",
+                              "defaultValue": "LogAnalytics",
+                              "allowedValues": [
+                                "ApplicationInsights",
+                                "ApplicationInsightsWithDiagnosticSettings",
+                                "LogAnalytics"
+                              ]
+                            },
+                            "workspaceId": {
+                              "type": "string"
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "workspace": {
+                              "id": "[parameters('workspaceId')]"
+                            },
+                            "appInsights": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'appins', ''), format(variables('metadata').longName, 'appins', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "appType": "[parameters('appInsightsType')]",
+                              "ingestionMode": "[parameters('appInsightsIngestionMode')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Insights/components",
+                              "apiVersion": "2020-02-02",
+                              "name": "[variables('appInsights').name]",
+                              "location": "[variables('appInsights').location]",
+                              "kind": "web",
+                              "properties": {
+                                "Application_Type": "[variables('appInsights').appType]",
+                                "Flow_Type": "Bluefield",
+                                "IngestionMode": "[variables('appInsights').ingestionMode]",
+                                "Request_Source": "rest",
+                                "WorkspaceResourceId": "[variables('workspace').id]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Insights/components', variables('appInsights').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('appInsights').name]"
+                            },
+                            "instrumentationKey": {
+                              "type": "string",
+                              "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsights').name)).InstrumentationKey]"
+                            }
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', format('LogAnalyticsWorkspace_{0}', parameters('suffix')))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "[format('ConsumptionPlan_{0}', parameters('suffix'))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "consumptionPlanIsLinux": {
+                            "value": "[parameters('consumptionPlanIsLinux')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "330814374194458555"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "consumptionPlanIsLinux": {
+                              "type": "bool",
+                              "defaultValue": false
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "consumption": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'csplan', ''), format(variables('metadata').longName, 'csplan', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "isLinux": "[parameters('consumptionPlanIsLinux')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Web/serverfarms",
+                              "apiVersion": "2021-02-01",
+                              "name": "[variables('consumption').name]",
+                              "location": "[variables('consumption').location]",
+                              "kind": "functionApp",
+                              "sku": {
+                                "name": "Y1",
+                                "tier": "Dynamic"
+                              },
+                              "properties": {
+                                "reserved": "[variables('consumption').isLinux]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Web/serverfarms', variables('consumption').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('consumption').name]"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "[format('FunctionApp_{0}', parameters('suffix'))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('name')]"
+                          },
+                          "suffix": {
+                            "value": "[parameters('suffix')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "env": {
+                            "value": "[parameters('env')]"
+                          },
+                          "storageAccountId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('StorageAccount_{0}', parameters('suffix')))).outputs.id.value]"
+                          },
+                          "storageAccountName": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('StorageAccount_{0}', parameters('suffix')))).outputs.name.value]"
+                          },
+                          "appInsightsId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ApplicationInsights_{0}', parameters('suffix')))).outputs.id.value]"
+                          },
+                          "consumptionPlanId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('ConsumptionPlan_{0}', parameters('suffix')))).outputs.id.value]"
+                          },
+                          "functionIsLinux": {
+                            "value": "[parameters('consumptionPlanIsLinux')]"
+                          },
+                          "functionEnvironment": {
+                            "value": "[parameters('functionEnvironment')]"
+                          },
+                          "functionExtensionVersion": {
+                            "value": "[parameters('functionExtensionVersion')]"
+                          },
+                          "functionWorkerRuntime": {
+                            "value": "[parameters('functionWorkerRuntime')]"
+                          },
+                          "functionWorkerVersion": {
+                            "value": "[parameters('functionWorkerVersion')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.6.1.6515",
+                              "templateHash": "1559731117397153201"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "defaultValue": ""
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "env": {
+                              "type": "string",
+                              "defaultValue": "dev",
+                              "allowedValues": [
+                                "dev",
+                                "test",
+                                "prod",
+                                "kdy",
+                                "kms",
+                                "lsw",
+                                "pjm"
+                              ]
+                            },
+                            "storageAccountId": {
+                              "type": "string"
+                            },
+                            "storageAccountName": {
+                              "type": "string"
+                            },
+                            "appInsightsId": {
+                              "type": "string"
+                            },
+                            "consumptionPlanId": {
+                              "type": "string"
+                            },
+                            "functionIsLinux": {
+                              "type": "bool",
+                              "defaultValue": false
+                            },
+                            "functionEnvironment": {
+                              "type": "string",
+                              "defaultValue": "Production",
+                              "allowedValues": [
+                                "Development",
+                                "Staging",
+                                "Production"
+                              ]
+                            },
+                            "functionExtensionVersion": {
+                              "type": "string",
+                              "defaultValue": "v4",
+                              "allowedValues": [
+                                "v3",
+                                "v4"
+                              ]
+                            },
+                            "functionWorkerRuntime": {
+                              "type": "string",
+                              "defaultValue": "dotnet",
+                              "allowedValues": [
+                                "dotnet",
+                                "dotnet-isolated",
+                                "java",
+                                "node",
+                                "python",
+                                "poweshell"
+                              ]
+                            },
+                            "functionWorkerVersion": {
+                              "type": "string",
+                              "defaultValue": "v6.0",
+                              "allowedValues": [
+                                "v6.0",
+                                "v8",
+                                "v11",
+                                "v12",
+                                "v14",
+                                "v16",
+                                "v3.7",
+                                "v3.8",
+                                "v3.9",
+                                "v7"
+                              ]
+                            }
+                          },
+                          "variables": {
+                            "locationCodeMap": {
+                              "australiacentral": "auc",
+                              "Australia Central": "auc",
+                              "australiaeast": "aue",
+                              "Australia East": "aue",
+                              "australiasoutheast": "ause",
+                              "Australia Southeast": "ause",
+                              "brazilsouth": "brs",
+                              "Brazil South": "brs",
+                              "canadacentral": "cac",
+                              "Canada Central": "cac",
+                              "canadaeast": "cae",
+                              "Canada East": "cae",
+                              "centralindia": "cin",
+                              "Central India": "cin",
+                              "centralus": "cus",
+                              "Central US": "cus",
+                              "eastasia": "ea",
+                              "East Asia": "ea",
+                              "eastus": "eus",
+                              "East US": "eus",
+                              "eastus2": "eus2",
+                              "East US 2": "eus2",
+                              "francecentral": "frc",
+                              "France Central": "frc",
+                              "germanywestcentral": "dewc",
+                              "Germany West Central": "dewc",
+                              "japaneast": "jpe",
+                              "Japan East": "jpe",
+                              "japanwest": "jpw",
+                              "Japan West": "jpw",
+                              "jioindianorthwest": "jinw",
+                              "Jio India North West": "jinw",
+                              "koreacentral": "krc",
+                              "Korea Central": "krc",
+                              "koreasouth": "krs",
+                              "Korea South": "krs",
+                              "northcentralus": "ncus",
+                              "North Central US": "ncus",
+                              "northeurope": "neu",
+                              "North Europe": "neu",
+                              "norwayeast": "noe",
+                              "Norway East": "noe",
+                              "southafricanorth": "zan",
+                              "South Africa North": "zan",
+                              "southcentralus": "scus",
+                              "South Central US": "scus",
+                              "southindia": "sin",
+                              "South India": "sin",
+                              "southeastasia": "sea",
+                              "Southeast Asia": "sea",
+                              "swedencentral": "sec",
+                              "Sweden Central": "sec",
+                              "switzerlandnorth": "chn",
+                              "Switzerland North": "chn",
+                              "uaenorth": "uaen",
+                              "UAE North": "uaen",
+                              "uksouth": "uks",
+                              "UK South": "uks",
+                              "ukwest": "ukw",
+                              "UK West": "ukw",
+                              "westcentralus": "wcus",
+                              "West Central US": "wcus",
+                              "westeurope": "weu",
+                              "West Europe": "weu",
+                              "westindia": "win",
+                              "West India": "win",
+                              "westus": "wus",
+                              "West US": "wus",
+                              "westus2": "wus2",
+                              "West US 2": "wus2",
+                              "westus3": "wus3",
+                              "West US 3": "wus3"
+                            },
+                            "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                            "metadata": {
+                              "longName": "[format('{{0}}-{0}{{1}}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                              "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                            },
+                            "storage": {
+                              "id": "[parameters('storageAccountId')]",
+                              "name": "[parameters('storageAccountName')]"
+                            },
+                            "consumption": {
+                              "id": "[parameters('consumptionPlanId')]"
+                            },
+                            "appInsights": {
+                              "id": "[parameters('appInsightsId')]"
+                            },
+                            "linuxFxVersionMap": {
+                              "dotnet": "",
+                              "dotnet-isolated": "",
+                              "java": "Java|{0}",
+                              "node": "Node|{0}",
+                              "python": "Python|{0}",
+                              "powershell": "PowerShell|{0}"
+                            },
+                            "functionApp": {
+                              "name": "[if(equals(parameters('suffix'), ''), format(variables('metadata').longName, 'fncapp', ''), format(variables('metadata').longName, 'fncapp', format('-{0}', parameters('suffix'))))]",
+                              "location": "[parameters('location')]",
+                              "kind": "[if(parameters('functionIsLinux'), 'functionapp,linux', 'functionapp')]",
+                              "linuxFxVersion": "[if(parameters('functionIsLinux'), format(variables('linuxFxVersionMap')[parameters('functionWorkerRuntime')], replace(parameters('functionWorkerVersion'), 'v', '')), '')]",
+                              "netFrameworkVersion": "v6.0",
+                              "nodeVersion": "",
+                              "javaVersion": "[if(and(not(parameters('functionIsLinux')), equals(parameters('functionWorkerRuntime'), 'java')), replace(parameters('functionWorkerVersion'), 'v', ''), null())]",
+                              "pythonVersion": "",
+                              "powerShellVersion": "[if(and(not(parameters('functionIsLinux')), equals(parameters('functionWorkerRuntime'), 'powershell')), replace(parameters('functionWorkerVersion'), 'v', '~'), '')]",
+                              "environment": "[parameters('functionEnvironment')]",
+                              "extensionVersion": "[replace(parameters('functionExtensionVersion'), 'v', '~')]",
+                              "workerRuntime": "[parameters('functionWorkerRuntime')]"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Web/sites",
+                              "apiVersion": "2021-02-01",
+                              "name": "[variables('functionApp').name]",
+                              "location": "[variables('functionApp').location]",
+                              "kind": "[variables('functionApp').kind]",
+                              "properties": {
+                                "serverFarmId": "[variables('consumption').id]",
+                                "httpsOnly": true,
+                                "siteConfig": {
+                                  "linuxFxVersion": "[variables('functionApp').linuxFxVersion]",
+                                  "netFrameworkVersion": "[variables('functionApp').netFrameworkVersion]",
+                                  "nodeVersion": "[variables('functionApp').nodeVersion]",
+                                  "javaVersion": "[variables('functionApp').javaVersion]",
+                                  "pythonVersion": "[variables('functionApp').pythonVersion]",
+                                  "powerShellVersion": "[variables('functionApp').powerShellVersion]",
+                                  "appSettings": [
+                                    {
+                                      "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                      "value": "[format('{0}', reference(variables('appInsights').id, '2020-02-02', 'Full').properties.InstrumentationKey)]"
+                                    },
+                                    {
+                                      "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                      "value": "[format('{0}', reference(variables('appInsights').id, '2020-02-02', 'Full').properties.connectionString)]"
+                                    },
+                                    {
+                                      "name": "AZURE_FUNCTIONS_ENVIRONMENT",
+                                      "value": "[variables('functionApp').environment]"
+                                    },
+                                    {
+                                      "name": "AzureWebJobsStorage",
+                                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storage').name, environment().suffixes.storage, listKeys(variables('storage').id, '2021-06-01').keys[0].value)]"
+                                    },
+                                    {
+                                      "name": "FUNCTION_APP_EDIT_MODE",
+                                      "value": "readonly"
+                                    },
+                                    {
+                                      "name": "FUNCTIONS_EXTENSION_VERSION",
+                                      "value": "[variables('functionApp').extensionVersion]"
+                                    },
+                                    {
+                                      "name": "FUNCTIONS_WORKER_RUNTIME",
+                                      "value": "[variables('functionApp').workerRuntime]"
+                                    },
+                                    {
+                                      "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storage').name, environment().suffixes.storage, listKeys(variables('storage').id, '2021-06-01').keys[0].value)]"
+                                    },
+                                    {
+                                      "name": "WEBSITE_CONTENTSHARE",
+                                      "value": "[variables('functionApp').name]"
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.Web/sites', variables('functionApp').name)]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[variables('functionApp').name]"
+                            }
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', format('ApplicationInsights_{0}', parameters('suffix')))]",
+                        "[resourceId('Microsoft.Resources/deployments', format('ConsumptionPlan_{0}', parameters('suffix')))]",
+                        "[resourceId('Microsoft.Resources/deployments', format('StorageAccount_{0}', parameters('suffix')))]"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'Provision-ApiManagement')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "Provision-DeploymentScript",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "env": {
+                    "value": "[parameters('env')]"
+                  },
+                  "principalType": {
+                    "value": "[parameters('deploymentScriptPrincipalType')]"
+                  },
+                  "azureCliVersion": {
+                    "value": "[parameters('deploymentScriptAzureCliVersion')]"
+                  },
+                  "functionAppSuffixes": {
+                    "value": "[parameters('suffixes')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.6.1.6515",
+                      "templateHash": "16027085467622424976"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "env": {
+                      "type": "string",
+                      "defaultValue": "dev",
+                      "allowedValues": [
+                        "dev",
+                        "test",
+                        "prod",
+                        "kdy",
+                        "kms",
+                        "lsw",
+                        "pjm"
+                      ]
+                    },
+                    "principalType": {
+                      "type": "string",
+                      "defaultValue": "ServicePrincipal",
+                      "allowedValues": [
+                        "Device",
+                        "ForeignGroup",
+                        "Group",
+                        "ServicePrincipal",
+                        "User"
+                      ]
+                    },
+                    "azureCliVersion": {
+                      "type": "string",
+                      "defaultValue": "2.33.1"
+                    },
+                    "functionAppSuffixes": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {
+                    "locationCodeMap": {
+                      "australiacentral": "auc",
+                      "Australia Central": "auc",
+                      "australiaeast": "aue",
+                      "Australia East": "aue",
+                      "australiasoutheast": "ause",
+                      "Australia Southeast": "ause",
+                      "brazilsouth": "brs",
+                      "Brazil South": "brs",
+                      "canadacentral": "cac",
+                      "Canada Central": "cac",
+                      "canadaeast": "cae",
+                      "Canada East": "cae",
+                      "centralindia": "cin",
+                      "Central India": "cin",
+                      "centralus": "cus",
+                      "Central US": "cus",
+                      "eastasia": "ea",
+                      "East Asia": "ea",
+                      "eastus": "eus",
+                      "East US": "eus",
+                      "eastus2": "eus2",
+                      "East US 2": "eus2",
+                      "francecentral": "frc",
+                      "France Central": "frc",
+                      "germanywestcentral": "dewc",
+                      "Germany West Central": "dewc",
+                      "japaneast": "jpe",
+                      "Japan East": "jpe",
+                      "japanwest": "jpw",
+                      "Japan West": "jpw",
+                      "jioindianorthwest": "jinw",
+                      "Jio India North West": "jinw",
+                      "koreacentral": "krc",
+                      "Korea Central": "krc",
+                      "koreasouth": "krs",
+                      "Korea South": "krs",
+                      "northcentralus": "ncus",
+                      "North Central US": "ncus",
+                      "northeurope": "neu",
+                      "North Europe": "neu",
+                      "norwayeast": "noe",
+                      "Norway East": "noe",
+                      "southafricanorth": "zan",
+                      "South Africa North": "zan",
+                      "southcentralus": "scus",
+                      "South Central US": "scus",
+                      "southindia": "sin",
+                      "South India": "sin",
+                      "southeastasia": "sea",
+                      "Southeast Asia": "sea",
+                      "swedencentral": "sec",
+                      "Sweden Central": "sec",
+                      "switzerlandnorth": "chn",
+                      "Switzerland North": "chn",
+                      "uaenorth": "uaen",
+                      "UAE North": "uaen",
+                      "uksouth": "uks",
+                      "UK South": "uks",
+                      "ukwest": "ukw",
+                      "UK West": "ukw",
+                      "westcentralus": "wcus",
+                      "West Central US": "wcus",
+                      "westeurope": "weu",
+                      "West Europe": "weu",
+                      "westindia": "win",
+                      "West India": "win",
+                      "westus": "wus",
+                      "West US": "wus",
+                      "westus2": "wus2",
+                      "West US 2": "wus2",
+                      "westus3": "wus3",
+                      "West US 3": "wus3"
+                    },
+                    "locationCode": "[variables('locationCodeMap')[parameters('location')]]",
+                    "metadata": {
+                      "longName": "[format('{{0}}-{0}-{1}-{2}', parameters('name'), parameters('env'), variables('locationCode'))]",
+                      "shortName": "[replace(format('{{0}}{0}{{1}}{1}{2}', parameters('name'), parameters('env'), variables('locationCode')), '-', '')]"
+                    },
+                    "userAssignedIdentity": {
+                      "name": "[format(variables('metadata').longName, 'spn')]",
+                      "location": "[parameters('location')]"
+                    },
+                    "roleAssignment": {
+                      "name": "[guid(resourceGroup().id, 'contributor')]",
+                      "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                      "principalType": "[parameters('principalType')]"
+                    },
+                    "deploymentScript": {
+                      "name": "[format(variables('metadata').longName, 'depscrpt')]",
+                      "location": "[parameters('location')]",
+                      "resourceName": "[parameters('name')]",
+                      "environmentCode": "[parameters('env')]",
+                      "locationCode": "[variables('locationCode')]",
+                      "containerGroupName": "[format(variables('metadata').longName, 'contgrp')]",
+                      "functionAppSuffixes": "[parameters('functionAppSuffixes')]",
+                      "azureCliVersion": "[parameters('azureCliVersion')]",
+                      "scriptUri": "https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/setup-apim.sh"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                      "apiVersion": "2018-11-30",
+                      "name": "[variables('userAssignedIdentity').name]",
+                      "location": "[variables('userAssignedIdentity').location]"
+                    },
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2020-10-01-preview",
+                      "name": "[variables('roleAssignment').name]",
+                      "properties": {
+                        "roleDefinitionId": "[variables('roleAssignment').roleDefinitionId]",
+                        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)).principalId]",
+                        "principalType": "[variables('roleAssignment').principalType]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Resources/deploymentScripts",
+                      "apiVersion": "2020-10-01",
+                      "name": "[variables('deploymentScript').name]",
+                      "location": "[variables('deploymentScript').location]",
+                      "kind": "AzureCLI",
+                      "identity": {
+                        "type": "UserAssigned",
+                        "userAssignedIdentities": {
+                          "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name))]": {}
+                        }
+                      },
+                      "properties": {
+                        "azCliVersion": "[variables('deploymentScript').azureCliVersion]",
+                        "containerSettings": {
+                          "containerGroupName": "[variables('deploymentScript').containerGroupName]"
+                        },
+                        "environmentVariables": [
+                          {
+                            "name": "AZ_APP_SUFFIXES",
+                            "value": "[variables('deploymentScript').functionAppSuffixes]"
+                          },
+                          {
+                            "name": "AZ_RESOURCE_NAME",
+                            "value": "[variables('deploymentScript').resourceName]"
+                          },
+                          {
+                            "name": "AZ_ENVIRONMENT_CODE",
+                            "value": "[variables('deploymentScript').environmentCode]"
+                          },
+                          {
+                            "name": "AZ_LOCATION_CODE",
+                            "value": "[variables('deploymentScript').locationCode]"
+                          }
+                        ],
+                        "primaryScriptUri": "[variables('deploymentScript').scriptUri]",
+                        "cleanupPreference": "OnExpiration",
+                        "retentionInterval": "P1D"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignment').name)]",
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)]"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'Provision-ApiManagement')]",
+                "fncapps"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format(variables('metadata').longName, 'rg'))]"
+      ]
+    }
+  ]
+}
