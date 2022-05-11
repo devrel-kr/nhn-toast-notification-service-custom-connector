@@ -149,7 +149,7 @@ module resources './main.bicep' = {
     params: {
         name: name
         location: location
-        suffixes: split(functionAppNames, ',')
+        suffixes: functionAppNames
         env: env
         apiMgmtPublisherName: apiManagementPublisherName
         apiMgmtPublisherEmail: apiManagementPublisherEmail

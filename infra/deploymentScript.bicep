@@ -22,7 +22,7 @@ param env string = 'dev'
 ])
 param principalType string = 'ServicePrincipal'
 param azureCliVersion string = '2.33.1'
-param functionAppSuffixes array
+param functionAppSuffixes string
 
 var locationCodeMap = {
     australiacentral: 'auc'
@@ -138,7 +138,7 @@ var deploymentScript = {
     environmentCode: env
     locationCode: locationCode
     containerGroupName: format(metadata.longName, 'contgrp')
-    functionAppSuffixes: replace(replace(replace(string(functionAppSuffixes), '[', ''), ']', ''), '"', '')
+    functionAppSuffixes: functionAppSuffixes
     azureCliVersion: azureCliVersion
     scriptUri: 'https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/setup-apim.sh'
 }
