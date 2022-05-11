@@ -2,9 +2,6 @@ name: Function Apps Matrix
 
 on:
   workflow_call:
-    secrets:
-      AZ_APP_SUFFIXES:
-        required: true
     outputs:
       matrix_json:
         description: function app names in the format of JSON string array
@@ -22,7 +19,7 @@ jobs:
       id: make_json
       shell: bash
       run: |
-        string_fncapps="${{ secrets.AZ_APP_SUFFIXES }}"
+        string_fncapps="${{ secrets.AZURE_APP_SUFFIXES }}"
         string_fncapps=$(echo $string_fncapps | tr "," " ")
         string_fncapps=$(echo $string_fncapps | tr " " "\n")
 

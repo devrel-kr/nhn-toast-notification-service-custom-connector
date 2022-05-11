@@ -9,8 +9,7 @@ on:
 jobs:
   call_make_function_apps_matrix:
     uses: ./.github/workflows/make-function-apps-matrix.yaml
-    secrets: 
-      AZ_APP_SUFFIXES: ${{ secrets.AZURE_APP_SUFFIXES }}
+    secrets: inherit
 
   call_build_test_upload:
     uses: ./.github/workflows/build-test-upload.yaml
@@ -18,8 +17,7 @@ jobs:
     - call_make_function_apps_matrix
     with:
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
-    secrets: 
-      AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+    secrets: inherit
 
   call_deployment_azure_dev:
     uses: ./.github/workflows/deployment-azure.yaml
@@ -30,7 +28,3 @@ jobs:
       gh_environment: DEV
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
     secrets: inherit
-      # AZ_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      # AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
-      # AZ_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE_DEV }}
-      # AZ_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}

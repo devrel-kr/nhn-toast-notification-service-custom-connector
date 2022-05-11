@@ -11,18 +11,8 @@ on:
         type: string
         required: true
         description: function app names in the format of JSON string array
-    # secrets:
-    #   AZ_CREDENTIALS:
-    #     required: true
-    #   AZ_ENVIRONMENT_CODE:
-    #     required: true
-    #   AZ_LOCATION_CODE:
-    #     required: true
-    #   AZ_RESOURCE_NAME:
-    #     required: true
 
 env:
-  # AZ_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZ_RESOURCE_NAME }}-${{ secrets.AZ_ENVIRONMENT_CODE }}-${{ secrets.AZ_LOCATION_CODE }}'
   AZURE_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZURE_RESOURCE_NAME }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
 
 jobs:
