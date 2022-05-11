@@ -6,7 +6,5 @@ on:
     - main
 
 jobs:
-  call_CI_part:
-    uses: ./.github/workflows/continuous-integration.yaml
-    with:
-      action_name: pull_request
+  call_build_test:
+    uses: ./.github/workflows/build-test.yaml

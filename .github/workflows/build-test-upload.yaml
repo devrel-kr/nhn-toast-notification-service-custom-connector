@@ -1,0 +1,60 @@
+name: 'Build, Test & Upload'
+
+on:
+  workflow_call:
+    inputs:
+      matrix_json:
+        type: string
+        required: true
+        description: function app names in the format of JSON string array
+
+jobs:
+  build_test_upload:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore .
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build . -c Release
+
+    - name: Test solution
+      shell: bash
+      run: |
+        dotnet test . -c Release --filter:"TestCategory!=Integration"
+
+    - name: Create Function app artifact
+      shell: bash
+      run: |
+        dotnet publish -c Release
+
+    - name: Add Function app path to env
+      shell: pwsh
+      run: |
+        $path = "src/${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
+
+        echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Upload app artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.fncapp-name }}
+        path: ${{ github.workspace }}/${{ env.APP_PATH }}
+        retention-days: 3

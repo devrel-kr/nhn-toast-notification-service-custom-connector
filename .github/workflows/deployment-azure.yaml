@@ -1,0 +1,61 @@
+name: Deploy to Azure
+
+on:
+  workflow_call:
+    inputs:
+      gh_environment:
+        type: string
+        required: true
+        description: GitHub Environment
+      matrix_json:
+        type: string
+        required: true
+        description: function app names in the format of JSON string array
+
+env:
+  AZURE_RESOURCE_GROUP_NAME: 'rg-${{ secrets.AZURE_RESOURCE_NAME }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
+
+jobs:
+  deploy_azure:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.gh_environment }}
+
+    strategy:
+      matrix:
+        fncapp-name: ${{ fromJson(inputs.matrix_json) }}
+
+    steps:
+    - name: Download Function app artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Set function app names
+      shell: pwsh
+      run: |
+        # $name = 'fncapp-${{ secrets.AZ_RESOURCE_NAME }}-${{ matrix.fncapp-name }}-${{ secrets.AZ_ENVIRONMENT_CODE }}-${{ secrets.AZ_LOCATION_CODE }}'
+        $name = 'fncapp-${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.fncapp-name }}-${{ secrets.AZURE_ENVIRONMENT_CODE }}-${{ secrets.AZURE_LOCATION_CODE }}'
+
+        echo "AZURE_FUNCTION_APP_NAME=$name" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Zip Function app artifacts
+      run: |
+        cd ${{ matrix.fncapp-name }}
+        zip ${{ matrix.fncapp-name }}.zip ./* -r
+        cd ${{ github.workspace }}
+
+        mkdir published
+        mv ${{ matrix.fncapp-name }}/${{ matrix.fncapp-name }}.zip published/${{ matrix.fncapp-name }}.zip
+
+    - name: Sign in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy FunctionApp artifact to Azure
+      shell: bash
+      run: |
+        az functionapp deploy \
+          -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} \
+          -n ${{ env.AZURE_FUNCTION_APP_NAME }} \
+          --src-path published/${{ matrix.fncapp-name }}.zip \
+          --type zip \
+          --verbose
