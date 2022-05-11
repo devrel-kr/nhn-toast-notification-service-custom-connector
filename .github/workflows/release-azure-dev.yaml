@@ -29,8 +29,8 @@ jobs:
     with:
       gh_environment: DEV
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
-    secrets:
-      AZ_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
-      AZ_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE_DEV }}
-      AZ_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}
+    secrets: inherit
+      # AZ_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      # AZ_RESOURCE_NAME: ${{ secrets.AZURE_RESOURCE_NAME }}
+      # AZ_ENVIRONMENT_CODE: ${{ secrets.AZURE_ENVIRONMENT_CODE_DEV }}
+      # AZ_LOCATION_CODE: ${{ secrets.AZURE_LOCATION_CODE }}
