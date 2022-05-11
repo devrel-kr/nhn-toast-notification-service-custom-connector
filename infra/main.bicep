@@ -1,9 +1,6 @@
 param name string
 param location string = resourceGroup().location
-param suffixes array = [
-    'sms'
-    'sms-verify'
-]
+param suffixes string = 'sms,sms-verify'
 @allowed([
     'dev'
     'test'
@@ -38,7 +35,7 @@ module apim './provision-apiManagement.bicep' = {
     }
 }
 
-module fncapps './provision-functionApp.bicep' = [for suffix in suffixes: {
+module fncapps './provision-functionApp.bicep' = [for suffix in split(suffixes, ','): {
     name: 'Provision-FunctionApp_${suffix}'
     dependsOn: [
         apim

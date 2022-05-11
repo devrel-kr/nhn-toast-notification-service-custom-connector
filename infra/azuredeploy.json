@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.1.6515",
-      "templateHash": "9998795189875484325"
+      "templateHash": "7630541756368121360"
     }
   },
   "parameters": {
@@ -188,7 +188,7 @@
             "value": "[parameters('location')]"
           },
           "suffixes": {
-            "value": "[split(parameters('functionAppNames'), ',')]"
+            "value": "[parameters('functionAppNames')]"
           },
           "env": {
             "value": "[parameters('env')]"
@@ -210,7 +210,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.1.6515",
-              "templateHash": "1644176950863084456"
+              "templateHash": "15368928808958282220"
             }
           },
           "parameters": {
@@ -222,11 +222,8 @@
               "defaultValue": "[resourceGroup().location]"
             },
             "suffixes": {
-              "type": "array",
-              "defaultValue": [
-                "sms",
-                "sms-verify"
-              ]
+              "type": "string",
+              "defaultValue": "sms,sms-verify"
             },
             "env": {
               "type": "string",
@@ -1392,11 +1389,11 @@
             {
               "copy": {
                 "name": "fncapps",
-                "count": "[length(parameters('suffixes'))]"
+                "count": "[length(split(parameters('suffixes'), ','))]"
               },
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "[format('Provision-FunctionApp_{0}', parameters('suffixes')[copyIndex()])]",
+              "name": "[format('Provision-FunctionApp_{0}', split(parameters('suffixes'), ',')[copyIndex()])]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -1410,7 +1407,7 @@
                     "value": "[parameters('location')]"
                   },
                   "suffix": {
-                    "value": "[parameters('suffixes')[copyIndex()]]"
+                    "value": "[split(parameters('suffixes'), ',')[copyIndex()]]"
                   },
                   "env": {
                     "value": "[parameters('env')]"
@@ -2791,7 +2788,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.1.6515",
-                      "templateHash": "15237087335822788466"
+                      "templateHash": "16027085467622424976"
                     }
                   },
                   "parameters": {
@@ -2831,7 +2828,7 @@
                       "defaultValue": "2.33.1"
                     },
                     "functionAppSuffixes": {
-                      "type": "array"
+                      "type": "string"
                     }
                   },
                   "variables": {
@@ -2930,7 +2927,7 @@
                       "environmentCode": "[parameters('env')]",
                       "locationCode": "[variables('locationCode')]",
                       "containerGroupName": "[format(variables('metadata').longName, 'contgrp')]",
-                      "functionAppSuffixes": "[replace(replace(string(parameters('functionAppSuffixes')), '[', ''), ']', '')]",
+                      "functionAppSuffixes": "[parameters('functionAppSuffixes')]",
                       "azureCliVersion": "[parameters('azureCliVersion')]",
                       "scriptUri": "https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/setup-apim.sh"
                     }

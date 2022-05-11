@@ -32,22 +32,26 @@ do
     api_path=$(echo ${fncapp_suffixes[$value]} | tr '-' '/')
     api_upper_suffix=$(echo ${fncapp_suffixes[$value]} | tr '[a-z]' '[A-Z]' | tr '-' '_')
     api_name="X_FUNCTIONS_KEY_$api_upper_suffix"
+    api_policy_url="https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-api-policy-${fncapp_suffixes[$value]}.xml"
 
     # Provision APIs to APIM
     az deployment group create \
-    -n ApiManagement_Api-${fncapp_suffixes[$value]} \
-    -g $resource_group \
-    -u $bicep_url \
-    -p name=$AZ_RESOURCE_NAME \
-    -p env=$AZ_ENVIRONMENT_CODE \
-    -p apiMgmtNameValueName=$api_name \
-    -p apiMgmtNameValueDisplayName=$api_name \
-    -p apiMgmtNameValueValue=$api_key \
-    -p apiMgmtApiName=$api_upper_suffix \
-    -p apiMgmtApiDisplayName=$api_upper_suffix \
-    -p apiMgmtApiDescription=$api_upper_suffix \
-    -p apiMgmtApiPath=$api_path \
-    -p apiMgmtApiValue=$fncapp_url
+        -n ApiManagement_Api-${fncapp_suffixes[$value]} \
+        -g $resource_group \
+        -u $bicep_url \
+        -p name=$AZ_RESOURCE_NAME \
+        -p env=$AZ_ENVIRONMENT_CODE \
+        -p apiMgmtNameValueName=$api_name \
+        -p apiMgmtNameValueDisplayName=$api_name \
+        -p apiMgmtNameValueValue=$api_key \
+        -p apiMgmtApiName=$api_upper_suffix \
+        -p apiMgmtApiDisplayName=$api_upper_suffix \
+        -p apiMgmtApiDescription=$api_upper_suffix \
+        -p apiMgmtApiPath=$api_path \
+        -p apiMgmtApiFormat="openapi+json-link" \
+        -p apiMgmtApiValue=$fncapp_url \
+        -p apiMgmtApiPolicyFormat="xml-link" \
+        -p apiMgmtApiPolicyValue=$api_policy_url
 
     apim_url="https://apim-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE.azure-api.net/$api_path"
     app_setting_list=$(az functionapp config appsettings list -g $resource_group -n $fncapp_name | jq '.[] | select(.name == "OpenApi__HostNames") | .value' -r)
