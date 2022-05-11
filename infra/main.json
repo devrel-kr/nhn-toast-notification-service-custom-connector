@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.1.6515",
-      "templateHash": "15368928808958282220"
+      "templateHash": "11292308876110684884"
     }
   },
   "parameters": {
@@ -80,6 +80,12 @@
           },
           "apiMgmtPublisherName": {
             "value": "[parameters('apiMgmtPublisherName')]"
+          },
+          "apiMgmtPolicyFormat": {
+            "value": "xml-link"
+          },
+          "apiMgmtPolicyValue": {
+            "value": "https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-global-policy.xml"
           }
         },
         "template": {
