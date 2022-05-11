@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -30,6 +32,7 @@ namespace Toast.Sms.Verification.Triggers
     public class ListSenders
     {
         private readonly ToastSettings<SmsVerificationEndpointSettings> _settings;
+        private readonly IValidator<ListSendersRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListSenders> _logger;
 
@@ -37,11 +40,13 @@ namespace Toast.Sms.Verification.Triggers
         /// Initializes a new instance of the <see cref="ListSenders"/> class.
         /// </summary>
         /// <param name="settings"><see cref="ToastSettings{T}"/> instance.</param>
+        /// <param name="validator"><see cref="IValidator{T}"/> instance.</param>
         /// <param name="factory"><see cref="IHttpClientFactory"/> instance.</param>
         /// <param name="log"><see cref="ILogger{TCategoryName}"/> instance.</param>
-        public ListSenders(ToastSettings<SmsVerificationEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListSenders> log)
+        public ListSenders(ToastSettings<SmsVerificationEndpointSettings> settings, IValidator<ListSendersRequestQueries> validator, IHttpClientFactory factory, ILogger<ListSenders> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("senders");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -81,7 +86,7 @@ namespace Toast.Sms.Verification.Triggers
             var queries = default(ListSendersRequestQueries);
             try
             {
-                queries = await req.To<ListSendersRequestQueries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+                queries = await req.To<ListSendersRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

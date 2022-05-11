@@ -1,3 +1,5 @@
+using FluentValidation;
+
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Toast.Common.Configurations;
 using Toast.Sms.Verification.Configurations;
+using Toast.Sms.Verification.Models;
+using Toast.Sms.Verification.Validators;
 
 [assembly: FunctionsStartup(typeof(Toast.Sms.Verification.Startup))]
 
@@ -37,6 +41,11 @@ namespace Toast.Sms.Verification
         private static void ConfigureHttpClient(IServiceCollection services)
         {
             services.AddHttpClient("senders");
+        }
+
+        private static void ConfigureValidators(IServiceCollection services)
+        {
+            services.AddScoped<IValidator<ListSendersRequestQueries>, ListSendersRequestQueryValidator>();
         }
     }
 }
