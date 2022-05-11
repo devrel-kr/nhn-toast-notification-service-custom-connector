@@ -65,6 +65,20 @@ TBD
 * Azure account: [Get free account](https://azure.microsoft.com/free/?WT.mc_id=dotnet-58531-juyoo) or [get student account](https://azure.microsoft.com/free/students/?WT.mc_id=dotnet-58531-juyoo)
 
 
+#### Serverless Autopilot ####
+
+1. Click the button below to autopilot all instances and apps on Azure. Make sure that you don't forget the app name you give.
+
+    [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdevrel-kr%2Fnhn-toast-notification-service-custom-connector%2Fmain%2Finfra%2Fazuredeploy.json)
+
+2. Visit the following URLs to check whether all the apps have been properly provisioned and deployed.
+
+   * `https://apim-<AZURE_RESOURCE_NAME>-<AZURE_ENVIRONMENT_CODE>-<AZURE_LOCATION_CODE>.azure-api.net/sms/swagger/ui`
+   * `https://apim-<AZURE_RESOURCE_NAME>-<AZURE_ENVIRONMENT_CODE>-<AZURE_LOCATION_CODE>.azure-api.net/sms/verify/swagger/ui`
+
+
+#### AKS Autopilot ####
+
 TBD
 
 
@@ -74,6 +88,8 @@ TBD
 
 * NHN Cloud account: [Get free account](https://www.toast.com/kr/pricing#event)
 
+
+#### NKS Autopilot ####
 
 TBD
 
