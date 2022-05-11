@@ -138,7 +138,7 @@ var deploymentScript = {
     environmentCode: env
     locationCode: locationCode
     containerGroupName: format(metadata.longName, 'contgrp')
-    functionAppSuffixes: replace(replace(string(functionAppSuffixes), '[', ''), ']', '')
+    functionAppSuffixes: replace(replace(replace(string(functionAppSuffixes), '[', ''), ']', ''), '"', '')
     azureCliVersion: azureCliVersion
     scriptUri: 'https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/setup-apim.sh'
 }
