@@ -1,22 +1,19 @@
-name: Continuous Integration for release
+name: 'Build, Test & Upload'
 
 on:
   workflow_call:
     inputs:
       matrix_json:
-        required: true
         type: string
-        description: function-app name array, format of a string JSON array
-    secrets:
-      AZ_RESOURCE_NAME:
         required: true
+        description: function app names in the format of JSON string array
 
 jobs:
-  Build-Test-Upload:
+  build_test_upload:
     runs-on: ubuntu-latest
 
     strategy:
-      matrix: 
+      matrix:
         fncapp-name: ${{ fromJson(inputs.matrix_json) }}
 
     steps:
@@ -43,15 +40,15 @@ jobs:
       run: |
         dotnet test . -c Release --filter:"TestCategory!=Integration"
 
-    - name: Create FunctionApp artifact
+    - name: Create Function app artifact
       shell: bash
       run: |
         dotnet publish -c Release
 
-    - name: Add function-app path to env
+    - name: Add Function app path to env
       shell: pwsh
       run: |
-        $path = "src/${{ secrets.AZ_RESOURCE_NAME }}-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
+        $path = "src/${{ secrets.AZURE_RESOURCE_NAME }}-${{ matrix.fncapp-name }}/bin/Release/net6.0/publish/"
 
         echo "APP_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
@@ -61,4 +58,3 @@ jobs:
         name: ${{ matrix.fncapp-name }}
         path: ${{ github.workspace }}/${{ env.APP_PATH }}
         retention-days: 3
-        

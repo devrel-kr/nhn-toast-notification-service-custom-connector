@@ -1,18 +1,18 @@
-name: Continuous Deployment for github release
+name: Release to GitHub
 
 on:
   workflow_call:
     inputs:
+      gh_tag:
+        type: string
+        required: true
       matrix_json:
-        required: true
-        type: string
-        description: function-app name array, format of a string JSON array
-      tag:
         type: string
         required: true
+        description: function app names in the format of JSON string array
 
 jobs:
-  Deployment-Github:
+  deploy_github:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,47 +20,44 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Extract version from tag
-      id: extract_version
       shell: pwsh
       run: |
-        $version = (echo ${{ inputs.tag }}) -replace "refs/tags/", ""
+        $version = (echo ${{ inputs.gh_tag }}) -replace "refs/tags/", ""
 
         echo "RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
-    - name: Download FunctionApp artifacts
+    - name: Download Function app artifacts
       uses: actions/download-artifact@v3
 
-    - name: Zip FunctionApp artifacts
+    - name: Zip Function app artifacts
       shell: pwsh
       run: |
         mkdir published
 
-        $matrix="${{ inputs.matrix_json }}" | convertfrom-json
-        $is_first=$true
-        $version="${Env:RELEASE_VERSION}"
+        $matrix = "${{ inputs.matrix_json }}" | ConvertFrom-Json
 
-        $matrix | foreach-object{ 
-          $fncapp_name=$_
-          $destination_path="published/" + $fncapp_name + "-" + $version + ".zip"
-          Compress-Archive -Path $fncapp_name/* -DestinationPath $destination_path
+        $is_first = $true
+        $version = "$env:RELEASE_VERSION"
 
-          if ( $is_first )
-          {
-            $fncapp_paths=$destination_path
-            $is_first=$false
-          }
-          else
-          {
-            $fncapp_paths=$fncapp_paths + "`r`n" + $destination_path
-          }
+        $matrix | ForEach-Object { 
+            $fncapp_name = $_
+            $destination_path = "published/$($fncapp_name)-$($version).zip"
+
+            Compress-Archive -Path $fncapp_name/* -DestinationPath $destination_path
+
+            if ($is_first) {
+                $fncapp_paths = $destination_path
+                $is_first = $false
+            } else {
+                $fncapp_paths = $fncapp_paths + "`r`n" + $destination_path
+            }
         }
 
         echo "FNCAPP_PATHS<<EOF" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
         echo "$fncapp_paths" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
         echo "EOF" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
   
-    - name: Release FunctionApp artifact to GitHub
-      id: create_release
+    - name: Release Function app artifacts to GitHub
       uses: softprops/action-gh-release@v1
       with:
         prerelease: false
