@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -28,12 +30,14 @@ namespace Toast.Sms.Triggers
     public class ListMessageStatus
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessageStatusRequestQuries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessageStatus> _logger;
 
-        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
+        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessageStatusRequestQuries> validator, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -67,7 +71,7 @@ namespace Toast.Sms.Triggers
             var queries = default(ListMessageStatusRequestQuries);
             try
             {
-                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

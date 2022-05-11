@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -27,12 +29,14 @@ namespace Toast.Sms.Triggers
     public class ListMessages
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessagesRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessages> _logger;
 
-        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessages> log)
+        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessagesRequestQueries> validator, IHttpClientFactory factory, ILogger<ListMessages> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -78,7 +82,7 @@ namespace Toast.Sms.Triggers
             var queries = default(ListMessagesRequestQueries);
             try
             {
-                queries = await req.To<ListMessagesRequestQueries>(SourceFrom.Query).Validate().ConfigureAwait(false);
+                queries = await req.To<ListMessagesRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -92,11 +96,11 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                RequestId = queries.RequestIden,
-                StartRequestDate = queries.StartReqDate,
-                EndRequestDate = queries.EndReqDate,
-                StartCreateDate = queries.StartCreDate,
-                EndCreateDate = queries.EndCreDate,
+                RequestId = queries.RequestId,
+                StartRequestDate = queries.StartRequestDate,
+                EndRequestDate = queries.EndRequestDate,
+                StartCreateDate = queries.StartCreateDate,
+                EndCreateDate = queries.EndCreateDate,
                 StartResultDate = queries.StartResultDate,
                 EndResultDate = queries.EndResultDate,
                 SendNo = queries.SendNumber,
