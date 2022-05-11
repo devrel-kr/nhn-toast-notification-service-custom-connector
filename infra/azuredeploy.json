@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.1.6515",
-      "templateHash": "17933413944747874252"
+      "templateHash": "9998795189875484325"
     }
   },
   "parameters": {
@@ -210,7 +210,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.1.6515",
-              "templateHash": "9034061989019125233"
+              "templateHash": "1644176950863084456"
             }
           },
           "parameters": {
@@ -277,17 +277,17 @@
                   "name": {
                     "value": "[parameters('name')]"
                   },
-                  "apiMgmtPublisherEmail": {
-                    "value": "[parameters('apiMgmtPublisherEmail')]"
-                  },
-                  "apiMgmtPublisherName": {
-                    "value": "[parameters('apiMgmtPublisherName')]"
-                  },
                   "location": {
                     "value": "[parameters('location')]"
                   },
                   "env": {
                     "value": "[parameters('env')]"
+                  },
+                  "apiMgmtPublisherEmail": {
+                    "value": "[parameters('apiMgmtPublisherEmail')]"
+                  },
+                  "apiMgmtPublisherName": {
+                    "value": "[parameters('apiMgmtPublisherName')]"
                   }
                 },
                 "template": {
@@ -2770,6 +2770,9 @@
                   },
                   "location": {
                     "value": "[parameters('location')]"
+                  },
+                  "env": {
+                    "value": "[parameters('env')]"
                   },
                   "principalType": {
                     "value": "[parameters('deploymentScriptPrincipalType')]"

@@ -31,10 +31,10 @@ module apim './provision-apiManagement.bicep' = {
     name: 'Provision-ApiManagement'
     params: {
         name: name
-        apiMgmtPublisherEmail: apiMgmtPublisherEmail
-        apiMgmtPublisherName: apiMgmtPublisherName
         location: location
         env: env
+        apiMgmtPublisherEmail: apiMgmtPublisherEmail
+        apiMgmtPublisherName: apiMgmtPublisherName
     }
 }
 
@@ -60,6 +60,7 @@ module uai './deploymentScript.bicep' = {
     params: {
         name: name
         location: location
+        env: env
         principalType: deploymentScriptPrincipalType
         azureCliVersion: deploymentScriptAzureCliVersion
         functionAppSuffixes: suffixes
