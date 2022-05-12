@@ -14,5 +14,7 @@ namespace Toast.Sms.Models
         /// </summary>
         [JsonProperty("data")]
         public virtual SendMessagesResponseData data { get; set; }
+
+    }
         
 }
