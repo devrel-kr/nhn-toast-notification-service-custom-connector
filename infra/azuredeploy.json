@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.1.6515",
-      "templateHash": "7630541756368121360"
+      "templateHash": "15414107879549049163"
     }
   },
   "parameters": {
@@ -210,7 +210,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.1.6515",
-              "templateHash": "15368928808958282220"
+              "templateHash": "11292308876110684884"
             }
           },
           "parameters": {
@@ -285,6 +285,12 @@
                   },
                   "apiMgmtPublisherName": {
                     "value": "[parameters('apiMgmtPublisherName')]"
+                  },
+                  "apiMgmtPolicyFormat": {
+                    "value": "xml-link"
+                  },
+                  "apiMgmtPolicyValue": {
+                    "value": "https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/apim-global-policy.xml"
                   }
                 },
                 "template": {
@@ -1314,7 +1320,7 @@
                             {
                               "type": "Microsoft.ApiManagement/service/namedValues",
                               "apiVersion": "2021-08-01",
-                              "name": "[format('{0}/resource_name', variables('apiManagement').name)]",
+                              "name": "[format('{0}/RESOURCE_NAME', variables('apiManagement').name)]",
                               "properties": {
                                 "displayName": "RESOURCE_NAME",
                                 "secret": true,
