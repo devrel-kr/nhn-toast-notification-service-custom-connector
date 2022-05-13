@@ -9,14 +9,13 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
-
-using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -91,7 +90,7 @@ namespace Toast.Sms.Tests.Triggers
             string startResultDate, string endResultDate, string sendNo, string recipientNo, string templateId, string msgStatus, string resultCode, string subResultCode, string senderGroupingKey, string recipientGroupingKey, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            var options = new ListMessagesRequestUrlOptions()
+            /*var options = new ListMessagesRequestUrlOptions()
             {
                 Version = this._settings.Version,
                 AppKey = this._headers.AppKey,
@@ -113,7 +112,32 @@ namespace Toast.Sms.Tests.Triggers
                 PageNum = pageNum,
                 PageSize = pageSize
             };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessages.TrimStart('/')}", options);
+            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessages.TrimStart('/')}", options);*/
+
+            ListMessagesRequestQueries queries = new ListMessagesRequestQueries()
+            {
+                RequestId = useRequestId ? this._settings.Examples.RequestId : null,
+                StartRequestDate = startRequestDate,
+                EndRequestDate = endRequestDate,
+                StartCreateDate = startCreateDate,
+                EndCreateDate = endCreateDate,
+                StartResultDate = startResultDate,
+                EndResultDate = endResultDate,
+                SendNumber = sendNo,
+                RecipientNumber = recipientNo,
+                TemplateId = templateId,
+                MessageStatus = msgStatus,
+                ResultCode = resultCode,
+                SubResultCode = subResultCode,
+                SenderGroupingKey = senderGroupingKey,
+                RecipientGroupingKey = recipientGroupingKey,
+                PageNumber = pageNum,
+                PageSize = pageSize,
+        };
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessages)
+                .WithHeaders(this._headers).WithQueries(queries)
+                .Build();
 
             var http = new HttpClient();
 

@@ -9,14 +9,13 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
-
-using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -52,14 +51,21 @@ namespace Toast.Sms.Tests.Triggers
         public async Task Given_Parameters_When_GetMessage_Invoked_Then_It_Should_Return_Result(bool useRequestId, int? recipientSeq, bool expected)
         {
             // Arrange
-            var options = new GetMessageRequestUrlOptions()
+            GetMessageRequestQueries queries = null;
+            if (recipientSeq != null)
             {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey,
-                RequestId = useRequestId ? this._settings.Examples.RequestId : null,
-                RecipientSeq = recipientSeq
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.GetMessage.TrimStart('/')}", options);
+                queries = new GetMessageRequestQueries() { RecipientSequenceNumber = (int)recipientSeq };
+            }
+            
+            string[] paths = new string[] {"requestId", useRequestId ? this._settings.Examples.RequestId : null};
+
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)
+                .WithHeaders(this._headers)
+                .WithQueries(queries)
+                .WithPaths(paths)
+                .Build();
+
 
             var http = new HttpClient();
 

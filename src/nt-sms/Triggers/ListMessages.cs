@@ -15,6 +15,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -74,13 +75,8 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.ListMessages;
-            var options = new ListMessagesRequestUrlOptions()
+            ListMessagesRequestQueries queries = new ListMessagesRequestQueries()
             {
-                Version = version,
-                AppKey = headers.AppKey,
                 RequestId = req.Query["requestId"].ToString(),
                 StartRequestDate = req.Query["startRequestDate"].ToString(),
                 EndRequestDate = req.Query["endRequestDate"].ToString(),
@@ -88,18 +84,23 @@ namespace Toast.Sms.Triggers
                 EndCreateDate = req.Query["endCreateDate"].ToString(),
                 StartResultDate = req.Query["startResultDate"].ToString(),
                 EndResultDate = req.Query["endResultDate"].ToString(),
-                SendNo = req.Query["sendNo"].ToString(),
-                RecipientNo = req.Query["recipientNo"].ToString(),
+                SendNumber = req.Query["sendNo"].ToString(),
+                RecipientNumber = req.Query["recipientNo"].ToString(),
                 TemplateId = req.Query["templateId"].ToString(),
-                MsgStatus = req.Query["msgStatus"].ToString(),
+                MessageStatus = req.Query["msgStatus"].ToString(),
                 ResultCode = req.Query["resultCode"].ToString(),
                 SubResultCode = req.Query["subResultCode"].ToString(),
                 SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15         
+                PageNumber = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
+                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
             };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+
+
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)
+                .WithHeaders(headers).WithQueries(queries)
+                .Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

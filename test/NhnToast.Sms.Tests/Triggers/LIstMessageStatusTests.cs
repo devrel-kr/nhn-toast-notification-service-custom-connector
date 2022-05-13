@@ -9,14 +9,13 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
-
-using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -58,7 +57,7 @@ namespace Toast.Sms.Tests.Triggers
         public async Task Given_Parameters_When_ListMessagesStatus_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdatedate, string? messageType, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            var options = new ListMessageStatusRequestUrlOptions()
+            /*var options = new ListMessageStatusRequestUrlOptions()
             {
                 Version = this._settings.Version,
                 AppKey = this._headers.AppKey,
@@ -68,7 +67,22 @@ namespace Toast.Sms.Tests.Triggers
                 PageNum = pageNum,
                 PageSize = pageSize
             };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessageStatus.TrimStart('/')}", options);
+            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessageStatus.TrimStart('/')}", options);*/
+
+            ListMessageStatusRequestQuries queries = new ListMessageStatusRequestQuries()
+            {
+                StartUpdateDate = startUpdateDate,
+                EndUpdateDate = endUpdatedate,
+                MessageType = messageType,
+                PageNumber = pageNum,
+                PageSize = pageSize,
+            };
+            
+
+            var requestUrl = new RequestUrlBuilder()
+               .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)
+               .WithHeaders(this._headers).WithQueries(queries)
+               .Build();
 
             var http = new HttpClient();
 
