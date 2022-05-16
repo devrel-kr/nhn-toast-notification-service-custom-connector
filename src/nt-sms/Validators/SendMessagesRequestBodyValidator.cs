@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 
 using FluentValidation;
@@ -43,6 +44,7 @@ namespace Toast.Sms.Validators
         {
             this.RuleFor(p => p.Body).NotNull();
             this.RuleFor(p => p.SenderNumber).NotEmpty();
+            this.RuleFor(p => p.Recipients.All(q => !string.IsNullOrWhiteSpace(q.RecipientNumber)));
         }
     }
 }
