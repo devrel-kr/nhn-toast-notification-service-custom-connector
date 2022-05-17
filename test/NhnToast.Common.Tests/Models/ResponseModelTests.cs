@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 using Toast.Common.Models;
@@ -24,44 +25,32 @@ namespace Toast.Common.Tests.Models
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        [TestInitialize]
-        public void Init()
-        {
-
-        }
-
         [TestMethod]
-        public void Given_Type_Then_It_Should_Contain_Header()
+        public void Given_ResponseModel_Type_Then_It_Should_Contain_Properties()
         {
             var pis = typeof(FakeResponseModel).GetProperties();
 
-            var pi = pis.SingleOrDefault(p => p.Name == "Header");
-
-            pi.Should().NotBeNull();
-            pi.PropertyType.Should().Be(typeof(ResponseHeaderModel));
-
-            var attr = pi.CustomAttributes.SingleOrDefault(a => a.AttributeType == typeof(JsonPropertyAttribute));
-
-            attr.Should().NotBeNull();
+            pis.SingleOrDefault(p => p.Name == "Header").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(ResponseHeaderModel));
+            pis.SingleOrDefault(p => p.Name == "Body").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
         }
 
         [TestMethod]
-        public void Given_Type_Then_It_Should_Contain_Body()
+        public void Given_ResponseHeaderModel_Type_Then_It_Should_Contain_Properties()
         {
-            var pis = typeof(FakeResponseModel).GetProperties();
+            var pis = typeof(ResponseHeaderModel).GetProperties();
 
-            var pi = pis.SingleOrDefault(p => p.Name == "Body");
-
-            pi.Should().NotBeNull();
-            pi.PropertyType.Should().Be(typeof(string));
-
-            var attr = pi.CustomAttributes.SingleOrDefault(a => a.AttributeType == typeof(JsonPropertyAttribute));
-
-            attr.Should().NotBeNull();
+            pis.SingleOrDefault(p => p.Name == "IsSuccessful").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(bool));
+            pis.SingleOrDefault(p => p.Name == "ResultCode").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(int));
+            pis.SingleOrDefault(p => p.Name == "ResultMessage").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
         }
 
         [TestMethod]
-        public void Given_Default_Instance_When_Serialized_Then_It_Should_Return_Result()
+        public void Given_Default_Instance_When_Serialised_Then_It_Should_Return_Result()
         {
             var model = new FakeResponseModel();
 
@@ -70,22 +59,23 @@ namespace Toast.Common.Tests.Models
 
             deserialised.Keys.Should().Contain("header");
             deserialised.Keys.Should().Contain("body");
-            
-            // var header = deserialised["header"] as Dictionary<string, object>;
-            // header.Keys.Should().Contain("isSuccessful");
-            // header.Keys.Should().Contain("resultCode");
-            // header.Keys.Should().Contain("resultMessage");
 
-            // header["isSuccessful"].Should().Be(false);
-            // header["resultCode"].Should().Be(0);
-            // header["resultMessage"].Should().BeNull();
+            var header = ((JObject)deserialised["header"]).ToObject<Dictionary<string, object>>();
+            header.Keys.Should().Contain("isSuccessful");
+            header.Keys.Should().Contain("resultCode");
+            header.Keys.Should().Contain("resultMessage");
 
-            deserialised["body"].Should().BeNull();
+            header["isSuccessful"].Should().Be(false);
+            header["resultCode"].Should().Be(0);
+            header["resultMessage"].Should().BeNull();
+
+            var body = deserialised["body"];
+            body.Should().BeNull();
         }
 
         [DataTestMethod]
         [DataRow(true, 1, "lorem ipsum", "hello world")]
-        public void Given_Values_When_Serialized_Then_It_Should_Return_Result(bool isSuccessful, int resultCode, string resultMessage, string body)
+        public void Given_Values_When_Serialised_Then_It_Should_Return_Result(bool isSuccessful, int resultCode, string resultMessage, string bodyMessage)
         {
             var model = new FakeResponseModel()
             {
@@ -95,7 +85,7 @@ namespace Toast.Common.Tests.Models
                     ResultCode = resultCode,
                     ResultMessage = resultMessage
                 },
-                Body = body
+                Body = bodyMessage
             };
 
             var serialised = JsonConvert.SerializeObject(model, serializerSettings);
@@ -103,17 +93,18 @@ namespace Toast.Common.Tests.Models
 
             deserialised.Keys.Should().Contain("header");
             deserialised.Keys.Should().Contain("body");
-            
-            // var header = deserialised["header"] as Dictionary<string, object>;
-            // header.Keys.Should().Contain("isSuccessful");
-            // header.Keys.Should().Contain("resultCode");
-            // header.Keys.Should().Contain("resultMessage");
 
-            // header["isSuccessful"].Should().Be(false);
-            // header["resultCode"].Should().Be(0);
-            // header["resultMessage"].Should().BeNull();
+            var header = ((JObject)deserialised["header"]).ToObject<Dictionary<string, object>>();
+            header.Keys.Should().Contain("isSuccessful");
+            header.Keys.Should().Contain("resultCode");
+            header.Keys.Should().Contain("resultMessage");
 
-            deserialised["body"].Should().Be(body);
+            header["isSuccessful"].Should().Be(isSuccessful);
+            header["resultCode"].Should().Be(resultCode);
+            header["resultMessage"].Should().Be(resultMessage);
+
+            var body = deserialised["body"];
+            body.Should().Be(bodyMessage);
         }
     }
 }
