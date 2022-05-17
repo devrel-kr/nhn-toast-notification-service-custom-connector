@@ -3,7 +3,7 @@ using Toast.Common.Models;
 namespace Toast.Sms.Models
 {
     /// <summary>
-    /// This represents the entity for GetMessage response body.
+    /// This represents the entity for GetMessage response.
     /// </summary>
     public class GetMessageResponse : ResponseModel<GetMessageResponseBody>
     { }
