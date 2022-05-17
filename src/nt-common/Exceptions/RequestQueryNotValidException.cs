@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace Toast.Common.Exceptions
 {
+    /// <summary>
+    /// This represents the exception entity for RequestQueryNotValidException.
+    /// </summary>
     public class RequestQueryNotValidException : ToastException
     {
         /// <summary>

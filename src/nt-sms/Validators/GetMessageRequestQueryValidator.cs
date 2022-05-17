@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 
 using FluentValidation;
@@ -27,7 +28,7 @@ namespace Toast.Sms.Validators
                 return instance;
             }
 
-            throw new RequestQueryNotValidException("Not Found") { StatusCode = System.Net.HttpStatusCode.BadRequest };
+            throw new RequestQueryNotValidException("Invalid Query Parameters") { StatusCode = HttpStatusCode.BadRequest };
         }
     }
 

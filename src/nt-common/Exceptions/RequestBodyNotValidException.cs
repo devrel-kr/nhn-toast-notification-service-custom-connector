@@ -4,17 +4,20 @@ using System.Runtime.Serialization;
 
 namespace Toast.Common.Exceptions
 {
+    /// <summary>
+    /// This represents the exception entity for RequestBodyNotValidException.
+    /// </summary>
     public class RequestBodyNotValidException : ToastException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestQueryNotValidException"/> class.
+        /// Initializes a new instance of the <see cref="RequestBodyNotValidException"/> class.
         /// </summary>
         public RequestBodyNotValidException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestQueryNotValidException"/> class.
+        /// Initializes a new instance of the <see cref="RequestBodyNotValidException"/> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
         public RequestBodyNotValidException(string message)
@@ -23,7 +26,7 @@ namespace Toast.Common.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestQueryNotValidException"/> class.
+        /// Initializes a new instance of the <see cref="RequestBodyNotValidException"/> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
         /// <param name="innerException"><see cref="Exception"/> instance as the inner exception.</param>
@@ -33,7 +36,7 @@ namespace Toast.Common.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestQueryNotValidException"/> class.
+        /// Initializes a new instance of the <see cref="RequestBodyNotValidException"/> class.
         /// </summary>
         /// <param name="info"><see cref="SerializationInfo"/> instance.</param>
         /// <param name="context"><see cref="StreamingContext"/> instance.</param>

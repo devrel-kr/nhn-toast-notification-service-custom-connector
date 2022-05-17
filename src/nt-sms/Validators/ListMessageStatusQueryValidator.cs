@@ -46,8 +46,8 @@ namespace Toast.Sms.Validators
         {
             this.RuleFor(p => p.StartUpdateDate).NotEmpty();
             this.RuleFor(p => p.EndUpdateDate).NotEmpty();
-            this.RuleFor(p => p.PageNumber).GreaterThanOrEqualTo(1);
-            this.RuleFor(p => p.PageSize).GreaterThanOrEqualTo(1);
+            this.RuleFor(p => p.PageNumber).GreaterThan(0);
+            this.RuleFor(p => p.PageSize).GreaterThan(0);
         }
     }
 }

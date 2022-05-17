@@ -32,11 +32,12 @@ namespace Toast.Sms.Tests.Validators
 
         [DataTestMethod]
 
-        public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception()
+        public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception(string templateId, string sendNo, string recipientNo)
         {
             var payloads = new SendMessagesRequestBody()
             {
-
+                TemplateId = templateId,
+                SenderNumber = sendNo
             };
             var validator = new SendMessagesRequestBodyValidator();
 
@@ -47,11 +48,12 @@ namespace Toast.Sms.Tests.Validators
 
         [DataTestMethod]
 
-        public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result()
+        public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result(string templateId, string sendNo, string recipientNo)
         {
             var payloads = new SendMessagesRequestBody()
             {
-
+                TemplateId = templateId,
+                SenderNumber = sendNo
             };
             var validator = new SendMessagesRequestBodyValidator();
 
