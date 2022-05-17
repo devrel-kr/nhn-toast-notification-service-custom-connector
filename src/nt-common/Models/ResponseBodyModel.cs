@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
 
 namespace Toast.Common.Models
 {
@@ -45,5 +45,4 @@ namespace Toast.Common.Models
         [JsonProperty("data")]
         public virtual List<T> Data { get; set; }
     }
-
 }
