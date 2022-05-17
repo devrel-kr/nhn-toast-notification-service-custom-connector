@@ -5,7 +5,7 @@ namespace Toast.Common.Models
     /// <summary>
     /// This represents the model entity for response.
     /// </summary>
-    public class ResponseModel<T> 
+    public abstract class ResponseModel<T> 
     {
         /// <summary>
         /// Gets or sets the header.
