@@ -11,13 +11,13 @@ namespace Toast.Common.Models
         /// Gets or sets the header.
         /// </summary>
         [JsonProperty("header")]
-        public virtual ResponseHeaderModel header { get; set; }
+        public virtual ResponseHeaderModel Header { get; set; }
 
         /// <summary>
         /// Gets or sets the body.
         /// </summary>
         [JsonProperty("body")]
-        public virtual T body { get; set; }
+        public virtual T Body { get; set; }
 
     }
 

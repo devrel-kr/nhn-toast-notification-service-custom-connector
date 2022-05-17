@@ -11,19 +11,19 @@ namespace Toast.Common.Models
         /// Gets or sets whether success header.
         /// </summary>
         [JsonProperty("isSuccessful")]
-        public virtual bool isSuccessful { get; set; }
+        public virtual bool IsSuccessful { get; set; }
 
         /// <summary>
         /// Gets or sets the failure code header.
         /// </summary>
         [JsonProperty("resultCode")]
-        public virtual int resultCode { get; set; }
+        public virtual int ResultCode { get; set; }
 
         /// <summary>
         /// Gets or sets the failure message header.
         /// </summary>
         [JsonProperty("resultMessage")]
-        public virtual string resultMessage { get; set; }
+        public virtual string ResultMessage { get; set; }
     }
 
 }
