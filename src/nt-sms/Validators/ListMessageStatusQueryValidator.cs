@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 using FluentValidation;
 
@@ -30,7 +33,7 @@ namespace Toast.Sms.Validators
                 return instance;
             }
 
-            throw new RequestQueryNotValidException("Not Found") { StatusCode = System.Net.HttpStatusCode.BadRequest };
+            throw new RequestQueryNotValidException("Not Found") { StatusCode = HttpStatusCode.BadRequest };
         }
     }
 
@@ -44,10 +47,28 @@ namespace Toast.Sms.Validators
         /// </summary>
         public ListMessageStatusRequestQueryValidator()
         {
-            this.RuleFor(p => p.StartUpdateDate).NotEmpty();
-            this.RuleFor(p => p.EndUpdateDate).NotEmpty();
+            this.RuleFor(p => p.StartUpdateDate).Must(IsValidDateFormat).NotEmpty();
+            this.RuleFor(p => p.EndUpdateDate).Must(IsValidDateFormat).NotEmpty().GreaterThan(q => q.StartUpdateDate);
+            When(p => p.MessageType != null, () =>
+            {
+                this.RuleFor(p => p.MessageType).Must(p => MsgType.Contains(p));
+            });
             this.RuleFor(p => p.PageNumber).GreaterThan(0);
             this.RuleFor(p => p.PageSize).GreaterThan(0);
+
+        }
+        List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
+
+        private bool IsValidDateFormat(string date)
+        {
+            if (date == null)
+            {
+                return false;
+            }
+            else
+            {
+                return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
+            }   
         }
     }
 }
