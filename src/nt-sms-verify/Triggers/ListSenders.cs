@@ -67,7 +67,8 @@ namespace Toast.Sms.Verification.Triggers
         [OpenApiParameter(name: "pageNum", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page number in the pagination. Default value is '1'")]
         [OpenApiParameter(name: "pageSize", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page size in the pagination. Default value is '15'")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
-        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The BadRequest response")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "senders")] HttpRequest req)
         {

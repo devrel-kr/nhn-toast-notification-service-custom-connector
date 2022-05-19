@@ -21,7 +21,6 @@ using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 
-
 namespace Toast.Sms.Triggers
 {
     public class GetMessage
@@ -45,6 +44,8 @@ namespace Toast.Sms.Triggers
         [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Path, Required = true, Description = "SMS request ID")]
         [OpenApiParameter(name: "recipientSeq", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "SMS request sequence number")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/{requestId:regex(^\\d+\\w+$)}")] HttpRequest req,
             string requestId)
