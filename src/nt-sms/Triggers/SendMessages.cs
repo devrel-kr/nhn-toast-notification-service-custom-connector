@@ -46,6 +46,8 @@ namespace Toast.Sms.Triggers
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(object), Description = "Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "messages")] HttpRequest req)
         {
