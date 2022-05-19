@@ -6,17 +6,11 @@ namespace Toast.Sms.Models
     /// <summary>
     /// This represents the entity for ListMessageStatus response.
     /// </summary>
-    public class ListMessageStatusResponse : ResponseModel<ListMessageStatusResponseBody>
+    public class ListMessageStatusResponse : ResponseModel<ResponseCollectionBodyModel<ListMessageStatusResponseData>>
     { }
 
     /// <summary>
-    /// This represents the entity for ListMessageStatus response body.
-    /// </summary>
-    public class ListMessageStatusResponseBody : ResponseCollectionBodyModel<ListMessageStatusResponseData>
-    { }
-
-    /// <summary>
-    /// This represents the entity for ListMessageStatus response body's data.
+    /// This represents the entity for ListMessageStatus response data.
     /// </summary>
     public class ListMessageStatusResponseData
     {
@@ -34,7 +28,7 @@ namespace Toast.Sms.Models
         /// Gets or sets the request sequence number.
         /// </summary>
         [JsonProperty("recipientSeq")]
-        public virtual string RecipientSequence { get; set; }
+        public virtual int RecipientSequence { get; set; }
 
         /// <summary>
         /// Gets or sets the message's result code.
@@ -44,12 +38,18 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the message's result name.
         /// </summary>
-        public virtual string ResultCodeName { get; set; }
+        [JsonProperty("resultCodeName")]
+        public virtual string ResultName { get; set; }
 
         /// <summary>
         /// Gets or sets the date requested.
         /// </summary>
         public virtual string RequestDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date resulted.
+        /// </summary>
+        public virtual string ResultDate { get; set; }
 
         /// <summary>
         /// Gets or sets the date updated.
@@ -59,21 +59,25 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the sender's telecom code.
         /// </summary>
-        public virtual string TelecomCode { get; set; }
+        [JsonProperty("telecomCode")]
+        public virtual string CarrierCode { get; set; }
 
         /// <summary>
         /// Gets or sets the sender's telecom name.
         /// </summary>
-        public virtual string TelecomCodeName { get; set; }
+        [JsonProperty("telecomCodeName")]
+        public virtual string CarrierName { get; set; }
 
         /// <summary>
         /// Gets or sets the sender's grouping key.
         /// </summary>
-        public virtual string SenderGroupingKey { get; set; }
+        [JsonProperty("senderGroupingKey")]
+        public virtual string SenderGroupKey { get; set; }
 
         /// <summary>
         /// Gets or sets the recipient's grouping key.
         /// </summary>
-        public virtual string RecipientGroupingKey { get; set; }
+        [JsonProperty("recipientGroupingKey")]
+        public virtual string RecipientGroupKey { get; set; }
     }
 }

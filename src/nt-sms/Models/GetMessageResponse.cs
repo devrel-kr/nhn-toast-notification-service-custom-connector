@@ -6,17 +6,11 @@ namespace Toast.Sms.Models
     /// <summary>
     /// This represents the entity for GetMessage response.
     /// </summary>
-    public class GetMessageResponse : ResponseModel<GetMessageResponseBody>
+    public class GetMessageResponse : ResponseModel<ResponseItemBodyModel<GetMessageResponseData>>
     { }
 
     /// <summary>
-    /// This represents the entity for GetMessage response body.
-    /// </summary>
-    public class GetMessageResponseBody : ResponseItemBodyModel<GetMessageResponseData> 
-    { }
-
-    /// <summary>
-    /// This represents the entity for GetMessage response body's data.
+    /// This represents the entity for GetMessage response data.
     /// </summary>
     public class GetMessageResponseData
     {
@@ -48,7 +42,7 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the category ID.
         /// </summary>
-        public virtual string CategoryId { get; set; }
+        public virtual int CategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the category name.
@@ -102,18 +96,20 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the sender's telecom code.
         /// </summary>
-        public virtual string TelecomCode { get; set; }
+        [JsonProperty("telecomCode")]
+        public virtual int CarrierCode { get; set; }
 
         /// <summary>
         /// Gets or sets the sender's telecom name.
         /// </summary>
-        public virtual string TelecomCodeName { get; set; }
+        [JsonProperty("telecomCodeName")]
+        public virtual string CarrierName { get; set; }
 
         /// <summary>
         /// Gets or sets the request sequence number.
         /// </summary>
         [JsonProperty("recipientSeq")]
-        public virtual string RecipientSequence { get; set; }
+        public virtual int RecipientSequence { get; set; }
 
         /// <summary>
         /// Gets or sets the message type code.
@@ -134,7 +130,7 @@ namespace Toast.Sms.Models
         /// Gets or sets whether to advertise.
         /// </summary>
         [JsonProperty("adYn")]
-        public virtual string AdvertiseYesNo { get; set; }
+        public virtual string IsAdvertisement { get; set; }
 
         /// <summary>
         /// Gets or sets the result message.
@@ -144,11 +140,13 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the sender's grouping key.
         /// </summary>
-        public virtual string SenderGroupingKey { get; set; }
+        [JsonProperty("senderGroupingKey")]
+        public virtual string SenderGroupKey { get; set; }
 
         /// <summary>
         /// Gets or sets the recipient's grouping key.
         /// </summary>
-        public virtual string RecipientGroupingKey { get; set; }
+        [JsonProperty("recipientGroupingKey")]
+        public virtual string RecipientGroupKey { get; set; }
     }
 }
