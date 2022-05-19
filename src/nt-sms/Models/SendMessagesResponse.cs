@@ -8,12 +8,7 @@ namespace Toast.Sms.Models
     /// <summary>
     /// This represents the entity for SendMessages response.
     /// </summary>
-    public class SendMessagesResponse : ResponseModel<SendMessagesResponseBody>{ }
-
-    /// <summary>
-    /// This represents the entity for SendMessages response body.
-    /// </summary>
-    public class SendMessagesResponseBody: ResponseItemBodyModel<SendMessagesResponseData>{ }
+    public class SendMessagesResponse : ResponseModel<ResponseItemBodyModel<SendMessagesResponseData>> { }
 
     /// <summary>
     /// This represents the entity for SendMessages response data.

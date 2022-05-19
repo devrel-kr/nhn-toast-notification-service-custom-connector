@@ -9,12 +9,7 @@ namespace Toast.Sms.Models
     /// <summary>
     /// This represents the entity for ListMessages response.
     /// </summary>
-    public class ListMessagesResponse : ResponseModel<ListMessagesResponseBody> { }
-
-    /// <summary>
-    /// This represents the entity for ListMessages response body.
-    /// </summary>
-    public class ListMessagesResponseBody : ResponseCollectionBodyModel<ListMessagesResponseData> { }
+    public class ListMessagesResponse : ResponseModel<ResponseCollectionBodyModel<ListMessagesResponseData>> { }
 
     /// <summary>
     /// This represents the entity for ListMessages response data.
