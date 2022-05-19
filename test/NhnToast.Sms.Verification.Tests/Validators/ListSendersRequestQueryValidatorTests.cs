@@ -60,6 +60,7 @@ namespace Toast.Sms.Verification.Tests.Validators
         }
 
         [DataTestMethod]
+        [DataRow(null, null, null, null, 1, 15)]
         [DataRow("Y", "N", null, null, 1, 15)]
         [DataRow("N", "Y", 2, 10, 2, 10)]
         public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result(string useNumber, string blockedNumber, int? pageNumber, int? pageSize, int expectedPageNumber, int expectedPageSize)
