@@ -23,21 +23,19 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the request ID.
         /// </summary>
-        [JsonProperty("requestId")]
         public virtual string RequestId { get; set; }
 
         /// <summary>
         /// Gets or sets the request status code.
         /// </summary>
         /// 
-        [JsonProperty("statusCode")]
         public virtual string StatusCode { get; set; }
 
         /// <summary>
         /// Gets or sets the sender group key.
         /// </summary>
         [JsonProperty("senderGroupingKey")]
-        public virtual string SenderGroupingKey { get; set; }
+        public virtual string SenderGroupKey { get; set; }
 
         /// <summary>
         /// Gets or sets the list of send results.
@@ -61,13 +59,11 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the result code.
         /// </summary>
-        [JsonProperty("resultCode")]
         public virtual int ResultCode { get; set; }
 
         /// <summary>
         /// Gets or sets the result message.
         /// </summary>
-        [JsonProperty("resultMessage")]
         public virtual string ResultMessage { get; set; }
 
         /// <summary>
