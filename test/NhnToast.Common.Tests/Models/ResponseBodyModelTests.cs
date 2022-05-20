@@ -132,8 +132,8 @@ namespace Toast.Common.Tests.Models
             pageSizeProperty.Should().Be(pageSize);
             var totalCountProperty = deserialised["totalCount"];
             totalCountProperty.Should().Be(totalCount);
-            var dataProperty = deserialised["data"];
-            dataProperty.Should().Equals(data);
+            var dataProperty = ((JArray)deserialised["data"]).ToObject<List<string>>();
+            dataProperty.Should().Equal(data);
         }
     }
 }

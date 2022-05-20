@@ -80,7 +80,7 @@ namespace Toast.Sms.Tests.Models
             var senderGroupingKey = deserialised["senderGroupingKey"];
             senderGroupingKey.Should().BeNull();
 
-            var sendResultList = ((JObject)deserialised["sendResultList"]).ToObject<List<Dictionary<string, object>>>();
+            var sendResultList = deserialised["sendResultList"];
             sendResultList.Should().BeNull();
 
 
@@ -104,7 +104,7 @@ namespace Toast.Sms.Tests.Models
             recipientNo.Should().BeNull();
             var resultCode = deserialised["resultCode"];
             resultCode.Should().Be(0);
-            var ResultMessage = deserialised["ResultMessage"];
+            var ResultMessage = deserialised["resultMessage"];
             ResultMessage.Should().BeNull();
             var recipientSeq = deserialised["recipientSeq"];
             recipientSeq.Should().Be(0);
@@ -148,7 +148,7 @@ namespace Toast.Sms.Tests.Models
             var senderGroupingKeyProperty = deserialised["senderGroupingKey"];
             senderGroupingKeyProperty.Should().Be(senderGroupingKey);
 
-            var sendResultListProperty = ((JObject)deserialised["sendResultList"]).ToObject<List<Dictionary<string, object>>>();
+            var sendResultListProperty = ((JArray)deserialised["sendResultList"]).ToObject<List<Dictionary<string, object>>>();
             sendResultListProperty[0].Keys.Should().Contain("recipientNo");
             sendResultListProperty[0].Keys.Should().Contain("resultCode");
             sendResultListProperty[0].Keys.Should().Contain("resultMessage");
