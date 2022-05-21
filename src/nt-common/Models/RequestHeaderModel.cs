@@ -19,5 +19,4 @@ namespace Toast.Common.Models
         [JsonProperty("x-secret-key")]
         public virtual string SecretKey { get; set; }
     }
-
 }
