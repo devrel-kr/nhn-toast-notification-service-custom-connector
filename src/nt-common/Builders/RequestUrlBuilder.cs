@@ -107,11 +107,12 @@ namespace Toast.Common.Builders
         /// </summary>
         /// <param name="paths"> instance.</param>
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
-        public RequestUrlBuilder WithPaths(string[] paths)
+        public RequestUrlBuilder WithPaths<T>(T paths) where T : BaseRequestPaths
         {
             try
             {
-                Paths = Enumerable.Range(0, paths.Length / 2).ToDictionary(i => paths[i * 2], i => paths[i * 2 + 1]);
+                var serialised = JsonConvert.SerializeObject(paths, Settings.SerializerSsetting);
+                Paths = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
             }
             catch(Exception ex)
             {
@@ -134,29 +135,9 @@ namespace Toast.Common.Builders
             Endpoint = Endpoint.Replace("{version}", Version);
             Endpoint = Endpoint.Replace("{appKey}", AppKey);
 
-            if (Queries != null)
-            {
-                foreach (var querie in Queries)
-                {
-                    var where = querie.Key;
+            Endpoint += String.Join("&", Queries.Select(x => x.Key + "=" + x.Value).ToArray());
 
-                    where = where.Insert(0, "{");
-                    where = where.Insert(where.Length, "}");
-                    Endpoint = Endpoint.Replace(where, querie.Value);
-                }
-            }
-
-            if (Paths != null)
-            {
-                foreach (var path in Paths)
-                {
-                    var where = path.Key;
-                    where = where.Insert(0, "{");
-                    where = where.Insert(where.Length, "}");
-
-                    Endpoint = Endpoint.Replace(where, path.Value);
-                }
-            }
+            Endpoint += String.Join("&", Paths.Select(x => x.Key + "=" + x.Value).ToArray());
 
             return $"{BaseUrl.TrimEnd('/')}/{Endpoint.TrimStart('/')}";
         }
