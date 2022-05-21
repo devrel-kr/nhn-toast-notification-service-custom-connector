@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using FluentValidation;
 
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
+
 using Toast.Sms.Verification.Models;
 
 namespace Toast.Sms.Verification.Validators
@@ -44,10 +46,16 @@ namespace Toast.Sms.Verification.Validators
         /// </summary>
         public ListSendersRequestQueryValidator()
         {
-            this.RuleFor(p => p.UseNumber).Must(BeYOrN);
-            this.RuleFor(p => p.BlockedNumber).Must(BeYOrN);
-            this.RuleFor(p => p.PageNumber).GreaterThanOrEqualTo(1);
-            this.RuleFor(p => p.PageSize).GreaterThanOrEqualTo(1);
+            this.RuleFor(p => p.UseNumber).Must(BeYOrN)
+                                          .When(p => !p.UseNumber.IsNullOrWhiteSpace())
+                                          .WithMessage("'useYn' must be 'Y' or 'N'");
+            this.RuleFor(p => p.BlockedNumber).Must(BeYOrN)
+                                              .When(p => !p.BlockedNumber.IsNullOrWhiteSpace())
+                                              .WithMessage("'blockYn' must be 'Y' or 'N'");
+            this.RuleFor(p => p.PageNumber).GreaterThanOrEqualTo(1)
+                                           .WithMessage("'pageNum' must be greater than or equal to 1");
+            this.RuleFor(p => p.PageSize).GreaterThanOrEqualTo(1)
+                                         .WithMessage("'pageSize' must be greater than or equal to 1");
         }
 
         private bool BeYOrN(string value)

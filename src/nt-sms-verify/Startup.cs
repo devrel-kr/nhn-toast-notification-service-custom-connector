@@ -28,6 +28,7 @@ namespace Toast.Sms.Verification
         {
             ConfigureAppSettings(builder.Services);
             ConfigureHttpClient(builder.Services);
+            ConfigureValidators(builder.Services);
         }
 
         private static void ConfigureAppSettings(IServiceCollection services)
