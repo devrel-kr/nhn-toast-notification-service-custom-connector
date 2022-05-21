@@ -92,7 +92,7 @@ namespace Toast.Sms.Triggers
                 SubResultCode = req.Query["subResultCode"].ToString(),
                 SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
                 RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNumber = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
+                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
                 PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
             };
 

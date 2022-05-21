@@ -17,43 +17,42 @@ namespace Toast.Common.Builders
         /// <summary>
         /// Gets or sets the Settings for RequestUrlBuilder.
         /// </summary>
-        public ToastSettings Settings { get; private set; }
+        private ToastSettings Settings;
 
         /// <summary>
         /// Gets or sets the BaseUrl for RequestUrlBuilder.
         /// </summary>
-        public string BaseUrl { get; private set; }
+        private string BaseUrl;
 
         /// <summary>
         /// Gets or sets the Version for RequestUrlBuilder.
         /// </summary>
-        public string Version { get; private set; }
+        private string Version;
 
         /// <summary>
         /// Gets or sets the AppKey for RequestUrlBuilder.
         /// </summary>
-        public string AppKey { get; private set; }
+        private string AppKey;
 
         /// <summary>
         /// Gets or sets the Endpoint for RequestUrlBuilder.
         /// </summary>
-        public string Endpoint { get; private set; }
+        private string Endpoint;
 
         /// <summary>
         /// Gets or sets the Quries Dictionay for RequestUrlBuilder.
         /// </summary>
-        public Dictionary<string, string> Queries { get; private set; }
+        private Dictionary<string, string> Queries;
 
         /// <summary>
         /// Gets or sets the Paths Dictionay for RequestUrlBuilder.
         /// </summary
-        public Dictionary<string, string> Paths { get; private set; }
+        private Dictionary<string, string> Paths;
 
         /// <summary>
         /// Gets or sets the RequestUrl for RequestUrlBuilder.
         /// </summary>
-        public string RequestUrl { get; private set; }
-
+        private string RequestUrl;
 
         /// <summary>
         /// Settings the request URL values in setting.
@@ -88,11 +87,11 @@ namespace Toast.Common.Builders
         /// </summary>
         /// <param name="queries"> instance.</param>
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
-        public RequestUrlBuilder WithQueries<T>(T queries)
+        public RequestUrlBuilder WithQueries<T>(T queries) where T : BaseRequestQueries
         {
             try
             {
-                var serialised = JsonConvert.SerializeObject(queries);
+                var serialised = JsonConvert.SerializeObject(queries, Settings.SerializerSsetting);
                 Queries = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
             }
             catch(Exception ex)

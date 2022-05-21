@@ -1,52 +1,47 @@
 using Newtonsoft.Json;
 
+using Toast.Common.Models;
+
 namespace Toast.Sms.Models
 {
     /// <summary>
     /// This represents the entity for ListMessages request query parameters.
     /// </summary>
-    public class ListMessagesRequestQueries
+    public class ListMessagesRequestQueries : BaseRequestQueries
     {
         /// <summary>
         /// Gets or sets the request id.
         /// </summary>
-        [JsonProperty("requestId")]
         public virtual string RequestId { get; set; }
 
         /// <summary>
         /// Gets or sets the start request date.
         /// </summary>
-        [JsonProperty("startRequestDate")]
         public virtual string StartRequestDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end request date.
         /// </summary>
-        [JsonProperty("endRequestDate")]
         public virtual string EndRequestDate { get; set; }
 
         /// <summary>
         /// Gets or sets the start create date.
         /// </summary>
-        [JsonProperty("startCreateDate")]
         public virtual string StartCreateDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end create date.
         /// </summary>
-        [JsonProperty("endCreateDate")]
         public virtual string EndCreateDate { get; set; }
 
         /// <summary>
         /// Gets or sets the start result date.
         /// </summary>
-        [JsonProperty("startResultDate")]
         public virtual string StartResultDate { get; set; }
 
         /// <summary>
         /// Gets or sets the end result date.
         /// </summary>
-        [JsonProperty("endResultDate")]
         public virtual string EndResultDate { get; set; }
 
         /// <summary>
@@ -64,7 +59,6 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the template id.
         /// </summary>
-        [JsonProperty("templateId")]
         public virtual string TemplateId { get; set; }
 
         /// <summary>
@@ -76,37 +70,31 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the result code.
         /// </summary>
-        [JsonProperty("resultCode")]
         public virtual string ResultCode { get; set; }
 
         /// <summary>
         /// Gets or sets the sub result code.
         /// </summary>
-        [JsonProperty("subResultCode")]
         public virtual string SubResultCode { get; set; }
 
         /// <summary>
         /// Gets or sets the sender grouping key.
         /// </summary>
-        [JsonProperty("senderGroupingKey")]
         public virtual string SenderGroupingKey { get; set; }
 
         /// <summary>
         /// Gets or sets the recipient grouping key.
         /// </summary>
-        [JsonProperty("recipientGroupingKey")]
         public virtual string RecipientGroupingKey { get; set; }
 
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
-        [JsonProperty("pageNum")]
-        public virtual int? PageNumber { get; set; }
+        public virtual int? PageNum { get; set; }
 
         /// <summary>
         /// Gets or sets the page size.
         /// </summary>
-        [JsonProperty("pageSize")]
         public virtual int? PageSize { get; set; }
     }
 }

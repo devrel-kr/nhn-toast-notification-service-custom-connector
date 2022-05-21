@@ -1,3 +1,6 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
 using SmartFormat;
 using SmartFormat.Core.Settings;
 
@@ -27,6 +30,11 @@ namespace Toast.Common.Configurations
         /// Gets the <see cref="SmartFormatter"/> instance.
         /// </summary>
         public virtual SmartFormatter Formatter { get; } = Smart.CreateDefaultSmartFormat(new SmartSettings() { CaseSensitivity = CaseSensitivityType.CaseInsensitive });
+
+        /// <summary>
+        /// sSets the <see cref="JsonSerializerSettings"/> instance.
+        /// </summary>
+        public JsonSerializerSettings SerializerSsetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, ContractResolver = new CamelCasePropertyNamesContractResolver() };
     }
 
     /// <summary>
