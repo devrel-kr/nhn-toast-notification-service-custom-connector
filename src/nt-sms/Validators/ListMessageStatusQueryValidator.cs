@@ -33,7 +33,7 @@ namespace Toast.Sms.Validators
                 return instance;
             }
 
-            throw new RequestQueryNotValidException("Not Found") { StatusCode = HttpStatusCode.BadRequest };
+            throw new RequestQueryNotValidException("Invalid Query Parameter") { StatusCode = HttpStatusCode.BadRequest };
         }
     }
 

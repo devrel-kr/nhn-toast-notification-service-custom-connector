@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Toast.Sms.Validators
                 return instance;
             }
 
-            throw new RequestQueryNotValidException("Not Found") { StatusCode = System.Net.HttpStatusCode.BadRequest };
+            throw new RequestQueryNotValidException("Invalid Query Parameter") { StatusCode = HttpStatusCode.BadRequest };
         }
     }
     public class ListMessagesRequestQueryValidator : AbstractValidator<ListMessagesRequestQueries>
@@ -42,14 +43,14 @@ namespace Toast.Sms.Validators
         /// </summary>
         public ListMessagesRequestQueryValidator()
         {
-            
+
             this.RuleFor(p => p.RequestId)
                 .NotEmpty()
                 .MaximumLength(25)
-                .When(p=>p.StartRequestDate == null)
-                .When(p=>p.EndRequestDate == null)
+                .When(p => p.StartRequestDate == null)
+                .When(p => p.EndRequestDate == null)
                 .When(p => p.StartCreateDate == null)
-                .When(p => p.EndCreateDate == null  );
+                .When(p => p.EndCreateDate == null);
 
             this.RuleFor(p => p.StartRequestDate)
                 .NotEmpty()
@@ -81,9 +82,9 @@ namespace Toast.Sms.Validators
                 .When(p => p.StartRequestDate == null)
                 .When(p => p.EndRequestDate == null);
 
-            this.RuleFor(p => p.StartResultDate).Must(IsValidDateFormat);
+            this.RuleFor(p => p.StartResultDate).Must(IsValidDateFormat).When(p => p.StartResultDate != null);
 
-            this.RuleFor(p => p.EndResultDate).Must(IsValidDateFormat).GreaterThan(p => p.StartResultDate);
+            this.RuleFor(p => p.EndResultDate).Must(IsValidDateFormat).GreaterThan(p => p.StartResultDate).When(p => p.EndResultDate != null);
 
             this.RuleFor(p => p.SendNumber).MaximumLength(13);
 
@@ -93,17 +94,17 @@ namespace Toast.Sms.Validators
 
             this.RuleFor(p => p.MessageStatus).MaximumLength(1).Must(p => MsgStatusType.Contains(p)).When(p => p.MessageStatus != null);
 
-            this.RuleFor(p => p.ResultCode).MaximumLength(1).Must(p => resultCodeType.Contains(p)).When(p => p.ResultCode != null);
+            this.RuleFor(p => p.ResultCode).MaximumLength(10).Must(p => resultCodeType.Contains(p)).When(p => p.ResultCode != null);
 
-            this.RuleFor(p => p.SubResultCode).MaximumLength(1).Must(p => subResultCodeType.Contains(p)).When(p => p.SubResultCode != null);
+            this.RuleFor(p => p.SubResultCode).MaximumLength(10).Must(p => subResultCodeType.Contains(p)).When(p => p.SubResultCode != null);
             
             this.RuleFor(p => p.SenderGroupingKey).MaximumLength(100);
 
             this.RuleFor(p => p.RecipientGroupingKey).MaximumLength(100);
 
-            this.RuleFor(p => p.PageNumber).GreaterThanOrEqualTo(1);
-            
-            this.RuleFor(p => p.PageSize).GreaterThanOrEqualTo(1).LessThanOrEqualTo(1000);
+            this.RuleFor(p => p.PageNumber).GreaterThan(0);
+
+            this.RuleFor(p => p.PageSize).GreaterThan(0);
         }
 
         List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
