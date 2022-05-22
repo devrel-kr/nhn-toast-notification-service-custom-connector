@@ -50,11 +50,6 @@ namespace Toast.Common.Builders
         private string Paths;
 
         /// <summary>
-        /// Gets or sets the RequestUrl for RequestUrlBuilder.
-        /// </summary>
-        private string RequestUrl;
-
-        /// <summary>
         /// Settings the request URL values in setting.
         /// </summary>
         /// <param name="settings"> instance.</param>
