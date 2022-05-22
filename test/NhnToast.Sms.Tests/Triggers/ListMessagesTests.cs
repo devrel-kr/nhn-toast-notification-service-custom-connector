@@ -55,9 +55,9 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow(false, "2022-03-22 18:00:00", null, null, "2022-03-22 22:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
         [DataRow(false, null, "2022-03-22 22:00:00", "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
         [DataRow(false, null, "2022-03-22 22:00:00", null, "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15, false)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, true)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15, true)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, null, null, "2022-03-22 22:00:00", "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, "2022-03-22 18:00:00", "2022-03-22 22:00:00", null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
@@ -107,9 +107,9 @@ namespace Toast.Sms.Tests.Triggers
                 SubResultCode = subResultCode,
                 SenderGroupingKey = senderGroupingKey,
                 RecipientGroupingKey = recipientGroupingKey,
-                PageNum = pageNum,
-                PageSize = pageSize,
-        };
+                PageNum = (pageNum != null) ? pageNum : 1,
+                PageSize = (pageSize != null) ? pageSize : 15,
+            };
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings(this._settings, this._settings.Endpoints.ListMessages)
                 .WithHeaders(this._headers).WithQueries(queries)

@@ -68,7 +68,7 @@ namespace Toast.Sms.Triggers
                 StartUpdateDate = req.Query["startUpdateDate"].ToString(),
                 EndUpdateDate = req.Query["endUpdateDate"].ToString(),
                 MessageType = req.Query["messageType"].ToString(),
-                PageNumber = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
+                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
                 PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
             };
 

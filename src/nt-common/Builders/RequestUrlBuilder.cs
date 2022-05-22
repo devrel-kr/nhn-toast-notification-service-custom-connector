@@ -91,7 +91,8 @@ namespace Toast.Common.Builders
         {
             var serialised = JsonConvert.SerializeObject(queries, Settings.SerializerSsetting);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            Queries = String.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
+
+            if (deserialised != null) Queries = String.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
 
             return this;
         }
@@ -105,7 +106,9 @@ namespace Toast.Common.Builders
         {
             var serialised = JsonConvert.SerializeObject(paths, Settings.SerializerSsetting);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            Paths = String.Join("/", deserialised.Select(x => x.Value));
+
+            if (deserialised != null) Paths = String.Join("/", deserialised.Select(x => x.Value));
+            
             return this;
         }
 
