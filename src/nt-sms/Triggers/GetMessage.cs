@@ -15,6 +15,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -61,17 +62,19 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.GetMessage;
-            var options = new GetMessageRequestUrlOptions()
+            GetMessageRequestQueries queries = new GetMessageRequestQueries()
             {
-                Version = version,
-                AppKey = headers.AppKey,
-                RequestId = requestId,
-                RecipientSeq = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0,
+                RecipientSequenceNumber = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0
             };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+
+            var paths = new GetMessageRequestPaths() { RequestId = requestId };
+
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)
+                .WithHeaders(headers).WithQueries(queries)
+                .WithPaths(paths).Build();
+            
+            var quries = new GetMessageRequestQueries();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

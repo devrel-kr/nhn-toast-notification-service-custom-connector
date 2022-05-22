@@ -1,11 +1,13 @@
 using Newtonsoft.Json;
 
+using Toast.Common.Models;
+
 namespace Toast.Sms.Models
 {
     /// <summary>
     /// This represents the entity for ListMessageStatus request query parameters.
     /// </summary>
-    public class ListMessageStatusRequestQuries
+    public class ListMessageStatusRequestQuries : BaseRequestQueries
     {
         /// <summary>
         /// Gets or sets the start update date.
@@ -25,8 +27,7 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
-        [JsonProperty("pageNum")]
-        public virtual int? PageNumber { get; set; }
+        public virtual int? PageNum { get; set; }
 
         /// <summary>
         /// Gets or sets the page size.
