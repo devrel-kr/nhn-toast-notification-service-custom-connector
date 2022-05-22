@@ -5,7 +5,7 @@ set -e
 declare -a fncapp_suffixes
 suffix_index=1
 
-# ','기준으로 나누기
+# Delimit by comma (',')
 while [ "$(echo $AZ_APP_SUFFIXES | cut -d ',' -f $suffix_index)" != ""  ]
 do
     fncapp_suffixes[$suffix_index-1]=$(echo $AZ_APP_SUFFIXES | cut -d ',' -f $suffix_index)
@@ -53,15 +53,26 @@ do
         -p apiMgmtApiPolicyFormat="xml-link" \
         -p apiMgmtApiPolicyValue=$api_policy_url
 
+    # Update hostnames on function apps
     apim_url="https://apim-$AZ_RESOURCE_NAME-$AZ_ENVIRONMENT_CODE-$AZ_LOCATION_CODE.azure-api.net/$api_path"
-    app_setting_list=$(az functionapp config appsettings list -g $resource_group -n $fncapp_name | jq '.[] | select(.name == "OpenApi__HostNames") | .value' -r)
-    if [ "$app_setting_list" == "" ]
+    appsettings_hostnames=$(az functionapp config appsettings list -g $resource_group -n $fncapp_name | jq '.[] | select(.name == "OpenApi__HostNames") | .value' -r)
+    if [ "$appsettings_hostnames" == "" ]
     then
-        api_host_names=$apim_url
+        openapi_hostnames=$apim_url
     else
-        api_host_names=$apim_url,$app_setting_list
+        openapi_hostnames=$apim_url,$appsettings_hostnames
     fi
 
-    # Update app settings on function apps
-    api_settings=$(az functionapp config appsettings set -g $resource_group -n $fncapp_name --settings OpenApi__HostNames=$api_host_names)
+    appsettings_updated=$(az functionapp config appsettings set -g $resource_group -n $fncapp_name --settings OpenApi__HostNames=$openapi_hostnames)
+
+    # Update NHN Toast endpoints on function apps
+    appsettings=$(curl https://raw.githubusercontent.com/devrel-kr/nhn-toast-notification-service-custom-connector/main/infra/appsettings-endpoints-${fncapp_suffixes[$value]}.json)
+    appsettings_length=$(echo $appsettings | jq '. | length')
+    for (( i=0; i<$appsettings_length; i++ ))
+    do
+        appsettings_name=$(echo $appsettings | jq --arg i "$i" '.[$i|fromjson].name' -r)
+        appsettings_value=$(echo $appsettings | jq --arg i "$i" '.[$i|fromjson].value' -r)
+
+        appsettings_updated=$(az functionapp config appsettings set -g $resource_group -n $fncapp_name --settings $appsettings_name=$appsettings_value)
+    done
 done
