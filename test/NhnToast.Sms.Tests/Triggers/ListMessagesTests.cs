@@ -90,30 +90,6 @@ namespace Toast.Sms.Tests.Triggers
             string startResultDate, string endResultDate, string sendNo, string recipientNo, string templateId, string msgStatus, string resultCode, string subResultCode, string senderGroupingKey, string recipientGroupingKey, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            /*var options = new ListMessagesRequestUrlOptions()
-            {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey,
-                RequestId = useRequestId ? this._settings.Examples.RequestId : null,
-                StartRequestDate = startRequestDate,
-                EndRequestDate = endRequestDate,
-                StartCreateDate = startCreateDate,
-                EndCreateDate = endCreateDate,
-                StartResultDate = startResultDate,
-                EndResultDate = endResultDate,
-                SendNo = sendNo,
-                RecipientNo = recipientNo,
-                TemplateId = templateId,
-                MsgStatus = msgStatus,
-                ResultCode = resultCode,
-                SubResultCode = subResultCode,
-                SenderGroupingKey = senderGroupingKey,
-                RecipientGroupingKey = recipientGroupingKey,
-                PageNum = pageNum,
-                PageSize = pageSize
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessages.TrimStart('/')}", options);*/
-
             ListMessagesRequestQueries queries = new ListMessagesRequestQueries()
             {
                 RequestId = useRequestId ? this._settings.Examples.RequestId : null,

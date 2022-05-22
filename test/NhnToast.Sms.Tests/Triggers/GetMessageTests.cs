@@ -51,11 +51,9 @@ namespace Toast.Sms.Tests.Triggers
         public async Task Given_Parameters_When_GetMessage_Invoked_Then_It_Should_Return_Result(bool useRequestId, int? recipientSeq, bool expected)
         {
             // Arrange
-            GetMessageRequestQueries queries = null;
-            if (recipientSeq != null)
-            {
-                queries = new GetMessageRequestQueries() { RecipientSequenceNumber = (int)recipientSeq };
-            }
+            
+            GetMessageRequestQueries queries = new GetMessageRequestQueries();
+            if (recipientSeq is not null) queries.RecipientSequenceNumber = (int)recipientSeq;
 
             var paths = new GetMessageRequestPaths() { RequestId = useRequestId ? this._settings.Examples.RequestId : null };
             var requestUrl = new RequestUrlBuilder()

@@ -105,7 +105,7 @@ namespace Toast.Common.Builders
         {
             var serialised = JsonConvert.SerializeObject(paths, Settings.SerializerSsetting);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            Paths = String.Join("&", deserialised.Select(x => $"/{x.Value}"));
+            Paths = String.Join("/", deserialised.Select(x => x.Value));
             return this;
         }
 
@@ -119,10 +119,11 @@ namespace Toast.Common.Builders
             else if (Endpoint == null) return $"{BaseUrl.TrimEnd('/')}/{Endpoint}";
 
             Endpoint = Endpoint.Replace("{version}", Version);
-            Endpoint = Endpoint.Replace("{appKeys}", AppKey);
+            Endpoint = Endpoint.Replace("{appKey}", AppKey);
 
-            Endpoint = $"{Endpoint.TrimEnd('/')}/{Paths?.TrimStart('/')}?{Queries?.TrimStart('&')}";
-            Endpoint = Endpoint.TrimEnd('?', '/');
+            Endpoint = $"{Endpoint.TrimEnd('/')}/{Paths}";
+            Endpoint = $"{Endpoint.TrimEnd('/')}?{Queries}";
+            Endpoint = Endpoint.TrimEnd('?');
 
             return $"{BaseUrl.TrimEnd('/')}/{Endpoint.TrimStart('/')}";
         }
