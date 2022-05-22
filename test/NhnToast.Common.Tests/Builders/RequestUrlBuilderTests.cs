@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
@@ -10,10 +12,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
-using Toast.Common.Exceptions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
-
 
 namespace Toast.Common.Tests.Builders
 {
@@ -29,11 +29,14 @@ namespace Toast.Common.Tests.Builders
         public void Given_Parameters_When_WithSettins_Invoked_Then_It_Should_Return_Result(string baseUrl, string version, string endpoint)
         {
             var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
-
             var result = new RequestUrlBuilder().WithSettings(settings, endpoint);
 
-            result.BaseUrl.Should().Be(baseUrl);
-            result.Version.Should().Be(version);
+            var builder = typeof(RequestUrlBuilder);
+            var resultBaseUrl = builder.GetField("BaseUrl", BindingFlags.Public)?.GetValue(result);
+            var resultVersion = builder.GetField("Version", BindingFlags.Public)?.GetValue(result);
+
+            resultBaseUrl.Should().Be(baseUrl);
+            resultVersion.Should().Be(version);
         }
 
         [DataTestMethod]
@@ -42,90 +45,59 @@ namespace Toast.Common.Tests.Builders
         public void Given_Parameters_When_WithHeaders_Invoked_Then_It_Should_Return_Result(string appKey)
         {
             var headers = new RequestHeaderModel() { AppKey = appKey };
-
             var result = new RequestUrlBuilder().WithHeaders(headers);
+            var resultAppKey = typeof(RequestUrlBuilder).GetField("AppKey", BindingFlags.Public)?.GetValue(result);
 
-            result.AppKey.Should().Be(appKey);
+            resultAppKey.Should().Be(appKey);
         }
 
         [DataTestMethod]
-        [DataRow(null, null, "Value cannot be null. (Parameter 'name')")]
-        [DataRow("Key1", "Value1", null)]
-        public void Given_Parameters_When_WithQueries_Invoked_Then_It_Should_Return_Result(string key, string value, string expected)
+        [DataRow(null, null)]
+        [DataRow("Key1", "Value1")]
+        public void Given_Parameters_When_WithQueries_Invoked_Then_It_Should_Return_Result(string key, string value)
         {
-            string? exceptionMessage = null;
+            var queries = new BaseRequestQueries() { Name = key, Value = value };
+            var result = new RequestUrlBuilder().WithQueries(queries);
+            
+            var query = typeof(RequestUrlBuilder).GetField("Queries", BindingFlags.Public);
+            var resultQuery = query?.GetValue(result) as Dictionary<string, string>;
 
-            try
-            {
-                var queries = new JObject();
-                queries.Add(key, value);
-
-                var result = new RequestUrlBuilder().WithQueries(queries);
-
-                result.Queries.Keys.Should().Contain(key);
-                result.Queries.Values.Should().Contain(value);
-            }
-            catch (Exception ex)
-            {
-                exceptionMessage = ex.Message;
-            }
-
-            exceptionMessage.Should().Be(expected);
+            resultQuery?.Keys.Should().Contain(key);
+            resultQuery?.Values.Should().Contain(value);
         }
 
         [DataTestMethod]
-        [DataRow(null, null, "Object reference not set to an instance of an object.")]
-        [DataRow("Key", "Value", null)]
-        public void Given_Parameters_When_WithPaths_Invoked_Then_It_Should_Return_Result(string key, string value, string expected)
+        [DataRow(null, null)]
+        [DataRow("Key1", "Value1")]
+        public void Given_Parameters_When_WithPaths_Invoked_Then_It_Should_Return_Result(string key, string value)
         {
-            string? exceptionMessage = null;
+            var paths = new BaseRequestPaths() { Name = key, Value = value };
+            var result = new RequestUrlBuilder().WithPaths(paths);
 
-            try
-            {
-                var paths = new string[] { key, value };
+            var path = typeof(RequestUrlBuilder).GetField("Queries", BindingFlags.Public);
+            var resultPath = path?.GetValue(result) as Dictionary<string, string>;
 
-                var result = new RequestUrlBuilder().WithPaths(paths);
-
-                for (int i = 0; i < paths.Length; i += 2)
-                {
-                    result.Paths.Keys.Should().Contain(paths[i]);
-                    result.Paths.Values.Should().Contain(paths[i + 1]);
-                }
-            }
-            catch (Exception ex)
-            {
-                exceptionMessage = ex.Message;
-            }
-
-            exceptionMessage?.Should().Be(expected);
+            resultPath?.Keys.Should().Contain(key);
+            resultPath?.Values.Should().Contain(value);
         }
 
         [DataTestMethod]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", "path", "This is Path", "This is BaseUrl/This is Version/appKey/This is AppKey/path/This is Path/query/This is Query")]
-        [DataRow(null, "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", "path", "This is Path", "/{version}/appKey/{appKey}/path/{path}/query/{query}")]
-        [DataRow("This is BaseUrl", null, "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", "path", "This is Path", "This is BaseUrl/appKey/This is AppKey/path/This is Path/query/This is Query")]
-        [DataRow("This is BaseUrl", "This is Version", null, "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", "path", "This is Path", "This is BaseUrl/This is Version/appKey//path/This is Path/query/This is Query")]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", null, "query", "This is Query", "path", "This is Path", "This is BaseUrl/")]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", null, "This is Query", "path", "This is Path", "This is BaseUrl/This is Version/appKey/This is AppKey/path/This is Path/query/{query}")]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", null, "path", "This is Path", "This is BaseUrl/This is Version/appKey/This is AppKey/path/This is Path/query/")]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", null, "This is Path", "This is BaseUrl/This is Version/appKey/This is AppKey/path/{path}/query/This is Query")]
-        [DataRow("This is BaseUrl", "This is Version", "This is AppKey", "{version}/appKey/{appKey}/path/{path}/query/{query}", "query", "This is Query", "path", null, "This is BaseUrl/This is Version/appKey/This is AppKey/path//query/This is Query")]
-        public void Given_Parameters_When_Builder_Invoked_Then_It_Should_Return_Result(string baseUrl, string version, string appKey, string endpoint, string queryKey, string queryValue, string pahtKey, string pathValue, string expected)
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", "Query1", "query2", "Query2", "path", "Path", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/AppKey/sender/sms/Path?query1=Query1&query2=Query2")]
+        [DataRow(null, "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query", "Query", "path", "Path", "/sms/{version}/appKeys/{appKey}/sender/sms/Path?query1=Query1&query2=Query2")]
+        [DataRow("https://api-sms.cloud.toast.com/", null, "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", "Query1", "query2", "Query2", "path", "Path", "https://api-sms.cloud.toast.com/sms/appKeys/AppKey/sender/sms/Path??query1=Query1&query2=Query2")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", null, "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", "Query1", "query2", "Query2", "path", "Path", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys//sender/sms/Path?query1=Query1&query2=Query2")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", null, "query1", "Query1", "query2", "Query2", "path", "Path", "https://api-sms.cloud.toast.com/")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", null, "query2", "Query2", "path", "Path", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/AppKey/sender/sms/Path?query2=Query2")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", "Query1", "query2", null, "path", "Path", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/AppKey/sender/sms/Path?query1=Query1")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", "Query1", "query2", "Query2", "path", null, "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/AppKey/sender/sms?query1=Query1&query2=Query2")]
+        [DataRow("https://api-sms.cloud.toast.com/", "v3.0", "AppKey", "/sms/{version}/appKeys/{appKey}/sender/sms", "query1", null, null, null, null, null, "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/AppKey/sender/sms")]
+
+        public void Given_Parameters_When_Builder_Invoked_Then_It_Should_Return_Result(string baseUrl, string version, string appKey, string endpoint, string queryKey1, string queryValue1, string queryKey2, string queryValue2, string pahtKey, string pathValue, string expected)
         {
             var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
             var headers = new RequestHeaderModel() { AppKey = appKey };
-            var queries = new JObject();
-            var paths = new string[] { pahtKey, pathValue };
-            try
-            {
-                queries.Add(queryKey, queryValue);
-            }
-            catch (Exception ex)
-            {
-                queries = null;
-            }
-            
-            
+            var queries = new BaseRequestQueries() { Name1 = queryKey1, Name2 = queryKey2, Value1 = queryValue1, Value2 = queryValue2 };
+            var paths = new BaseRequestPaths() { Name = pahtKey, Value = pathValue };
 
             var requestUrl = new RequestUrlBuilder()
              .WithSettings(settings, endpoint)

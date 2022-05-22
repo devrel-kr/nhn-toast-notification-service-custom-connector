@@ -131,7 +131,7 @@ namespace Toast.Sms.Tests.Triggers
                 SubResultCode = subResultCode,
                 SenderGroupingKey = senderGroupingKey,
                 RecipientGroupingKey = recipientGroupingKey,
-                PageNumber = pageNum,
+                PageNum = pageNum,
                 PageSize = pageSize,
         };
             var requestUrl = new RequestUrlBuilder()

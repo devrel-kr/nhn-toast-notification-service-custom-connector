@@ -56,9 +56,8 @@ namespace Toast.Sms.Tests.Triggers
             {
                 queries = new GetMessageRequestQueries() { RecipientSequenceNumber = (int)recipientSeq };
             }
-            
-            string[] paths = new string[] {"requestId", useRequestId ? this._settings.Examples.RequestId : null};
 
+            var paths = new GetMessageRequestPaths() { RequestId = useRequestId ? this._settings.Examples.RequestId : null };
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)
                 .WithHeaders(this._headers)

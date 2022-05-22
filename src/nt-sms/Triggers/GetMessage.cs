@@ -66,8 +66,8 @@ namespace Toast.Sms.Triggers
             {
                 RecipientSequenceNumber = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0
             };
-            
-            string[] paths = new string[] {"requestId", requestId };
+
+            var paths = new GetMessageRequestPaths() { RequestId = requestId };
 
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)

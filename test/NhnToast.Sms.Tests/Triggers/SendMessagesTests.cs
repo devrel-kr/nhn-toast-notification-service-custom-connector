@@ -57,13 +57,7 @@ namespace Toast.Sms.Tests.Triggers
             var sendNo = useSendNo ? this._settings.Examples.SendNo : null;
             var recipientNo = useRecipientNo ? this._settings.Examples.RecipientNo : null;
             var json = $"{{ \"body\": \"{body}\", \"sendNo\": \"{sendNo}\", \"recipientList\": [ {{\"recipientNo\": \"{recipientNo}\" }} ] }}";
-            /*var options = new RequestUrlOptions
-            {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey
-            };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.SendMessages.TrimStart('/')}", options);*/
-
+            
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings(this._settings, this._settings.Endpoints.SendMessages)
                 .WithHeaders(this._headers)

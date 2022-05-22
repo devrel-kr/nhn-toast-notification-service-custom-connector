@@ -40,14 +40,14 @@ namespace Toast.Common.Builders
         private string Endpoint;
 
         /// <summary>
-        /// Gets or sets the Quries Dictionay for RequestUrlBuilder.
+        /// Gets or sets the Quries for RequestUrlBuilder.
         /// </summary>
-        private Dictionary<string, string> Queries;
+        private string Queries;
 
         /// <summary>
-        /// Gets or sets the Paths Dictionay for RequestUrlBuilder.
+        /// Gets or sets the Paths for RequestUrlBuilder.
         /// </summary
-        private Dictionary<string, string> Paths;
+        private string Paths;
 
         /// <summary>
         /// Gets or sets the RequestUrl for RequestUrlBuilder.
@@ -89,15 +89,9 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithQueries<T>(T queries) where T : BaseRequestQueries
         {
-            try
-            {
-                var serialised = JsonConvert.SerializeObject(queries, Settings.SerializerSsetting);
-                Queries = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            }
-            catch(Exception ex)
-            {
-                Queries = null;
-            }
+            var serialised = JsonConvert.SerializeObject(queries, Settings.SerializerSsetting);
+            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+            Queries = String.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
 
             return this;
         }
@@ -109,17 +103,9 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithPaths<T>(T paths) where T : BaseRequestPaths
         {
-            try
-            {
-                var serialised = JsonConvert.SerializeObject(paths, Settings.SerializerSsetting);
-                Paths = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            }
-            catch(Exception ex)
-            {
-                Paths = null;
-            }
-            
-            
+            var serialised = JsonConvert.SerializeObject(paths, Settings.SerializerSsetting);
+            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+            Paths = String.Join("&", deserialised.Select(x => $"/{x.Value}"));
             return this;
         }
 
@@ -133,11 +119,10 @@ namespace Toast.Common.Builders
             else if (Endpoint == null) return $"{BaseUrl.TrimEnd('/')}/{Endpoint}";
 
             Endpoint = Endpoint.Replace("{version}", Version);
-            Endpoint = Endpoint.Replace("{appKey}", AppKey);
+            Endpoint = Endpoint.Replace("{appKeys}", AppKey);
 
-            Endpoint += String.Join("&", Queries.Select(x => x.Key + "=" + x.Value).ToArray());
-
-            Endpoint += String.Join("&", Paths.Select(x => x.Key + "=" + x.Value).ToArray());
+            Endpoint = $"{Endpoint.TrimEnd('/')}/{Paths?.TrimStart('/')}?{Queries?.TrimStart('&')}";
+            Endpoint = Endpoint.TrimEnd('?', '/');
 
             return $"{BaseUrl.TrimEnd('/')}/{Endpoint.TrimStart('/')}";
         }
