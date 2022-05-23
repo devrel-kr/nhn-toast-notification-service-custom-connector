@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\nt-common\NhnToast.Common.csproj" />
-    <ProjectReference Include="..\..\src\nt-sms\NhnToast.Sms.csproj" />
   </ItemGroup>
 
 </Project>
