@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -23,18 +25,22 @@ using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
+using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class SendMessages
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<SendMessagesRequestBody> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<SendMessages> _logger;
 
-        public SendMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<SendMessages> log)
+        public SendMessages(ToastSettings<SmsEndpointSettings> settings, IValidator<SendMessagesRequestBody> validator, IHttpClientFactory factory, ILogger<SendMessages> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("senders");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -57,6 +63,16 @@ namespace Toast.Sms.Triggers
             try
             {
                 headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
+            var payloads = default(SendMessagesRequestBody);
+            try
+            {
+                payloads = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

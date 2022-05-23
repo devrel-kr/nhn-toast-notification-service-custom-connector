@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -20,18 +22,21 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class ListMessages
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessagesRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessages> _logger;
 
-        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessages> log)
+        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessagesRequestQueries> validator, IHttpClientFactory factory, ILogger<ListMessages> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -76,6 +81,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var queries = default(ListMessagesRequestQueries);
+            try
+            {
+                queries = await req.To<ListMessagesRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.ListMessages;
@@ -83,23 +98,23 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                RequestId = req.Query["requestId"].ToString(),
-                StartRequestDate = req.Query["startRequestDate"].ToString(),
-                EndRequestDate = req.Query["endRequestDate"].ToString(),
-                StartCreateDate = req.Query["startCreateDate"].ToString(),
-                EndCreateDate = req.Query["endCreateDate"].ToString(),
-                StartResultDate = req.Query["startResultDate"].ToString(),
-                EndResultDate = req.Query["endResultDate"].ToString(),
-                SendNo = req.Query["sendNo"].ToString(),
-                RecipientNo = req.Query["recipientNo"].ToString(),
-                TemplateId = req.Query["templateId"].ToString(),
-                MsgStatus = req.Query["msgStatus"].ToString(),
-                ResultCode = req.Query["resultCode"].ToString(),
-                SubResultCode = req.Query["subResultCode"].ToString(),
-                SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
-                RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
+                RequestId = queries.RequestId,
+                StartRequestDate = queries.StartRequestDate,
+                EndRequestDate = queries.EndRequestDate,
+                StartCreateDate = queries.StartCreateDate,
+                EndCreateDate = queries.EndCreateDate,
+                StartResultDate = queries.StartResultDate,
+                EndResultDate = queries.EndResultDate,
+                SendNo = queries.SendNumber,
+                RecipientNo = queries.RecipientNumber,
+                TemplateId = queries.TemplateId,
+                MsgStatus = queries.MessageStatus,
+                ResultCode = queries.ResultCode,
+                SubResultCode = queries.SubResultCode,
+                SenderGroupingKey = queries.SenderGroupingKey,
+                RecipientGroupingKey = queries.RecipientGroupingKey,
+                PageNum = queries.PageNumber,
+                PageSize = queries.PageSize       
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
