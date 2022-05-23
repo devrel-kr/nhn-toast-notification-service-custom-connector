@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -20,19 +22,21 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
-
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class ListMessageStatus
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessageStatusRequestQuries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessageStatus> _logger;
 
-        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
+        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessageStatusRequestQuries> validator, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -48,6 +52,8 @@ namespace Toast.Sms.Triggers
         [OpenApiParameter(name: "pageNum", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page number in the pagination. Default value is '1'")]
         [OpenApiParameter(name: "pageSize", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page size in the pagination. Default value is '15'")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "The OK response")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/status")] HttpRequest req)
         {
@@ -63,6 +69,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var queries = default(ListMessageStatusRequestQuries);
+            try
+            {
+                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
+
             var baseUrl = this._settings.BaseUrl;
             var version = this._settings.Version;
             var endpoint = this._settings.Endpoints.GetMessage;
@@ -70,11 +86,11 @@ namespace Toast.Sms.Triggers
             {
                 Version = version,
                 AppKey = headers.AppKey,
-                StartUpdateDate = req.Query["startUpdateDate"].ToString(),
-                EndUpdateDate = req.Query["endUpdateDate"].ToString(),
-                MessageType = req.Query["messageType"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
+                StartUpdateDate = queries.StartUpdateDate,
+                EndUpdateDate = queries.EndUpdateDate,
+                MessageType = queries.MessageType,
+                PageNum = queries.PageNumber,
+                PageSize = queries.PageSize
             };
             var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
 
