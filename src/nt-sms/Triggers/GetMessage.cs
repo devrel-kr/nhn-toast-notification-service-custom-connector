@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -21,18 +23,21 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<GetMessageRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<GetMessage> _logger;
 
-        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<GetMessage> log)
+        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IValidator<GetMessageRequestQueries> validator, IHttpClientFactory factory, ILogger<GetMessage> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -63,10 +68,15 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            GetMessageRequestQueries queries = new GetMessageRequestQueries()
+            var queries = default(GetMessageRequestQueries);
+            try 
             {
-                RecipientSequenceNumber = int.TryParse(req.Query["recipientSeq"].ToString(), out int recipientSeqVal) ? recipientSeqVal : 0
-            };
+                queries = await req.To<GetMessageRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var paths = new GetMessageRequestPaths() { RequestId = requestId };
 
@@ -74,8 +84,6 @@ namespace Toast.Sms.Triggers
                 .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)
                 .WithHeaders(headers).WithQueries(queries)
                 .WithPaths(paths).Build();
-            
-            var quries = new GetMessageRequestQueries();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

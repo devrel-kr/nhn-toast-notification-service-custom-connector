@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -21,18 +23,21 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class ListMessageStatus
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessageStatusRequestQuries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessageStatus> _logger;
 
-        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
+        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessageStatusRequestQuries> validator, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -64,15 +69,16 @@ namespace Toast.Sms.Triggers
             {
                 return new BadRequestResult();
             }
-            
-            var queries = new ListMessageStatusRequestQuries()
+
+            var queries = default(ListMessageStatusRequestQuries);
+            try
             {
-                StartUpdateDate = req.Query["startUpdateDate"].ToString(),
-                EndUpdateDate = req.Query["endUpdateDate"].ToString(),
-                MessageType = req.Query["messageType"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumVal) ? pageNumVal : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeVal) ? pageSizeVal : 15,
-            };
+                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)

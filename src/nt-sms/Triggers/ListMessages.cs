@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
 
+using FluentValidation;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -21,18 +23,21 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
+using Toast.Sms.Validators;
 
 namespace Toast.Sms.Triggers
 {
     public class ListMessages
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IValidator<ListMessagesRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessages> _logger;
 
-        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IHttpClientFactory factory, ILogger<ListMessages> log)
+        public ListMessages(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessagesRequestQueries> validator, IHttpClientFactory factory, ILogger<ListMessages> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
@@ -77,27 +82,15 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            ListMessagesRequestQueries queries = new ListMessagesRequestQueries()
+            var queries = default(ListMessagesRequestQueries);
+            try
             {
-                RequestId = req.Query["requestId"].ToString(),
-                StartRequestDate = req.Query["startRequestDate"].ToString(),
-                EndRequestDate = req.Query["endRequestDate"].ToString(),
-                StartCreateDate = req.Query["startCreateDate"].ToString(),
-                EndCreateDate = req.Query["endCreateDate"].ToString(),
-                StartResultDate = req.Query["startResultDate"].ToString(),
-                EndResultDate = req.Query["endResultDate"].ToString(),
-                SendNumber = req.Query["sendNo"].ToString(),
-                RecipientNumber = req.Query["recipientNo"].ToString(),
-                TemplateId = req.Query["templateId"].ToString(),
-                MessageStatus = req.Query["msgStatus"].ToString(),
-                ResultCode = req.Query["resultCode"].ToString(),
-                SubResultCode = req.Query["subResultCode"].ToString(),
-                SenderGroupingKey = req.Query["senderGroupingKey"].ToString(),
-                RecipientGroupingKey = req.Query["recipientGroupingKey"].ToString(),
-                PageNum = int.TryParse(req.Query["pageNum"].ToString(), out int pageNumParse) ? pageNumParse : 1,
-                PageSize = int.TryParse(req.Query["pageSize"].ToString(), out int pageSizeParse) ? pageSizeParse : 15
-            };
-
+                queries = await req.To<ListMessagesRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult();
+            }
 
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)
