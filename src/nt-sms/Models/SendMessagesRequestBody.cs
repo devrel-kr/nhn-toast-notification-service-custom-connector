@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 
 using Newtonsoft.Json;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Newtonsoft.Json.Serialization;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Resolvers;
 
 namespace Toast.Sms.Models
 {
@@ -50,5 +53,47 @@ namespace Toast.Sms.Models
         /// Gets or sets the stats ID.
         /// </summary>
         public virtual string StatsId { get; set; }
+    }
+
+    /// <summary>
+    /// This represents the example entity for SendMessages request body.
+    /// </summary>
+    public class SendMessagesRequestBodyModelExample : OpenApiExample<SendMessagesRequestBody>
+    {
+        public override IOpenApiExample<SendMessagesRequestBody> Build(NamingStrategy namingStrategy = null)
+        {
+            this.Examples.Add(
+            OpenApiExampleResolver.Resolve(
+                "sample",
+                "This represents the example entity for SendMessages request body.",
+                new SendMessagesRequestBody()
+                {
+                    TemplateId = "TemplateId",
+                    Body = "본문",
+                    SenderNumber = "15446859",
+                    RequestDate = "2018-08-10 10:00",
+                    SenderGroupingKey = "SenderGroupingKey",
+                    Recipients = new List<SendMessagesRequestRecipient>()
+                    {
+                        new SendMessagesRequestRecipient()
+                        {
+                            RecipientNumber = "01000000000",
+                            CountryCode = "82",
+                            InternationalRecipientNumber = "821000000000",
+                            TemplateParameters = new Dictionary<string, object>()
+                            {
+                                { "key", "value"}
+                            },
+                            RecipientGroupingKey = "recipientGroupingKey"
+                        }
+                    },
+                    UserId = "UserId",
+                    StatsId = "statsId"
+                },
+                namingStrategy
+            ));
+
+            return this;
+        }
     }
 }

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 using Toast.Common.Models;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Newtonsoft.Json.Serialization;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Resolvers;
 
 namespace Toast.Sms.Models
 {
@@ -72,6 +75,56 @@ namespace Toast.Sms.Models
         /// </summary>
         [JsonProperty("recipientGroupingKey")]
         public virtual string RecipientGroupKey { get; set; }
+
+    }
+
+    /// <summary>
+    /// This represents the example entity for SendMessages response body.
+    /// </summary>
+    public class SendMessagesResponseModelExample : OpenApiExample<SendMessagesResponse>
+    {
+        public override IOpenApiExample<SendMessagesResponse> Build(NamingStrategy namingStrategy = null)
+        {
+            this.Examples.Add(
+                OpenApiExampleResolver.Resolve(
+                    "sample",
+                    "This represents the example entity for SendMessages response body.",
+                    new SendMessagesResponse()
+                    {
+                        Header =
+                        {
+                            IsSuccessful = true,
+                            ResultCode = 0,
+                            ResultMessage = "SUCCESS"
+                        },
+                        Body =
+                        {
+                            Data = new SendMessagesResponseData()
+                            {
+                                RequestId = "20180810100630ReZQ6KZzAH0",
+                                StatusCode = "2",
+                                SenderGroupKey = "SenderGroupingKey",
+                                SendResults = new List<SendMessagesResponseResult>()
+                                {
+                                    new SendMessagesResponseResult()
+                                    {
+                                        RecipientNumber = "01000000000",
+                                        ResultCode = 0,
+                                        ResultMessage = "SUCCESS",
+                                        RecipientSequence = 1,
+                                        RecipientGroupKey = "RecipientGroupingKey"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    namingStrategy
+                )
+            );
+
+            return this;
+        }
+
 
     }
 
