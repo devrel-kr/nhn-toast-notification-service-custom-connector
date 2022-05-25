@@ -15,6 +15,11 @@ namespace Toast.Sms.Models
     public class ListMessagesResponse : ResponseModel<ResponseCollectionBodyModel<ListMessagesResponseData>> { }
 
     /// <summary>
+    /// This represents the entity for ListMessages response body.
+    /// </summary>
+    public class ListMessagesResponseBody : ResponseCollectionBodyModel<ListMessagesResponseData> { }
+
+    /// <summary>
     /// This represents the entity for ListMessages response data.
     /// </summary>
     public class ListMessagesResponseData
@@ -164,20 +169,16 @@ namespace Toast.Sms.Models
     {
         public override IOpenApiExample<ListMessagesResponse> Build(NamingStrategy namingStrategy = null)
         {
-            this.Examples.Add(
-                OpenApiExampleResolver.Resolve(
-                    "sample",
-                    "This represents the example entity for ListMessages response body.",
-                    new ListMessagesResponse()
-                    {
-                        Header = 
+            var exampleInstance = new ListMessagesResponse()
+            {
+                Header = new ResponseHeaderModel()
                         {
                             ResultCode = 0,
                             ResultMessage = "SUCCESS",
                             IsSuccessful = true
                         },
-                        Body = 
-                        {
+                Body = new ListMessagesResponseBody()
+                {
                             PageNumber = 1,
                             PageSize = 15,
                             TotalCount = 1,
@@ -212,8 +213,15 @@ namespace Toast.Sms.Models
                                     RecipientGroupKey = "RecipientGroupingKey"
                                 }
                             }
-                        }
-                    },
+                }
+            };
+            
+
+            this.Examples.Add(
+                OpenApiExampleResolver.Resolve(
+                    "sample",
+                    "This represents the example entity for ListMessages response body.",
+                    exampleInstance,
                     namingStrategy
             ));
 

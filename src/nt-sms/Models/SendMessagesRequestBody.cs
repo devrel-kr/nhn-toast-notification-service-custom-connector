@@ -62,19 +62,16 @@ namespace Toast.Sms.Models
     {
         public override IOpenApiExample<SendMessagesRequestBody> Build(NamingStrategy namingStrategy = null)
         {
-            this.Examples.Add(
-            OpenApiExampleResolver.Resolve(
-                "sample",
-                "This represents the example entity for SendMessages request body.",
-                new SendMessagesRequestBody()
+
+            var exampleInstance = new SendMessagesRequestBody()
+            {
+                TemplateId = "TemplateId",
+                Body = "본문",
+                SenderNumber = "15446859",
+                RequestDate = "2018-08-10 10:00",
+                SenderGroupingKey = "SenderGroupingKey",
+                Recipients = new List<SendMessagesRequestRecipient>()
                 {
-                    TemplateId = "TemplateId",
-                    Body = "본문",
-                    SenderNumber = "15446859",
-                    RequestDate = "2018-08-10 10:00",
-                    SenderGroupingKey = "SenderGroupingKey",
-                    Recipients = new List<SendMessagesRequestRecipient>()
-                    {
                         new SendMessagesRequestRecipient()
                         {
                             RecipientNumber = "01000000000",
@@ -86,10 +83,16 @@ namespace Toast.Sms.Models
                             },
                             RecipientGroupingKey = "recipientGroupingKey"
                         }
-                    },
-                    UserId = "UserId",
-                    StatsId = "statsId"
                 },
+                UserId = "UserId",
+                StatsId = "statsId"
+            };
+
+            this.Examples.Add(
+            OpenApiExampleResolver.Resolve(
+                "sample",
+                "This represents the example entity for SendMessages request body.",
+                exampleInstance,
                 namingStrategy
             ));
 

@@ -14,6 +14,11 @@ namespace Toast.Sms.Models
     public class SendMessagesResponse : ResponseModel<ResponseItemBodyModel<SendMessagesResponseData>> { }
 
     /// <summary>
+    /// This represents the entity for SendMessages response body.
+    /// </summary>
+    public class SendMessagesResponseBody : ResponseItemBodyModel<SendMessagesResponseData> { }
+
+    /// <summary>
     /// This represents the entity for SendMessages response data.
     /// </summary>
     public class SendMessagesResponseData
@@ -85,27 +90,24 @@ namespace Toast.Sms.Models
     {
         public override IOpenApiExample<SendMessagesResponse> Build(NamingStrategy namingStrategy = null)
         {
-            this.Examples.Add(
-                OpenApiExampleResolver.Resolve(
-                    "sample",
-                    "This represents the example entity for SendMessages response body.",
-                    new SendMessagesResponse()
+
+            var exampleInstance = new SendMessagesResponse()
+            {
+                Header = new ResponseHeaderModel()
+                {
+                    IsSuccessful = true,
+                    ResultCode = 0,
+                    ResultMessage = "SUCCESS"
+                },
+                Body = new SendMessagesResponseBody()
+                {
+                    Data = new SendMessagesResponseData()
                     {
-                        Header =
+                        RequestId = "20180810100630ReZQ6KZzAH0",
+                        StatusCode = "2",
+                        SenderGroupKey = "SenderGroupingKey",
+                        SendResults = new List<SendMessagesResponseResult>()
                         {
-                            IsSuccessful = true,
-                            ResultCode = 0,
-                            ResultMessage = "SUCCESS"
-                        },
-                        Body =
-                        {
-                            Data = new SendMessagesResponseData()
-                            {
-                                RequestId = "20180810100630ReZQ6KZzAH0",
-                                StatusCode = "2",
-                                SenderGroupKey = "SenderGroupingKey",
-                                SendResults = new List<SendMessagesResponseResult>()
-                                {
                                     new SendMessagesResponseResult()
                                     {
                                         RecipientNumber = "01000000000",
@@ -114,10 +116,16 @@ namespace Toast.Sms.Models
                                         RecipientSequence = 1,
                                         RecipientGroupKey = "RecipientGroupingKey"
                                     }
-                                }
-                            }
                         }
-                    },
+                    }
+                }
+            };
+
+            this.Examples.Add(
+                OpenApiExampleResolver.Resolve(
+                    "sample",
+                    "This represents the example entity for SendMessages response body.",
+                    exampleInstance,
                     namingStrategy
                 )
             );
