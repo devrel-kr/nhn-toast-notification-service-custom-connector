@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using FluentAssertions;
 
@@ -13,106 +9,118 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
-using Toast.Common.Validators;
+using Toast.Common.Tests.Fakes;
+
 
 namespace Toast.Common.Tests.Builders
 {
     [TestClass]
     public class RequestBuilderValidatorTests
     {
+        [TestMethod]
+        public void Given_RequestUrlBuilder_Type_Then_It_Should_Contain_Properties()
+        {
+            var fis = typeof(RequestUrlBuilder).GetProperties(BindingFlags.NonPublic|BindingFlags.Instance);
+
+            fis.SingleOrDefault(p => p.Name == "_settings").Should().NotBeNull()
+                .And.Subject.PropertyType.Should().Be(typeof(ToastSettings));
+
+            fis.SingleOrDefault(p => p.Name == "_baseUrl").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
+
+            fis.SingleOrDefault(p => p.Name == "_version").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
+
+            fis.SingleOrDefault(p => p.Name == "_appKey").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
+
+            fis.SingleOrDefault(p => p.Name == "_endpoint").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
+
+            fis.SingleOrDefault(p => p.Name == "_queries").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(string));
+
+            fis.SingleOrDefault(p => p.Name == "_paths").Should().NotBeNull()
+               .And.Subject.PropertyType.Should().Be(typeof(Dictionary<string, string>));
+        }
+
         [DataTestMethod]
-        [DataRow("BaseUrl", "Version", "Endpoint")]
+        [DataRow("baseUrl", "version", "endpoint")]
         [DataRow(null, null, null)]
-        [DataRow(null, "Version", "Endpoint")]
-        [DataRow("BaseUrl", null, "Endpoint")]
-        [DataRow("BaseUrl", "Version", null)]
+        [DataRow(null, "version", "endpoint")]
+        [DataRow("baseUrl", null, "endpoint")]
+        [DataRow("baseUrl", "version", null)]
         public void Given_Parameters_When_WithSettins_Invoked_Then_It_Should_Return_Result(string baseUrl, string version, string endpoint)
         {
             var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
             var result = new RequestUrlBuilder().WithSettings(settings, endpoint);
 
-            var builder = typeof(RequestUrlBuilder);
-            
-            var resultBaseUrl = typeof(RequestUrlBuilder).GetField("BaseUrl", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-            var resultVersion = typeof(RequestUrlBuilder).GetField("Version", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-            
+            var resultSetting = typeof(RequestUrlBuilder).GetProperty("_settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultBaseUrl = typeof(RequestUrlBuilder).GetProperty("_baseUrl", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultVersion = typeof(RequestUrlBuilder).GetProperty("_version", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultEndpoint = typeof(RequestUrlBuilder).GetProperty("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+
+            result.Should().BeOfType(typeof(RequestUrlBuilder));
+            resultSetting.Should().Be(resultSetting);
             resultBaseUrl.Should().Be(baseUrl);
             resultVersion.Should().Be(version);
+            resultEndpoint.Should().Be(endpoint);
         }
 
         [DataTestMethod]
-        [DataRow("AppKey")]
+        [DataRow("appKey")]
         [DataRow(null)]
         public void Given_Parameters_When_WithHeaders_Invoked_Then_It_Should_Return_Result(string appKey)
         {
             var headers = new RequestHeaderModel() { AppKey = appKey };
             var result = new RequestUrlBuilder().WithHeaders(headers);
-
-            var resultAppKey = typeof(RequestUrlBuilder).GetField("AppKey", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultAppKey = typeof(RequestUrlBuilder).GetProperty("_appKey", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
             resultAppKey.Should().Be(appKey);
         }
 
-        [DataTestMethod]
-        [DataRow("This is Query1", "This is Query2", "query1=This is Query1&query2=This is Query2")]
-        [DataRow(null, null, "")]
-        [DataRow(null, "This is Query2", "query2=This is Query2")]
-        public void Given_Parameters_When_WithQueries_Invoked_Then_It_Should_Return_Result(string value1, string value2, string expected)
+        /*[TestMethod]
+        public void Given_InvalidQueries_When_WithQueries_Invoked_Then_It_Should_Throw_Exception( )
         {
             var settings = new ToastSettings();
-            var queries = new BaseRequestQueries() { Query1 = value1, Query2 = value2 };
-            var result = new RequestUrlBuilder().WithSettings(settings, "").WithQueries(queries);
+            var queries = new FakeRequestQuries2();
+            var result = new RequestUrlBuilder().WithSettings(settings, null).WithQueries(queries);
 
-            var resultQuery = typeof(RequestUrlBuilder).GetField("Queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+
+            result.Should().BeOfType<RequestUrlBuilder>();
+            resultQuery.Should().BeNull();
+        }*/
+
+        [TestMethod]
+        public void Given_Default_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
+        {
+            var queries = new FakeRequestQuries();
+            var result = new RequestUrlBuilder().WithQueries(queries);
+            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
             
-            resultQuery.Should().Be(expected);
-            //var query = typeof(RequestUrlBuilder).GetField("Queries", BindingFlags.Public);
-            //var resultQuery = query?.GetValue(result) as Dictionary<string, string>;
+            result.Should().BeOfType<RequestUrlBuilder>();
+            resultQuery.Should().BeNull();
         }
 
-        [DataTestMethod]
-        [DataRow("This is Path1", "This is Path2", "This is Path1/This is Path2")]
-        [DataRow(null, null, "")]
-        [DataRow(null, "This is Path2", "This is Path2")]
-        public void Given_Parameters_When_WithPaths_Invoked_Then_It_Should_Return_Result(string value1, string value2, string expected)
+        [TestMethod]
+        public void Given_Default_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result()
         {
-            var settings = new ToastSettings();
-            var paths = new BaseRequestPaths() { Path1 = value1, Path2 = value2 };
-            var result = new RequestUrlBuilder().WithSettings(settings, "").WithPaths(paths);
+            var paths = new FakeRequestPaths();
+            var result = new RequestUrlBuilder().WithPaths(paths);
 
-            var resultPath = typeof(RequestUrlBuilder).GetField("Paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
-            resultPath.Should().Be(expected);
-            //var path = typeof(RequestUrlBuilder).GetField("Queries", BindingFlags.Public);
-            //var resultPath = path?.GetValue(result) as Dictionary<string, string>;
+            result.Should().BeOfType<RequestUrlBuilder>();
+            resultQuery.Should().BeNull();
         }
 
-        [DataTestMethod]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "path1", "path2", "query1", "query2", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/path1/path2?query1=query1&query2=query2")]
-        [DataRow(null, "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "path1", "path2", "query1", "query2", "/sms/{version}/appKeys/{appKey}/sender/sms")]
-        [DataRow("https://api-sms.cloud.toast.com/", null, "v3.0", "appKey", "path1", "path2", "query1", "query2", "https://api-sms.cloud.toast.com/")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", null, "appKey", "path1", "path2", "query1", "query2", "https://api-sms.cloud.toast.com/sms//appKeys/appKey/sender/sms/path1/path2?query1=query1&query2=query2")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", null, "path1", "path2", "query1", "query2", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys//sender/sms/path1/path2?query1=query1&query2=query2")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", null, "path2", "query1", "query2", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/path2?query1=query1&query2=query2")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "path1", null, "query1", "query2", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/path1?query1=query1&query2=query2")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "path1", "path2", null, "query2", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/path1/path2?query2=query2")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "path1", "path2", "query1", null, "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/path1/path2?query1=query1")]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", null, null, null, null, "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms")]
-        public void Given_Parameters_When_Builder_Invoked_Then_It_Should_Return_Result(string baseUrl, string endpoint, string version, string appKey, string pathValue1, string pathValue2, string queryValue1, string queryValue2, string expected)
+        [TestMethod]
+        public void Given_Parameters_When_Build_Invoked_Then_It_Should_Return_Result()
         {
-            var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
-            var headers = new RequestHeaderModel() { AppKey = appKey };
-            var queries = new BaseRequestQueries() { Query1 = queryValue1, Query2 = queryValue2 };
-            var paths = new BaseRequestPaths() { Path1 = pathValue1, Path2 = pathValue2 };
+            var result = new RequestUrlBuilder().Build();
 
-            var requestUrl = new RequestUrlBuilder()
-             .WithSettings(settings, endpoint)
-             .WithHeaders(headers)
-             .WithQueries(queries)
-             .WithPaths(paths)
-             .Build();
-
-            requestUrl.Should().Be(expected);
+            result.Should().BeOfType(typeof(string));
         }
     }
 }

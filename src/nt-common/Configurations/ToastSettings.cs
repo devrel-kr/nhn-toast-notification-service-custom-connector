@@ -34,7 +34,7 @@ namespace Toast.Common.Configurations
         /// <summary>
         /// sSets the <see cref="JsonSerializerSettings"/> instance.
         /// </summary>
-        public JsonSerializerSettings SerializerSsetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, ContractResolver = new CamelCasePropertyNamesContractResolver() };
+        public JsonSerializerSettings SerializerSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, ContractResolver = new CamelCasePropertyNamesContractResolver() };
     }
 
     /// <summary>

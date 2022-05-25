@@ -90,7 +90,8 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the page number.
         /// </summary>
-        public virtual int? PageNum { get; set; }
+        [JsonProperty("pageNum")]
+        public virtual int? PageNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the page size.

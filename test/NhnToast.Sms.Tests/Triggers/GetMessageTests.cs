@@ -50,8 +50,7 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow(true, 100, true)]
         public async Task Given_Parameters_When_GetMessage_Invoked_Then_It_Should_Return_Result(bool useRequestId, int? recipientSeq, bool expected)
         {
-            // Arrange
-            
+            // Arrange  
             GetMessageRequestQueries? queries = new GetMessageRequestQueries();
             if (recipientSeq is not null) queries.RecipientSequenceNumber = (int)recipientSeq;
             else queries = null;

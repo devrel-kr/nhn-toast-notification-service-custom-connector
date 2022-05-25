@@ -61,7 +61,7 @@ namespace Toast.Sms.Tests.Triggers
                 StartUpdateDate = startUpdateDate,
                 EndUpdateDate = endUpdatedate,
                 MessageType = messageType,
-                PageNum = (pageNum != null) ? pageNum : 1,
+                PageNumber = (pageNum != null) ? pageNum : 1,
                 PageSize = (pageSize != null) ? pageSize : 15,
             };
             
