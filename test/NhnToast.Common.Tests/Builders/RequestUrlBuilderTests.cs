@@ -116,7 +116,7 @@ namespace Toast.Common.Tests.Builders
         }
 
         [TestMethod]
-        public void Given_Parameters_When_Build_Invoked_Then_It_Should_Return_Result()
+        public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result()
         {
             var result = new RequestUrlBuilder().Build();
 
