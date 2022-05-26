@@ -66,8 +66,8 @@ namespace Toast.Sms.Models
             var exampleInstance = new SendMessagesRequestBody()
             {
                 TemplateId = "TemplateId",
-                Body = "본문",
-                SenderNumber = "15446859",
+                Body = "body",
+                SenderNumber = "00000000",
                 RequestDate = "2018-08-10 10:00",
                 SenderGroupingKey = "SenderGroupingKey",
                 Recipients = new List<SendMessagesRequestRecipient>()

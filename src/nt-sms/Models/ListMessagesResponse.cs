@@ -186,7 +186,7 @@ namespace Toast.Sms.Models
                             {
                                 new ListMessagesResponseData()
                                 {
-                                    RequestId = "20180810100630ReZQ6KZzAH0",
+                                    RequestId = "2018081000000000000000000",
                                     RequestDate = "2018-08-10 10:06:30.0",
                                     ResponseDate = "2018-08-10 10:06:42.0",
                                     TemplateId = "TemplateId",
@@ -194,7 +194,7 @@ namespace Toast.Sms.Models
                                     CategoryId =  "0",
                                     CategoryName = "카테고리명",
                                     Body = "단문 테스트",
-                                    SenderNumber = "15446859",
+                                    SenderNumber = "00000000",
                                     CountryCode = "82",
                                     RecipientNumber = "01000000000",
                                     MessageStatus = "3",
@@ -202,7 +202,7 @@ namespace Toast.Sms.Models
                                     ResultCode = "1000",
                                     ResultCodeName = "성공",
                                     CarrierCode = 10001,
-                                    CarrierName = "SKT",
+                                    CarrierName = "통신사",
                                     RecipientSequence = 1,
                                     SendType = "0",
                                     MessageType = "SMS",

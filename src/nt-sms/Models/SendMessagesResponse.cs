@@ -103,7 +103,7 @@ namespace Toast.Sms.Models
                 {
                     Data = new SendMessagesResponseData()
                     {
-                        RequestId = "20180810100630ReZQ6KZzAH0",
+                        RequestId = "201808100000000000000000",
                         StatusCode = "2",
                         SenderGroupKey = "SenderGroupingKey",
                         SendResults = new List<SendMessagesResponseResult>()
