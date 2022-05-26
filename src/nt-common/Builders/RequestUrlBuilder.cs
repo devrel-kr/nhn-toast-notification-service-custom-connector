@@ -14,40 +14,15 @@ namespace Toast.Common.Builders
     /// </summary>
     public class RequestUrlBuilder
     {
-        /// <summary>
-        /// Gets or sets the Settings for RequestUrlBuilder.
-        /// </summary>
-        private ToastSettings _settings { get; set; }
+        private ToastSettings _settings;
 
-        /// <summary>
-        /// Gets or sets the BaseUrl for RequestUrlBuilder.
-        /// </summary>
-        private string _baseUrl { get; set; }
+        private RequestHeaderModel _headers;
 
-        /// <summary>
-        /// Gets or sets the Version for RequestUrlBuilder.
-        /// </summary>
-        private string _version { get; set; }
+        private string _endpoint;
 
-        /// <summary>
-        /// Gets or sets the AppKey for RequestUrlBuilder.
-        /// </summary>
-        private string _appKey { get; set; }
+        private string _queries;
 
-        /// <summary>
-        /// Gets or sets the Endpoint for RequestUrlBuilder.
-        /// </summary>
-        private string _endpoint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Quries for RequestUrlBuilder.
-        /// </summary>
-        private string _queries { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Paths for RequestUrlBuilder.
-        /// </summary
-        private Dictionary<string, string> _paths { get; set; }
+        private Dictionary<string, string> _paths;
 
         /// <summary>
         /// Settings the request URL values in setting.
@@ -59,11 +34,8 @@ namespace Toast.Common.Builders
         {
             if (settings != null)
             {
-                _settings = settings;
-                _baseUrl = settings.BaseUrl;
-                _version = settings.Version;
-                _endpoint = endpoint;
-
+                this._settings = settings;
+                this._endpoint = endpoint;
             }
 
             return this;
@@ -76,8 +48,8 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithHeaders(RequestHeaderModel headers)
         {
-            if (headers != null) _appKey = headers.AppKey;
-            
+            this._headers = headers;
+
             return this;
         }
 
@@ -88,10 +60,13 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithQueries<T>(T queries) where T : BaseRequestQueries
         {
-            var serialised = JsonConvert.SerializeObject(queries, _settings?.SerializerSetting);
-            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+            if (this._settings != null)
+            {
+                var serialised = JsonConvert.SerializeObject(queries, this._settings.SerializerSetting);
+                var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
 
-            if (deserialised != null && deserialised.Count() != 0) _queries = String.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
+                this._queries = string.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
+            }
 
             return this;
         }
@@ -103,9 +78,14 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithPaths<T>(T paths) where T : BaseRequestPaths
         {
-            var serialised = JsonConvert.SerializeObject(paths, _settings?.SerializerSetting);
-            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-            if (deserialised != null && deserialised.Count() != 0) _paths = deserialised;
+            if (this._settings != null)
+            {
+                var serialised = JsonConvert.SerializeObject(paths, this._settings?.SerializerSetting);
+                var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+
+                this._paths = deserialised; 
+            }
+
             return this;
         }
 
@@ -115,23 +95,29 @@ namespace Toast.Common.Builders
         /// <returns>Returns request URL which is string type instance.</returns>
         public string Build()
         {
-            if (_baseUrl == null || _endpoint == null) return $"{_baseUrl?.TrimEnd('/')}/{_endpoint?.TrimStart('/')}";
-            
-            _endpoint = _endpoint.Replace("{version}", _version);
-            _endpoint = _endpoint.Replace("{appKey}", _appKey);
-
-            if (_paths != null)
+            if (this._settings != null && this._endpoint != null)
             {
-                foreach (var i in _paths.Keys)
+                var requestUrl = $"{this._settings.BaseUrl.TrimEnd('/')}/{this._endpoint.TrimStart('/')}";
+
+                requestUrl = requestUrl.Replace("{version}", this._settings.Version);
+                requestUrl = requestUrl.Replace("{appKey}", this._headers.AppKey);
+
+                if (_paths != null)
                 {
-                    _endpoint = _endpoint.Replace($"{{{i}}}", _paths[i]);
+                    foreach (var key in _paths.Keys)
+                    {
+                        requestUrl = requestUrl.Replace($"{{{key}}}", _paths[key]);
+                    }
                 }
+
+                requestUrl = (string.IsNullOrWhiteSpace(this._queries)) ? requestUrl : $"{requestUrl}?{this._queries}";
+
+                return requestUrl;
             }
-
-            _endpoint = $"{_endpoint.TrimEnd('/')}?{_queries}";
-            _endpoint = _endpoint.TrimEnd('?');
-
-            return $"{_baseUrl.TrimEnd('/')}/{_endpoint.TrimStart('/')}";
+            else 
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }

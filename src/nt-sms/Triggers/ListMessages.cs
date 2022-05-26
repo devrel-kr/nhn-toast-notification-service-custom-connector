@@ -93,7 +93,7 @@ namespace Toast.Sms.Triggers
             }
 
             var requestUrl = new RequestUrlBuilder()
-                .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessages)
                 .WithHeaders(headers).WithQueries(queries)
                 .Build();
 

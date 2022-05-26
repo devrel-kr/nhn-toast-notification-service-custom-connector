@@ -81,8 +81,9 @@ namespace Toast.Sms.Triggers
             var paths = new GetMessageRequestPaths() { RequestId = requestId };
 
             var requestUrl = new RequestUrlBuilder()
-                .WithSettings<ToastSettings>(this._settings, this._settings.Endpoints.GetMessage)
-                .WithHeaders(headers).WithQueries(queries)
+                .WithSettings(this._settings, this._settings.Endpoints.GetMessage)
+                .WithHeaders(headers)
+                .WithQueries(queries)
                 .WithPaths(paths).Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
