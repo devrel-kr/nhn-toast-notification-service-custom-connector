@@ -18,9 +18,7 @@ namespace Toast.Common.Tests.Models
     {
         private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings()
         {
-            // NullValueHandling = NullValueHandling.Ignore,
-            Formatting = Formatting.Indented,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
@@ -143,7 +141,7 @@ namespace Toast.Common.Tests.Models
         }
 
         [DataTestMethod]
-        [DataRow("20180810100630ReZQ6KZzAH0", "2018-08-10 10:06:30.0", "2018-08-10 10:06:42.0", "TemplateId", "템플릿명", 0, "카테고리명", "본문", "15446859", "82", "01000000000", "3", "성공", "1000", " 성공", 10001, "SKT", 1, "0", "SMS", "tester", "N", "lorem ipsum", "senderGroupingKey", "recipientGroupingKey")]
+        [DataRow("20180810100630ReZQ6KZzAH0", "2018-08-10 10:06:30.0", "2018-08-10 10:06:42.0", "TemplateId", "TemplateName", 0, "CategoryName", "body", "15446859", "82", "01000000000", "3", "success", "1000", " success", 10001, "SKT", 1, "0", "SMS", "tester", "N", "lorem ipsum", "senderGroupingKey", "recipientGroupingKey")]
         public void Given_Values_When_Serialised_Then_It_Should_Return_Result(string requestId, string requestDate, string resultDate, string templateId, string templateName, int categoryId, string categoryName, string body, string sendNo, string countryCode, string recipientNo, string msgStatus, string msgStatusName, string resultCode, string resultCodeName, int telecomCode, string telecomCodeName, int recipientSeq, string sendType, string messageType, string userId, string adYn, string resultMessage, string senderGroupingKey, string recipientGroupingKey)
         {
             var model = new GetMessageResponseData()

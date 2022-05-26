@@ -18,8 +18,6 @@ namespace Toast.Common.Tests.Models
         private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings()
         {
             // NullValueHandling = NullValueHandling.Ignore,
-            Formatting = Formatting.Indented,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
@@ -91,7 +89,7 @@ namespace Toast.Common.Tests.Models
         }
 
         [DataTestMethod]
-        [DataRow("sms", "lorem ipsum", 0, "1000", "성공", "2018-10-04 16:16:00.0", "2018 - 10 - 04 16:17:10.0", "2018-10-04 16:17:15.0", "10003", "LGU", "senderGroupingKey", "recipientGroupingKey")]
+        [DataRow("sms", "lorem ipsum", 0, "1000", "success", "2018-10-04 16:16:00.0", "2018 - 10 - 04 16:17:10.0", "2018-10-04 16:17:15.0", "10003", "LGU", "senderGroupingKey", "recipientGroupingKey")]
         public void Given_Values_When_Serialised_Then_It_Should_Return_Result(string messageType, string requestId, int recipientSeq, string resultCode, string resultCodeName, string requestDate, string resultDate, string updateDate, string telecomCode, string telecomCodeName, string senderGroupingKey, string recipientGroupingKey)
         {
             var model = new ListMessageStatusResponseData()
