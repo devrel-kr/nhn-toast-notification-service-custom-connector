@@ -18,89 +18,52 @@ namespace Toast.Common.Tests.Builders
     public class RequestBuilderValidatorTests
     {
         [TestMethod]
-        public void Given_RequestUrlBuilder_Type_Then_It_Should_Contain_Properties()
+        public void Given_RequestUrlBuilder_Type_Then_It_Should_Contain_Fields()
         {
-            var fis = typeof(RequestUrlBuilder).GetProperties(BindingFlags.NonPublic|BindingFlags.Instance);
+            var SettingsFi = typeof(RequestUrlBuilder).GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance);
+            var EndpointFi = typeof(RequestUrlBuilder).GetField("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance);
+            var QueriesFi = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
+            var PathsFi = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            fis.SingleOrDefault(p => p.Name == "_settings").Should().NotBeNull()
-                .And.Subject.PropertyType.Should().Be(typeof(ToastSettings));
-
-            fis.SingleOrDefault(p => p.Name == "_baseUrl").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(string));
-
-            fis.SingleOrDefault(p => p.Name == "_version").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(string));
-
-            fis.SingleOrDefault(p => p.Name == "_appKey").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(string));
-
-            fis.SingleOrDefault(p => p.Name == "_endpoint").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(string));
-
-            fis.SingleOrDefault(p => p.Name == "_queries").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(string));
-
-            fis.SingleOrDefault(p => p.Name == "_paths").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(Dictionary<string, string>));
+            SettingsFi?.FieldType.Name.Should().Be("ToastSettings");
+            EndpointFi?.FieldType.Name.Should().Be("String");
+            QueriesFi?.FieldType.Name.Should().Be("String");
+            PathsFi?.FieldType.Name.Should().Be("Dictionary`2");
         }
 
-        [DataTestMethod]
-        [DataRow("baseUrl", "version", "endpoint")]
-        [DataRow(null, null, null)]
-        [DataRow(null, "version", "endpoint")]
-        [DataRow("baseUrl", null, "endpoint")]
-        [DataRow("baseUrl", "version", null)]
-        public void Given_Parameters_When_WithSettins_Invoked_Then_It_Should_Return_Result(string baseUrl, string version, string endpoint)
+        [TestMethod]
+        public void Given_Default_Settings_When_WithSettins_Invoked_Then_It_Should_Return_Result()
         {
-            var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
-            var result = new RequestUrlBuilder().WithSettings(settings, endpoint);
+            var settings = new ToastSettings() { };
+            string endpoint = "";
 
-            var resultSetting = typeof(RequestUrlBuilder).GetProperty("_settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-            var resultBaseUrl = typeof(RequestUrlBuilder).GetProperty("_baseUrl", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-            var resultVersion = typeof(RequestUrlBuilder).GetProperty("_version", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-            var resultEndpoint = typeof(RequestUrlBuilder).GetProperty("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var result = new RequestUrlBuilder().WithSettings(settings, endpoint);
+            var resultSetting = typeof(RequestUrlBuilder).GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultEndpoint = typeof(RequestUrlBuilder).GetField("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
             result.Should().BeOfType(typeof(RequestUrlBuilder));
-            resultSetting.Should().Be(resultSetting);
-            resultBaseUrl.Should().Be(baseUrl);
-            resultVersion.Should().Be(version);
+            resultSetting.Should().Be(settings);
             resultEndpoint.Should().Be(endpoint);
         }
 
-        [DataTestMethod]
-        [DataRow("appKey")]
-        [DataRow(null)]
-        public void Given_Parameters_When_WithHeaders_Invoked_Then_It_Should_Return_Result(string appKey)
+        [TestMethod]
+        public void Given_Default_Headers_When_WithHeaders_Invoked_Then_It_Should_Return_Result()
         {
-            var headers = new RequestHeaderModel() { AppKey = appKey };
+            var headers = new RequestHeaderModel() {};
             var result = new RequestUrlBuilder().WithHeaders(headers);
-            var resultAppKey = typeof(RequestUrlBuilder).GetProperty("_appKey", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultHeader = typeof(RequestUrlBuilder).GetField("_headers", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
-            resultAppKey.Should().Be(appKey);
+            result.Should().BeOfType(typeof(RequestUrlBuilder));
+            resultHeader.Should().Be(headers);
         }
-
-        /*[TestMethod]
-        public void Given_InvalidQueries_When_WithQueries_Invoked_Then_It_Should_Throw_Exception( )
-        {
-            var settings = new ToastSettings();
-            var queries = new FakeRequestQuries2();
-            var result = new RequestUrlBuilder().WithSettings(settings, null).WithQueries(queries);
-
-            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-
-            result.Should().BeOfType<RequestUrlBuilder>();
-            resultQuery.Should().BeNull();
-        }*/
 
         [TestMethod]
         public void Given_Default_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
         {
             var queries = new FakeRequestQuries();
             var result = new RequestUrlBuilder().WithQueries(queries);
-            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
             
             result.Should().BeOfType<RequestUrlBuilder>();
-            resultQuery.Should().BeNull();
         }
 
         [TestMethod]
@@ -109,18 +72,26 @@ namespace Toast.Common.Tests.Builders
             var paths = new FakeRequestPaths();
             var result = new RequestUrlBuilder().WithPaths(paths);
 
-            var resultQuery = typeof(RequestUrlBuilder).GetProperty("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-
             result.Should().BeOfType<RequestUrlBuilder>();
-            resultQuery.Should().BeNull();
         }
 
-        [TestMethod]
-        public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result()
+        [DataTestMethod]
+        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms")]
+        public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result(string baseUrl, string endpoint, string version, string appKey, string expected)
         {
-            var result = new RequestUrlBuilder().Build();
+            var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
+            var headers = new RequestHeaderModel() { AppKey = appKey};
+            var queries = new FakeRequestQuries();
+            var paths = new FakeRequestPaths();
 
-            result.Should().BeOfType(typeof(string));
+            var result = new RequestUrlBuilder()
+                .WithSettings(settings, endpoint)
+                .WithHeaders(headers)
+                .WithQueries(queries)
+                .WithPaths(paths)
+                .Build();
+
+            result.Should().Be(expected);
         }
     }
 }

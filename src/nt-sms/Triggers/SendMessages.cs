@@ -70,21 +70,14 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var payloads = default(SendMessagesRequestBody);
+            var payload = default(SendMessagesRequestBody);
             try
             {
-                payloads = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
+                payload = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 return new BadRequestResult();
-            }
-
-            var data = default(object);
-            using (var reader = new StreamReader(req.Body))
-            {
-                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
-                data = JsonConvert.DeserializeObject<object>(json);
             }
 
             var requestUrl = new RequestUrlBuilder()
@@ -92,15 +85,15 @@ namespace Toast.Sms.Triggers
                 .WithHeaders(headers)
                 .Build();
 
-            var content = new ObjectContent<object>(data, new JsonMediaTypeFormatter(), "application/json");
+            var content = new ObjectContent<object>(payload, new JsonMediaTypeFormatter(), "application/json");
 
             // Act
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
-            var payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+            var resultPayload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
 
-            return new OkObjectResult(payload);
+            return new OkObjectResult(resultPayload);
         }
     }
 }
