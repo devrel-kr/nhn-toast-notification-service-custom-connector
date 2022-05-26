@@ -60,19 +60,27 @@ namespace Toast.Common.Tests.Builders
         [TestMethod]
         public void Given_Default_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
         {
+            var settings = new ToastSettings() { };
+            string endpoint = "";
             var queries = new FakeRequestQuries();
-            var result = new RequestUrlBuilder().WithQueries(queries); 
+            var result = new RequestUrlBuilder().WithSettings(settings, endpoint).WithQueries(queries);
+            var resultQueries = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
             result.Should().BeOfType<RequestUrlBuilder>();
+            resultQueries.Should().Be("");
         }
 
         [TestMethod]
         public void Given_Default_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result()
         {
+            var settings = new ToastSettings() { };
+            string endpoint = "";
             var paths = new FakeRequestPaths();
-            var result = new RequestUrlBuilder().WithPaths(paths);
+            var result = new RequestUrlBuilder().WithSettings(settings,endpoint).WithPaths(paths);
+            var resultPaths = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
             result.Should().BeOfType<RequestUrlBuilder>();
+            resultPaths.Should().BeEquivalentTo(new Dictionary<string, string>());
         }
 
         [DataTestMethod]
