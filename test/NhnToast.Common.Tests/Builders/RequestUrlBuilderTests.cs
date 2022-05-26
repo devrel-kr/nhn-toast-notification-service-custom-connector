@@ -20,15 +20,15 @@ namespace Toast.Common.Tests.Builders
         [TestMethod]
         public void Given_RequestUrlBuilder_Type_Then_It_Should_Contain_Fields()
         {
-            var SettingsFi = typeof(RequestUrlBuilder).GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance);
-            var EndpointFi = typeof(RequestUrlBuilder).GetField("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance);
-            var QueriesFi = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
-            var PathsFi = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance);
+            var settingsFi = typeof(RequestUrlBuilder).GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance);
+            var endpointFi = typeof(RequestUrlBuilder).GetField("_endpoint", BindingFlags.NonPublic | BindingFlags.Instance);
+            var queriesFi = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
+            var pathsFi = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            SettingsFi?.FieldType.Name.Should().Be("ToastSettings");
-            EndpointFi?.FieldType.Name.Should().Be("String");
-            QueriesFi?.FieldType.Name.Should().Be("String");
-            PathsFi?.FieldType.Name.Should().Be("Dictionary`2");
+            settingsFi?.FieldType.Name.Should().Be("ToastSettings");
+            endpointFi?.FieldType.Name.Should().Be("String");
+            queriesFi?.FieldType.Name.Should().Be("String");
+            pathsFi?.FieldType.Name.Should().Be("Dictionary`2");
         }
 
         [TestMethod]
@@ -61,8 +61,8 @@ namespace Toast.Common.Tests.Builders
         public void Given_Default_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
         {
             var queries = new FakeRequestQuries();
-            var result = new RequestUrlBuilder().WithQueries(queries);
-            
+            var result = new RequestUrlBuilder().WithQueries(queries); 
+
             result.Should().BeOfType<RequestUrlBuilder>();
         }
 
