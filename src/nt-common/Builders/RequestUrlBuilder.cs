@@ -95,29 +95,22 @@ namespace Toast.Common.Builders
         /// <returns>Returns request URL which is string type instance.</returns>
         public string Build()
         {
-            if (this._settings != null && this._endpoint != null)
+            var requestUrl = $"{this._settings.BaseUrl.TrimEnd('/')}/{this._endpoint.TrimStart('/')}";
+
+            requestUrl = requestUrl.Replace("{version}", this._settings.Version);
+            requestUrl = requestUrl.Replace("{appKey}", this._headers.AppKey);
+
+            if (_paths != null)
             {
-                var requestUrl = $"{this._settings.BaseUrl.TrimEnd('/')}/{this._endpoint.TrimStart('/')}";
-
-                requestUrl = requestUrl.Replace("{version}", this._settings.Version);
-                requestUrl = requestUrl.Replace("{appKey}", this._headers.AppKey);
-
-                if (_paths != null)
+                foreach (var key in _paths.Keys)
                 {
-                    foreach (var key in _paths.Keys)
-                    {
-                        requestUrl = requestUrl.Replace($"{{{key}}}", _paths[key]);
-                    }
+                    requestUrl = requestUrl.Replace($"{{{key}}}", _paths[key]);
                 }
-
-                requestUrl = (string.IsNullOrWhiteSpace(this._queries)) ? requestUrl : $"{requestUrl}?{this._queries}";
-
-                return requestUrl;
             }
-            else 
-            {
-                throw new InvalidOperationException();
-            }
+
+            requestUrl = (string.IsNullOrWhiteSpace(this._queries)) ? requestUrl : $"{requestUrl}?{this._queries}";
+
+            return requestUrl;
         }
     }
 }

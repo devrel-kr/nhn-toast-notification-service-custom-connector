@@ -43,9 +43,7 @@ namespace Toast.Sms.Tests.Triggers
 
         [TestCategory("Integration")]
         [DataTestMethod]
-        //[DataRow(false, null, false)]
         [DataRow(false, 1, false)]
-        //[DataRow(true, null, false)]
         [DataRow(true, 1, true)]
         [DataRow(true, 100, true)]
         public async Task Given_Parameters_When_GetMessage_Invoked_Then_It_Should_Return_Result(bool useRequestId, int recipientSeq, bool expected)
