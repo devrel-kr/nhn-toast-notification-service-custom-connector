@@ -83,7 +83,7 @@ namespace Toast.Common.Builders
                 throw new InvalidOperationException("_settings is not be null when WithPaths() is invoked");
             }
 
-            var serialised = JsonConvert.SerializeObject(paths, this._settings?.SerializerSetting);
+            var serialised = JsonConvert.SerializeObject(paths, this._settings.SerializerSetting);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
 
             this._paths = deserialised;
