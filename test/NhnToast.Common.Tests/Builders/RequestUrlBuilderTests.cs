@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 using FluentAssertions;
 
+using Newtonsoft.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Builders;
@@ -89,16 +89,16 @@ namespace Toast.Common.Tests.Builders
         }
 
         [TestMethod]
-        public void Given_Default_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
+        public void Given_Fake_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
         {
             var settings = new ToastSettings() { };
             string endpoint = "";
-            var queries = new FakeRequestQuries();
+            var queries = new FakeRequestQuries() {FakeQueries = "Fakequeries"};
             var result = new RequestUrlBuilder().WithSettings(settings, endpoint).WithQueries(queries);
             var resultQueries = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
             
-            result.Should().BeOfType<RequestUrlBuilder>();
-            resultQueries.Should().Be("");
+            result.Should().BeOfType(typeof(RequestUrlBuilder));
+            resultQueries.Should().Be("fakeQueries=Fakequeries");
         }
 
         [TestMethod]
@@ -106,22 +106,22 @@ namespace Toast.Common.Tests.Builders
         {
             var settings = new ToastSettings() { };
             string endpoint = "";
-            var paths = new FakeRequestPaths();
+            var paths = new FakeRequestPaths() {FakePaths="Fakepaths"};
             var result = new RequestUrlBuilder().WithSettings(settings,endpoint).WithPaths(paths);
             var resultPaths = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-
-            result.Should().BeOfType<RequestUrlBuilder>();
-            resultPaths.Should().BeEquivalentTo(new Dictionary<string, string>());
+            
+            result.Should().BeOfType(typeof(RequestUrlBuilder));
+            resultPaths.Should().BeOfType(typeof(Dictionary<string, string>));
         }
 
         [DataTestMethod]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms", "v3.0", "appKey", "https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms")]
-        public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result(string baseUrl, string endpoint, string version, string appKey, string expected)
+        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms/{fakePaths}", "v3.0", "appKey", "FakePaths","FakeQueries" ,"https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/FakePaths?fakeQueries=FakeQueries")]
+        public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result(string baseUrl, string endpoint, string version, string appKey, string path,string query,string expected)
         {
             var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
             var headers = new RequestHeaderModel() { AppKey = appKey};
-            var queries = new FakeRequestQuries();
-            var paths = new FakeRequestPaths();
+            var queries = new FakeRequestQuries() { FakeQueries = query};
+            var paths = new FakeRequestPaths() { FakePaths = path};
 
             var result = new RequestUrlBuilder()
                 .WithSettings(settings, endpoint)

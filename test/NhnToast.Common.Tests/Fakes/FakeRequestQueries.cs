@@ -4,5 +4,6 @@ namespace Toast.Common.Tests.Fakes
 {
     public class FakeRequestQuries : BaseRequestQueries
     {
+        public string FakeQueries { get; set; }
     }
 }
