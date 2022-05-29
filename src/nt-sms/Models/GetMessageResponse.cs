@@ -12,11 +12,6 @@ namespace Toast.Sms.Models
     public class GetMessageResponse : ResponseModel<ResponseItemBodyModel<GetMessageResponseData>> { }
 
     /// <summary>
-    /// This represents the entity for ListMessages response body.
-    /// </summary>
-    public class GetMessageResponseBody : ResponseItemBodyModel<GetMessageResponseData> { }
-
-    /// <summary>
     /// This represents the entity for GetMessage response data.
     /// </summary>
     public class GetMessageResponseData
@@ -158,7 +153,7 @@ namespace Toast.Sms.Models
     }
 
     /// <summary>
-    /// This represents the example entity for ListMessageStatus response body.
+    /// This represents the example entity for GetMessage response body.
     /// </summary>
     public class GetMessageResponseModelExample : OpenApiExample<GetMessageResponse>
     {
@@ -172,7 +167,7 @@ namespace Toast.Sms.Models
                     ResultMessage = "SUCCESS",
                     IsSuccessful = true
                 },
-                Body = new GetMessageResponseBody()
+                Body = new ResponseItemBodyModel<GetMessageResponseData>()
                 {
                     Data = new GetMessageResponseData()
                     {
@@ -208,7 +203,7 @@ namespace Toast.Sms.Models
             this.Examples.Add(
                 OpenApiExampleResolver.Resolve(
                     "sample",
-                    "This represents the example entity for ListMessages response body.",
+                    "This represents the example entity for GetMessage response body.",
                     exampleInstance,
                     namingStrategy
             ));

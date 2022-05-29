@@ -13,11 +13,6 @@ namespace Toast.Sms.Models
     public class ListMessageStatusResponse : ResponseModel<ResponseCollectionBodyModel<ListMessageStatusResponseData>> { }
 
     /// <summary>
-    /// This represents the entity for ListMessageStatus response body.
-    /// </summary>
-    public class ListMessageStatusResponseBody : ResponseCollectionBodyModel<ListMessageStatusResponseData> { }
-
-    /// <summary>
     /// This represents the entity for ListMessageStatus response data.
     /// </summary>
     public class ListMessageStatusResponseData
@@ -104,7 +99,7 @@ namespace Toast.Sms.Models
                     ResultMessage = "SUCCESS",
                     IsSuccessful = true
                 },
-                Body = new ListMessageStatusResponseBody()
+                Body = new ResponseCollectionBodyModel<ListMessageStatusResponseData>()
                 {
                     PageNumber = 1,
                     PageSize = 15,
@@ -132,7 +127,7 @@ namespace Toast.Sms.Models
             this.Examples.Add(
                 OpenApiExampleResolver.Resolve(
                     "sample",
-                    "This represents the example entity for ListMessages response body.",
+                    "This represents the example entity for ListMessageStatus response body.",
                     exampleInstance,
                     namingStrategy
             ));
