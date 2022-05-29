@@ -14,11 +14,6 @@ namespace Toast.Sms.Models
     public class SendMessagesResponse : ResponseModel<ResponseItemBodyModel<SendMessagesResponseData>> { }
 
     /// <summary>
-    /// This represents the entity for SendMessages response body.
-    /// </summary>
-    public class SendMessagesResponseBody : ResponseItemBodyModel<SendMessagesResponseData> { }
-
-    /// <summary>
     /// This represents the entity for SendMessages response data.
     /// </summary>
     public class SendMessagesResponseData
@@ -99,7 +94,7 @@ namespace Toast.Sms.Models
                     ResultCode = 0,
                     ResultMessage = "SUCCESS"
                 },
-                Body = new SendMessagesResponseBody()
+                Body = new ResponseItemBodyModel<SendMessagesResponseData>()
                 {
                     Data = new SendMessagesResponseData()
                     {

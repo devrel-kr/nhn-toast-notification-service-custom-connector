@@ -15,11 +15,6 @@ namespace Toast.Sms.Models
     public class ListMessagesResponse : ResponseModel<ResponseCollectionBodyModel<ListMessagesResponseData>> { }
 
     /// <summary>
-    /// This represents the entity for ListMessages response body.
-    /// </summary>
-    public class ListMessagesResponseBody : ResponseCollectionBodyModel<ListMessagesResponseData> { }
-
-    /// <summary>
     /// This represents the entity for ListMessages response data.
     /// </summary>
     public class ListMessagesResponseData
@@ -177,7 +172,7 @@ namespace Toast.Sms.Models
                             ResultMessage = "SUCCESS",
                             IsSuccessful = true
                         },
-                Body = new ListMessagesResponseBody()
+                Body = new ResponseCollectionBodyModel<ListMessagesResponseData>()
                 {
                             PageNumber = 1,
                             PageSize = 15,

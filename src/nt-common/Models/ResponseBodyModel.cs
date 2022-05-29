@@ -7,7 +7,7 @@ namespace Toast.Common.Models
     /// <summary>
     /// This represents the model entity for get response body.
     /// </summary>
-    public abstract class ResponseItemBodyModel<T>
+    public class ResponseItemBodyModel<T>
     {
         /// <summary>
         /// Gets or sets the data.
@@ -18,7 +18,7 @@ namespace Toast.Common.Models
     /// <summary>
     /// This represents the model entity for get list response body.
     /// </summary>
-    public abstract class ResponseCollectionBodyModel<T>
+    public class ResponseCollectionBodyModel<T>
     {
         /// <summary>
         /// Gets or sets the page number.
