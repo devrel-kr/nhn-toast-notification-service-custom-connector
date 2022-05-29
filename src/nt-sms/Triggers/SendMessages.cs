@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -18,8 +17,6 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
-using Newtonsoft.Json;
 
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
@@ -85,13 +82,12 @@ namespace Toast.Sms.Triggers
                 .WithHeaders(headers)
                 .Build();
 
-            var content = new ObjectContent<object>(payload, new JsonMediaTypeFormatter(), "application/json");
+            var content = new ObjectContent<SendMessagesRequestBody>(payload, new JsonMediaTypeFormatter(), "application/json");
 
-            // Act
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
-            var resultPayload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+            var resultPayload = await result.Content.ReadAsAsync<SendMessagesResponse>().ConfigureAwait(false);
 
             return new OkObjectResult(resultPayload);
         }

@@ -32,11 +32,8 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithSettings<T>(T settings, string endpoint) where T : ToastSettings
         {
-            if (settings != null)
-            {
-                this._settings = settings;
-                this._endpoint = endpoint;
-            }
+            this._settings = settings;
+            this._endpoint = endpoint;
 
             return this;
         }
@@ -60,13 +57,16 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithQueries<T>(T queries) where T : BaseRequestQueries
         {
-            if (this._settings != null)
+            if (this._settings == null)
             {
-                var serialised = JsonConvert.SerializeObject(queries, this._settings.SerializerSetting);
-                var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-
-                this._queries = string.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
+                throw new InvalidOperationException("_settings is not be null when WithQueries() is invoked");
             }
+
+            var serialised = JsonConvert.SerializeObject(queries, this._settings.SerializerSetting);
+            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+
+            this._queries = string.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
+
 
             return this;
         }
@@ -78,13 +78,16 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithPaths<T>(T paths) where T : BaseRequestPaths
         {
-            if (this._settings != null)
+            if (this._settings == null)
             {
-                var serialised = JsonConvert.SerializeObject(paths, this._settings?.SerializerSetting);
-                var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
-
-                this._paths = deserialised; 
+                throw new InvalidOperationException("_settings is not be null when WithPaths() is invoked");
             }
+
+            var serialised = JsonConvert.SerializeObject(paths, this._settings?.SerializerSetting);
+            var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
+
+            this._paths = deserialised;
+
 
             return this;
         }
@@ -100,7 +103,7 @@ namespace Toast.Common.Builders
             requestUrl = requestUrl.Replace("{version}", this._settings.Version);
             requestUrl = requestUrl.Replace("{appKey}", this._headers.AppKey);
 
-            if (_paths != null)
+            if (this._paths != null)
             {
                 foreach (var key in _paths.Keys)
                 {
@@ -108,7 +111,10 @@ namespace Toast.Common.Builders
                 }
             }
 
-            requestUrl = (string.IsNullOrWhiteSpace(this._queries)) ? requestUrl : $"{requestUrl}?{this._queries}";
+            if (!string.IsNullOrWhiteSpace(this._queries))
+            {
+                requestUrl += $"?{this._queries}";
+            }
 
             return requestUrl;
         }

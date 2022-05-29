@@ -25,10 +25,41 @@ namespace Toast.Common.Tests.Builders
             var queriesFi = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
             var pathsFi = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            settingsFi?.FieldType.Name.Should().Be("ToastSettings");
-            endpointFi?.FieldType.Name.Should().Be("String");
-            queriesFi?.FieldType.Name.Should().Be("String");
-            pathsFi?.FieldType.Name.Should().Be("Dictionary`2");
+            if (settingsFi != null)
+            {
+                settingsFi.FieldType.Should().Be(typeof(ToastSettings));
+            }
+            else 
+            {
+                throw new AssertFailedException("Can't find Field _settings in RequestUrlBuilder instance");
+            }
+            
+            if (endpointFi != null)
+            {
+                endpointFi.FieldType.Should().Be(typeof(string));
+            }
+            else
+            {
+                throw new AssertFailedException("Can't find Field _endpoint in RequestUrlBuilder instance");
+            }
+
+            if (queriesFi != null)
+            {
+                queriesFi.FieldType.Should().Be(typeof(string));
+            }
+            else
+            {
+                throw new AssertFailedException("Can't find Field _queries in RequestUrlBuilder instance");
+            }
+
+            if (pathsFi != null) 
+            {
+                pathsFi.FieldType.Should().Be(typeof(Dictionary<string, string>));
+            }
+            else
+            {
+                throw new AssertFailedException("Can't find Field _paths in RequestUrlBuilder instance");
+            }
         }
 
         [TestMethod]
@@ -65,7 +96,7 @@ namespace Toast.Common.Tests.Builders
             var queries = new FakeRequestQuries();
             var result = new RequestUrlBuilder().WithSettings(settings, endpoint).WithQueries(queries);
             var resultQueries = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
-
+            
             result.Should().BeOfType<RequestUrlBuilder>();
             resultQueries.Should().Be("");
         }
