@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 using Toast.Sms.Models;
 
 
-namespace Toast.Common.Tests.Models
+namespace Toast.Sms.Tests.Models
 {
     [TestClass]
     public class GetMessageResponseModelTest
@@ -38,7 +38,7 @@ namespace Toast.Common.Tests.Models
             pis.SingleOrDefault(p => p.Name == "TemplateName").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "CategoryId").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(int));
+               .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "CategoryName").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "Body").Should().NotBeNull()

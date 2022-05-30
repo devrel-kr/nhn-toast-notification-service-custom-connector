@@ -10,7 +10,7 @@ using Newtonsoft.Json.Serialization;
 
 using Toast.Sms.Models;
 
-namespace Toast.Common.Tests.Models
+namespace Toast.Sms.Tests.Models
 {
     [TestClass]
     public class ListMessageStatusResponseModelTest
