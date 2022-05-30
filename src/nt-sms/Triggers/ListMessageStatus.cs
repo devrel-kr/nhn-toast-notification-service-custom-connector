@@ -52,7 +52,7 @@ namespace Toast.Sms.Triggers
         [OpenApiParameter(name: "messageType", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "message type (`SMS`/`LMS`/`MMS`/`AUTH`)")]
         [OpenApiParameter(name: "pageNum", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page number in the pagination. Default value is '1'")]
         [OpenApiParameter(name: "pageSize", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page size in the pagination. Default value is '15'")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "The OK response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(ListMessageStatusResponse), Example = typeof(ListMessageStatusResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
@@ -89,7 +89,7 @@ namespace Toast.Sms.Triggers
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
-            dynamic payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+            dynamic payload = await result.Content.ReadAsAsync<ListMessageStatusResponse>().ConfigureAwait(false);
 
             return new OkObjectResult(payload);
         }
