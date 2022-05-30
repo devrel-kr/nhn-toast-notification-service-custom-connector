@@ -81,10 +81,10 @@ namespace Toast.Common.Tests.Builders
         }
 
         [DataTestMethod]
-        [DataRow("FakePath")]
-        [DataRow(null)]
-        [DataRow("")]
-        public void Given_Fake_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result(string path)
+        [DataRow("FakePath", 1)]
+        [DataRow(null, 0)]
+        [DataRow("", 1)]
+        public void Given_Fake_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result(string path, int count)
         {
             var settings = new ToastSettings() { };
             string endpoint = "";
@@ -93,11 +93,8 @@ namespace Toast.Common.Tests.Builders
             var resultPaths = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result) as Dictionary<string, string>;
             
             result.Should().BeOfType(typeof(RequestUrlBuilder));
-            if (string.IsNullOrWhiteSpace(path)) 
-            {
-                resultPaths.Keys.Should().Contain("fakePaths");
-                resultPaths.Values.Should().Contain(path);
-            }
+            resultPaths.Count.Should().Be(count);
+
             resultPaths.Should().BeOfType(typeof(Dictionary<string, string>));
         }
 
