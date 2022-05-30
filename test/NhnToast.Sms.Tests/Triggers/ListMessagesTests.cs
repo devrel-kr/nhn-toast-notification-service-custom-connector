@@ -9,14 +9,13 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
 using Toast.Tests.Common.Configurations;
-
-using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Triggers
 {
@@ -56,9 +55,9 @@ namespace Toast.Sms.Tests.Triggers
         [DataRow(false, "2022-03-22 18:00:00", null, null, "2022-03-22 22:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
         [DataRow(false, null, "2022-03-22 22:00:00", "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
         [DataRow(false, null, "2022-03-22 22:00:00", null, "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, false)]
-        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15, false)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, true)]
+        [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15, true)]
         [DataRow(true, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, null, null, "2022-03-22 22:00:00", "2022-03-22 18:00:00", null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
         [DataRow(true, "2022-03-22 18:00:00", "2022-03-22 22:00:00", null, null, null, null, null, null, null, null, null, null, null, null, 1, 15, true)]
@@ -91,10 +90,8 @@ namespace Toast.Sms.Tests.Triggers
             string startResultDate, string endResultDate, string sendNo, string recipientNo, string templateId, string msgStatus, string resultCode, string subResultCode, string senderGroupingKey, string recipientGroupingKey, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            var options = new ListMessagesRequestUrlOptions()
+            ListMessagesRequestQueries queries = new ListMessagesRequestQueries()
             {
-                Version = this._settings.Version,
-                AppKey = this._headers.AppKey,
                 RequestId = useRequestId ? this._settings.Examples.RequestId : null,
                 StartRequestDate = startRequestDate,
                 EndRequestDate = endRequestDate,
@@ -102,18 +99,21 @@ namespace Toast.Sms.Tests.Triggers
                 EndCreateDate = endCreateDate,
                 StartResultDate = startResultDate,
                 EndResultDate = endResultDate,
-                SendNo = sendNo,
-                RecipientNo = recipientNo,
+                SendNumber = sendNo,
+                RecipientNumber = recipientNo,
                 TemplateId = templateId,
-                MsgStatus = msgStatus,
+                MessageStatus = msgStatus,
                 ResultCode = resultCode,
                 SubResultCode = subResultCode,
                 SenderGroupingKey = senderGroupingKey,
                 RecipientGroupingKey = recipientGroupingKey,
-                PageNum = pageNum,
-                PageSize = pageSize
+                PageNumber = (pageNum != null) ? pageNum : 1,
+                PageSize = (pageSize != null) ? pageSize : 15,
             };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListMessages.TrimStart('/')}", options);
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessages)
+                .WithHeaders(this._headers).WithQueries(queries)
+                .Build();
 
             var http = new HttpClient();
 

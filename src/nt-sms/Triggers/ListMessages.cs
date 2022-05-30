@@ -17,6 +17,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -91,32 +92,10 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.ListMessages;
-            var options = new ListMessagesRequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey,
-                RequestId = queries.RequestId,
-                StartRequestDate = queries.StartRequestDate,
-                EndRequestDate = queries.EndRequestDate,
-                StartCreateDate = queries.StartCreateDate,
-                EndCreateDate = queries.EndCreateDate,
-                StartResultDate = queries.StartResultDate,
-                EndResultDate = queries.EndResultDate,
-                SendNo = queries.SendNumber,
-                RecipientNo = queries.RecipientNumber,
-                TemplateId = queries.TemplateId,
-                MsgStatus = queries.MessageStatus,
-                ResultCode = queries.ResultCode,
-                SubResultCode = queries.SubResultCode,
-                SenderGroupingKey = queries.SenderGroupingKey,
-                RecipientGroupingKey = queries.RecipientGroupingKey,
-                PageNum = queries.PageNumber,
-                PageSize = queries.PageSize       
-            };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessages)
+                .WithHeaders(headers).WithQueries(queries)
+                .Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
