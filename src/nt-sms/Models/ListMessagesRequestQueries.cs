@@ -1,11 +1,13 @@
 using Newtonsoft.Json;
 
+using Toast.Common.Models;
+
 namespace Toast.Sms.Models
 {
     /// <summary>
     /// This represents the entity for ListMessages request query parameters.
     /// </summary>
-    public class ListMessagesRequestQueries
+    public class ListMessagesRequestQueries : BaseRequestQueries
     {
         /// <summary>
         /// Gets or sets the request id.

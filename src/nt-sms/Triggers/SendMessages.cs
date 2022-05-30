@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -19,8 +18,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-using Newtonsoft.Json;
-
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -66,46 +64,34 @@ namespace Toast.Sms.Triggers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return new BadRequestResult();
             }
 
-            var payloads = default(SendMessagesRequestBody);
+            var payload = default(SendMessagesRequestBody);
             try
             {
-                payloads = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
+                payload = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.SendMessages;
-            var options = new RequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey
-            };
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.SendMessages)
+                .WithHeaders(headers)
+                .Build();
 
-            var data = default(object);
-            using (var reader = new StreamReader(req.Body))
-            {
-                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
-                data = JsonConvert.DeserializeObject<object>(json);
-            }
+            var content = new ObjectContent<SendMessagesRequestBody>(payload, this._settings.JsonFormatter, "application/json");
 
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
-
-            var content = new ObjectContent<object>(data, new JsonMediaTypeFormatter(), "application/json");
-
-            // Act
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
-            var payload = await result.Content.ReadAsAsync<SendMessagesResponse>().ConfigureAwait(false);
+            var resultPayload = await result.Content.ReadAsAsync<SendMessagesResponse>().ConfigureAwait(false);
 
-            return new OkObjectResult(payload);
+            return new OkObjectResult(resultPayload);
         }
     }
 }
