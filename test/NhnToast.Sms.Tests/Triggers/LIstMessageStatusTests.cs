@@ -56,7 +56,7 @@ namespace Toast.Sms.Tests.Triggers
         public async Task Given_Parameters_When_ListMessagesStatus_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdatedate, string? messageType, int? pageNum, int? pageSize, bool expected)
         {
             // Arrange
-            ListMessageStatusRequestQuries queries = new ListMessageStatusRequestQuries()
+            ListMessageStatusRequestQueries queries = new ListMessageStatusRequestQueries()
             {
                 StartUpdateDate = startUpdateDate,
                 EndUpdateDate = endUpdatedate,
