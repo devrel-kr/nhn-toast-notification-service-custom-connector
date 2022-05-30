@@ -25,41 +25,17 @@ namespace Toast.Common.Tests.Builders
             var queriesFi = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
             var pathsFi = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if (settingsFi != null)
-            {
-                settingsFi.FieldType.Should().Be(typeof(ToastSettings));
-            }
-            else 
-            {
-                throw new AssertFailedException("Can't find Field _settings in RequestUrlBuilder instance");
-            }
-            
-            if (endpointFi != null)
-            {
-                endpointFi.FieldType.Should().Be(typeof(string));
-            }
-            else
-            {
-                throw new AssertFailedException("Can't find Field _endpoint in RequestUrlBuilder instance");
-            }
+            settingsFi.Should().NotBeNull();
+            settingsFi.FieldType.Should().Be(typeof(ToastSettings));
 
-            if (queriesFi != null)
-            {
-                queriesFi.FieldType.Should().Be(typeof(string));
-            }
-            else
-            {
-                throw new AssertFailedException("Can't find Field _queries in RequestUrlBuilder instance");
-            }
+            endpointFi.Should().NotBeNull();
+            endpointFi.FieldType.Should().Be(typeof(string));
 
-            if (pathsFi != null) 
-            {
-                pathsFi.FieldType.Should().Be(typeof(Dictionary<string, string>));
-            }
-            else
-            {
-                throw new AssertFailedException("Can't find Field _paths in RequestUrlBuilder instance");
-            }
+            queriesFi.Should().NotBeNull();
+            queriesFi.FieldType.Should().Be(typeof(string));
+
+            pathsFi.Should().NotBeNull();
+            pathsFi.FieldType.Should().Be(typeof(Dictionary<string, string>));
         }
 
         [TestMethod]
@@ -80,7 +56,7 @@ namespace Toast.Common.Tests.Builders
         [TestMethod]
         public void Given_Default_Headers_When_WithHeaders_Invoked_Then_It_Should_Return_Result()
         {
-            var headers = new RequestHeaderModel() {};
+            var headers = new RequestHeaderModel() { };
             var result = new RequestUrlBuilder().WithHeaders(headers);
             var resultHeader = typeof(RequestUrlBuilder).GetField("_headers", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
 
@@ -88,39 +64,50 @@ namespace Toast.Common.Tests.Builders
             resultHeader.Should().Be(headers);
         }
 
-        [TestMethod]
-        public void Given_Fake_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result()
+        [DataTestMethod]
+        [DataRow("FakeQuery1", "FakeQuery2", "fakeQuery1=FakeQuery1&fakeQuery2=FakeQuery2")]
+        [DataRow("FakeQuery1", null, "fakeQuery1=FakeQuery1")]
+        [DataRow("FakeQuery1", "", "fakeQuery1=FakeQuery1&fakeQuery2=")]
+        public void Given_Fake_Queries_Instance_When_WithQueries_Invoked_Then_It_Should_Return_Result(string query1, string query2, string expected)
         {
             var settings = new ToastSettings() { };
             string endpoint = "";
-            var queries = new FakeRequestQuries() {FakeQueries = "Fakequeries"};
+            var queries = new FakeRequestQuries() {FakeQuery1 = query1, FakeQuery2 = query2};
             var result = new RequestUrlBuilder().WithSettings(settings, endpoint).WithQueries(queries);
             var resultQueries = typeof(RequestUrlBuilder).GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
             
             result.Should().BeOfType(typeof(RequestUrlBuilder));
-            resultQueries.Should().Be("fakeQueries=Fakequeries");
+            resultQueries.Should().Be(expected);
         }
 
-        [TestMethod]
-        public void Given_Default_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result()
+        [DataTestMethod]
+        [DataRow("FakePath")]
+        [DataRow(null)]
+        [DataRow("")]
+        public void Given_Fake_Paths_Instance_When_WithPaths_Invoked_Then_It_Should_Return_Result(string path)
         {
             var settings = new ToastSettings() { };
             string endpoint = "";
-            var paths = new FakeRequestPaths() {FakePaths="Fakepaths"};
+            var paths = new FakeRequestPaths() {FakePaths=path};
             var result = new RequestUrlBuilder().WithSettings(settings,endpoint).WithPaths(paths);
-            var resultPaths = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result);
+            var resultPaths = typeof(RequestUrlBuilder).GetField("_paths", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(result) as Dictionary<string, string>;
             
             result.Should().BeOfType(typeof(RequestUrlBuilder));
+            if (string.IsNullOrWhiteSpace(path)) 
+            {
+                resultPaths.Keys.Should().Contain("fakePaths");
+                resultPaths.Values.Should().Contain(path);
+            }
             resultPaths.Should().BeOfType(typeof(Dictionary<string, string>));
         }
 
         [DataTestMethod]
-        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms/{fakePaths}", "v3.0", "appKey", "FakePaths","FakeQueries" ,"https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/FakePaths?fakeQueries=FakeQueries")]
+        [DataRow("https://api-sms.cloud.toast.com/", "/sms/{version}/appKeys/{appKey}/sender/sms/{fakePaths}", "v3.0", "appKey", "FakePaths","FakeQuery" ,"https://api-sms.cloud.toast.com/sms/v3.0/appKeys/appKey/sender/sms/FakePaths?fakeQuery1=FakeQuery")]
         public void Given_Default_RequestUrlBuilder_Instance_When_Build_Invoked_Then_It_Should_Return_Result(string baseUrl, string endpoint, string version, string appKey, string path,string query,string expected)
         {
             var settings = new ToastSettings() { BaseUrl = baseUrl, Version = version };
             var headers = new RequestHeaderModel() { AppKey = appKey};
-            var queries = new FakeRequestQuries() { FakeQueries = query};
+            var queries = new FakeRequestQuries() { FakeQuery1 = query};
             var paths = new FakeRequestPaths() { FakePaths = path};
 
             var result = new RequestUrlBuilder()

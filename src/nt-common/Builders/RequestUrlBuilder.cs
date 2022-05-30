@@ -59,10 +59,10 @@ namespace Toast.Common.Builders
         {
             if (this._settings == null)
             {
-                throw new InvalidOperationException("_settings is not be null when WithQueries() is invoked");
+                throw new InvalidOperationException("Invalid ToastSettings.");
             }
 
-            var serialised = JsonConvert.SerializeObject(queries, this._settings.SerializerSetting);
+            var serialised = JsonConvert.SerializeObject(queries, this._settings.JsonFormatter.SerializerSettings);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
 
             this._queries = string.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
@@ -80,10 +80,10 @@ namespace Toast.Common.Builders
         {
             if (this._settings == null)
             {
-                throw new InvalidOperationException("_settings is not be null when WithPaths() is invoked");
+                throw new InvalidOperationException("Invalid ToastSettings.");
             }
 
-            var serialised = JsonConvert.SerializeObject(paths, this._settings.SerializerSetting);
+            var serialised = JsonConvert.SerializeObject(paths, this._settings.JsonFormatter.SerializerSettings);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
 
             this._paths = deserialised;

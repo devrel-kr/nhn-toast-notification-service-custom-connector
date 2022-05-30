@@ -82,7 +82,7 @@ namespace Toast.Sms.Triggers
                 .WithHeaders(headers)
                 .Build();
 
-            var content = new ObjectContent<SendMessagesRequestBody>(payload, new JsonMediaTypeFormatter(), "application/json");
+            var content = new ObjectContent<SendMessagesRequestBody>(payload, this._settings.JsonFormatter, "application/json");
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
