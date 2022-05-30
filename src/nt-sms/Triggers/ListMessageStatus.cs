@@ -17,6 +17,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -51,7 +52,7 @@ namespace Toast.Sms.Triggers
         [OpenApiParameter(name: "messageType", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "message type (`SMS`/`LMS`/`MMS`/`AUTH`)")]
         [OpenApiParameter(name: "pageNum", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page number in the pagination. Default value is '1'")]
         [OpenApiParameter(name: "pageSize", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page size in the pagination. Default value is '15'")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "The OK response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(ListMessageStatusResponse), Example = typeof(ListMessageStatusResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
@@ -79,25 +80,16 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var baseUrl = this._settings.BaseUrl;
-            var version = this._settings.Version;
-            var endpoint = this._settings.Endpoints.GetMessage;
-            var options = new ListMessageStatusRequestUrlOptions()
-            {
-                Version = version,
-                AppKey = headers.AppKey,
-                StartUpdateDate = queries.StartUpdateDate,
-                EndUpdateDate = queries.EndUpdateDate,
-                MessageType = queries.MessageType,
-                PageNum = queries.PageNumber,
-                PageSize = queries.PageSize
-            };
-            var requestUrl = this._settings.Formatter.Format($"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}", options);
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListMessageStatus)
+                .WithHeaders(headers)
+                .WithQueries(queries)
+                .Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
 
-            dynamic payload = await result.Content.ReadAsAsync<object>().ConfigureAwait(false);
+            dynamic payload = await result.Content.ReadAsAsync<ListMessageStatusResponse>().ConfigureAwait(false);
 
             return new OkObjectResult(payload);
         }
