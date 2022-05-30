@@ -47,7 +47,7 @@ namespace Toast.Sms.Validators
             this.RuleFor(p => p.TemplateId).MaximumLength(50).When(p => p.TemplateId != null);
             this.RuleFor(p => p.Body).NotNull().MaximumLength(255);
             this.RuleFor(p => p.SenderNumber).NotEmpty().MaximumLength(13);
-            this.RuleFor(p => p.RequestDate).Must(IsValidDateFormat);
+            this.RuleFor(p => p.RequestDate).Must(IsValidDateFormat).When(p => !string.IsNullOrWhiteSpace(p.RequestDate));
             this.RuleFor(p => p.SenderGroupingKey).MaximumLength(100);
             this.RuleForEach(p => p.Recipients).SetValidator(new SendMessagesRequestRecipientValidator());
             this.RuleFor(p => p.UserId).MaximumLength(100).When(p => p.UserId != null);
@@ -56,14 +56,7 @@ namespace Toast.Sms.Validators
 
         private bool IsValidDateFormat(string date)
         {
-            if (date == null)
-            {
-                return false;
-            }
-            else
-            {
-                return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
-            }
+            return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
         }
     }
     /// <summary>

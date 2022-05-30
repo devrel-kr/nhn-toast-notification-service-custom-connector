@@ -27,7 +27,7 @@ namespace Toast.Sms.Tests.Validators
 
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize, bool expected)
         {
-            var queries = new ListMessageStatusRequestQuries()
+            var queries = new ListMessageStatusRequestQueries()
             {
                 StartUpdateDate = startUpdateDate,
                 EndUpdateDate = endUpdateDate,
@@ -54,7 +54,7 @@ namespace Toast.Sms.Tests.Validators
 
         public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize)
         {
-            var queries = new ListMessageStatusRequestQuries()
+            var queries = new ListMessageStatusRequestQueries()
             {
                 StartUpdateDate = startUpdateDate,
                 EndUpdateDate = endUpdateDate,
@@ -76,7 +76,7 @@ namespace Toast.Sms.Tests.Validators
 
         public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize, int expectedPageNumber, int expectedPageSize)
         {
-            var queries = new ListMessageStatusRequestQuries()
+            var queries = new ListMessageStatusRequestQueries()
             {
                 StartUpdateDate = startUpdateDate,
                 EndUpdateDate = endUpdateDate,
@@ -89,7 +89,7 @@ namespace Toast.Sms.Tests.Validators
             var result = await ListMessageStatusRequestQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
             result.Should().NotBeNull();
-            result.Should().BeOfType<ListMessageStatusRequestQuries>();
+            result.Should().BeOfType<ListMessageStatusRequestQueries>();
             result.StartUpdateDate.Should().Be(startUpdateDate);
             result.EndUpdateDate.Should().Be(endUpdateDate);
             result.MessageType.Should().Be(msgType);
