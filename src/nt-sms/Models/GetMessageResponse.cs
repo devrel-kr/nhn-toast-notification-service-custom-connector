@@ -44,7 +44,7 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the category ID.
         /// </summary>
-        public virtual int CategoryId { get; set; }
+        public virtual string CategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the category name.
@@ -176,7 +176,7 @@ namespace Toast.Sms.Models
                         ResultDate = "2018-08-10 10:06:42.0",
                         TemplateId = "TemplateId",
                         TemplateName = "TemplateName",
-                        CategoryId = 0,
+                        CategoryId = "0",
                         CategoryName = "CategoryName",
                         Body = "Body",
                         SenderNumber = "00000000",

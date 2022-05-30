@@ -7,8 +7,8 @@
     "Toast__BaseUrl": "https://api-sms.cloud.toast.com/",
     "Toast__Version": "v3.0",
     "Toast__Endpoints__SendMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
-    "Toast__Endpoints__ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms?requestId={requestId}&startRequestDate={startRequestDate}&endRequestDate={endRequestDate}&startCreateDate={startCreateDate}&endCreateDate={endCreateDate}&startResultDate={startResultDate}&endResultDate={endResultDate}&sendNo={sendNo}&recipientNo={recipientNo}&templateId={templateId}&msgStatus={msgStatus}&resultCode={resultCode}&subResultCode={subResultCode}&senderGroupingKey={senderGroupingKey}&recipientGroupingKey={recipientGroupingKey}&pageNum={pageNum}&pageSize={pageSize}",
-    "Toast__Endpoints__GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}?recipientSeq={recipientSeq}",
-    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results?startUpdateDate={startUpdateDate}&endUpdateDate={endUpdateDate}&messageType={messageType}&pageNum={pageNum}&pageSize={pageSize}"
+    "Toast__Endpoints__ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
+    "Toast__Endpoints__GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
+    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results"
   }
 }
