@@ -29,11 +29,11 @@ namespace Toast.Sms.Triggers
     public class ListMessageStatus
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
-        private readonly IValidator<ListMessageStatusRequestQuries> _validator;
+        private readonly IValidator<ListMessageStatusRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<ListMessageStatus> _logger;
 
-        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessageStatusRequestQuries> validator, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
+        public ListMessageStatus(ToastSettings<SmsEndpointSettings> settings, IValidator<ListMessageStatusRequestQueries> validator, IHttpClientFactory factory, ILogger<ListMessageStatus> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
@@ -69,10 +69,10 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
-            var queries = default(ListMessageStatusRequestQuries);
+            var queries = default(ListMessageStatusRequestQueries);
             try
             {
-                queries = await req.To<ListMessageStatusRequestQuries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
+                queries = await req.To<ListMessageStatusRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

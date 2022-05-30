@@ -66,6 +66,7 @@ namespace Toast.Sms.Triggers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return new BadRequestResult();
             }
 
@@ -76,6 +77,7 @@ namespace Toast.Sms.Triggers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return new BadRequestResult();
             }
 

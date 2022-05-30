@@ -5,7 +5,7 @@ namespace Toast.Sms.Models
     /// <summary>
     /// This represents the entity for ListMessageStatus request query parameters.
     /// </summary>
-    public class ListMessageStatusRequestQuries
+    public class ListMessageStatusRequestQueries
     {
         /// <summary>
         /// Gets or sets the start update date.

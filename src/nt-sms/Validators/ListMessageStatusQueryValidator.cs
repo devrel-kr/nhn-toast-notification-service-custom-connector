@@ -20,7 +20,7 @@ namespace Toast.Sms.Validators
         /// </summary>
         /// <param name="headers"><see cref="ListMessageStatusRequestQuries"/> instance.</param>
         /// <returns>Returns the <see cref="ListMessageStatusRequestQuries"/> instance.</returns>
-        public static async Task<ListMessageStatusRequestQuries> Validate(this Task<ListMessageStatusRequestQuries> queries, IValidator<ListMessageStatusRequestQuries> validator)
+        public static async Task<ListMessageStatusRequestQueries> Validate(this Task<ListMessageStatusRequestQueries> queries, IValidator<ListMessageStatusRequestQueries> validator)
         {
             var instance = await queries.ConfigureAwait(false);
 
@@ -40,7 +40,7 @@ namespace Toast.Sms.Validators
     /// <summary>
     /// This represents the validator entity for the ListMessageStatus request query parameters.
     /// </summary>
-    public class ListMessageStatusRequestQueryValidator : AbstractValidator<ListMessageStatusRequestQuries>
+    public class ListMessageStatusRequestQueryValidator : AbstractValidator<ListMessageStatusRequestQueries>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessageStatusRequestQueryValidator"/> class.
