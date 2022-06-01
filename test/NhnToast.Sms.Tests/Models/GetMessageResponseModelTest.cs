@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 using Toast.Sms.Models;
 
 
-namespace Toast.Common.Tests.Models
+namespace Toast.Sms.Tests.Models
 {
     [TestClass]
     public class GetMessageResponseModelTest
@@ -38,7 +38,7 @@ namespace Toast.Common.Tests.Models
             pis.SingleOrDefault(p => p.Name == "TemplateName").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "CategoryId").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(int));
+               .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "CategoryName").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(string));
             pis.SingleOrDefault(p => p.Name == "Body").Should().NotBeNull()
@@ -118,7 +118,7 @@ namespace Toast.Common.Tests.Models
             deserialised["resultDate"].Should().BeNull();
             deserialised["templateId"].Should().BeNull();
             deserialised["templateName"].Should().BeNull();
-            deserialised["categoryId"].Should().Be(0);
+            deserialised["categoryId"].Should().BeNull();
             deserialised["categoryName"].Should().BeNull();
             deserialised["body"].Should().BeNull();
             deserialised["sendNo"].Should().BeNull();
@@ -141,8 +141,8 @@ namespace Toast.Common.Tests.Models
         }
 
         [DataTestMethod]
-        [DataRow("20180810100630ReZQ6KZzAH0", "2018-08-10 10:06:30.0", "2018-08-10 10:06:42.0", "TemplateId", "TemplateName", 0, "CategoryName", "body", "15446859", "82", "01000000000", "3", "success", "1000", " success", 10001, "SKT", 1, "0", "SMS", "tester", "N", "lorem ipsum", "senderGroupingKey", "recipientGroupingKey")]
-        public void Given_Values_When_Serialised_Then_It_Should_Return_Result(string requestId, string requestDate, string resultDate, string templateId, string templateName, int categoryId, string categoryName, string body, string sendNo, string countryCode, string recipientNo, string msgStatus, string msgStatusName, string resultCode, string resultCodeName, int telecomCode, string telecomCodeName, int recipientSeq, string sendType, string messageType, string userId, string adYn, string resultMessage, string senderGroupingKey, string recipientGroupingKey)
+        [DataRow("20180810100630ReZQ6KZzAH0", "2018-08-10 10:06:30.0", "2018-08-10 10:06:42.0", "TemplateId", "TemplateName", "0", "CategoryName", "body", "15446859", "82", "01000000000", "3", "success", "1000", " success", 10001, "SKT", 1, "0", "SMS", "tester", "N", "lorem ipsum", "senderGroupingKey", "recipientGroupingKey")]
+        public void Given_Values_When_Serialised_Then_It_Should_Return_Result(string requestId, string requestDate, string resultDate, string templateId, string templateName, string categoryId, string categoryName, string body, string sendNo, string countryCode, string recipientNo, string msgStatus, string msgStatusName, string resultCode, string resultCodeName, int telecomCode, string telecomCodeName, int recipientSeq, string sendType, string messageType, string userId, string adYn, string resultMessage, string senderGroupingKey, string recipientGroupingKey)
         {
             var model = new GetMessageResponseData()
             {
