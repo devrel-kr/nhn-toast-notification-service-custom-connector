@@ -231,6 +231,10 @@ resource fncapp 'Microsoft.Web/sites@2021-02-01' = {
                 }
                 // OpenAPI
                 {
+                    name: 'OpenApi__Version'
+                    value: 'v3'
+                }
+                {
                     name: 'OpenApi__HostNames'
                     value: 'https://${functionApp.name}.azurewebsites.net/api'
                 }
