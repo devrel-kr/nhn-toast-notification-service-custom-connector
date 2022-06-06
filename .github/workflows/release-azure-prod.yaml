@@ -18,15 +18,15 @@ jobs:
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
     secrets: inherit
 
-  # call_deployment_azure_prod:
-  #   uses: ./.github/workflows/deployment-azure.yaml
-  #   needs:
-  #   - call_make_function_apps_matrix
-  #   - call_build_test_upload
-  #   with:
-  #     gh_environment: PROD
-  #     matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
-  #   secrets: inherit
+  call_deployment_azure_prod:
+    uses: ./.github/workflows/deployment-azure.yaml
+    needs:
+    - call_make_function_apps_matrix
+    - call_build_test_upload
+    with:
+      gh_environment: PROD
+      matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
+    secrets: inherit
 
   call_deployment_github:
     uses: ./.github/workflows/deployment-github.yaml

@@ -4,7 +4,10 @@ on:
   push:
     branches:
     - main
-    - 'feature/*'
+    - 'feature/**'
+    paths:
+    - 'src/**'
+    - 'test/**'
   
 jobs:
   call_make_function_apps_matrix:
