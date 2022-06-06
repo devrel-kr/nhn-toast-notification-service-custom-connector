@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "10426576068940819647"
+      "templateHash": "13809515532133216613"
     }
   },
   "parameters": {
@@ -1221,7 +1221,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "2085080094641394567"
+              "templateHash": "10502187499531211324"
             }
           },
           "parameters": {
@@ -2266,7 +2266,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "8833618921905391376"
+                      "templateHash": "1016790929927723497"
                     }
                   },
                   "parameters": {
@@ -2522,6 +2522,10 @@
                             {
                               "name": "WEBSITE_CONTENTSHARE",
                               "value": "[variables('functionApp').name]"
+                            },
+                            {
+                              "name": "OpenApi__Version",
+                              "value": "v3"
                             },
                             {
                               "name": "OpenApi__HostNames",
