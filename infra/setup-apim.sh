@@ -80,6 +80,6 @@ do
         appsettings_name=$(echo $appsettings | jq --arg i "$i" '.[$i|fromjson].name' -r)
         appsettings_value=$(echo $appsettings | jq --arg i "$i" '.[$i|fromjson].value' -r)
 
-        appsettings_updated=$(az functionapp config appsettings set -g $resource_group -n $fncapp_name --settings $appsettings_name=$appsettings_value)
+        appsettings_updated=$(az functionapp config appsettings set -g $resource_group -n $fncapp_name --settings $appsettings_name="$appsettings_value")
     done
 done
