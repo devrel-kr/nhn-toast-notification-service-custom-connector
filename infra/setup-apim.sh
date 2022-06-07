@@ -2,6 +2,8 @@
 
 set -e
 
+sleep 30s
+
 declare -a fncapp_suffixes
 suffix_index=1
 

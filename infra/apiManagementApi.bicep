@@ -206,6 +206,18 @@ resource apimapipolicy 'Microsoft.ApiManagement/service/apis/policies@2021-08-01
 
 var operations = [
     {
+        name: 'openapi-v2-json'
+        displayName: 'openapi/v2.json'
+        method: 'GET'
+        urlTemplate: '/openapi/v2.json'
+    }
+    {
+        name: 'openapi-v3-json'
+        displayName: 'openapi/v3.json'
+        method: 'GET'
+        urlTemplate: '/openapi/v3.json'
+    }
+    {
         name: 'swagger-json'
         displayName: 'swagger.json'
         method: 'GET'

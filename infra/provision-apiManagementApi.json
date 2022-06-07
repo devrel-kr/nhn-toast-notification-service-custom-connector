@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "4806279195893736076"
+      "templateHash": "13562727815394432639"
     }
   },
   "parameters": {
@@ -173,7 +173,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "14378244657716164852"
+              "templateHash": "10031038445999354079"
             }
           },
           "parameters": {
@@ -371,6 +371,18 @@
               "productName": "[parameters('apiMgmtProductName')]"
             },
             "operations": [
+              {
+                "name": "openapi-v2-json",
+                "displayName": "openapi/v2.json",
+                "method": "GET",
+                "urlTemplate": "/openapi/v2.json"
+              },
+              {
+                "name": "openapi-v3-json",
+                "displayName": "openapi/v3.json",
+                "method": "GET",
+                "urlTemplate": "/openapi/v3.json"
+              },
               {
                 "name": "swagger-json",
                 "displayName": "swagger.json",
