@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
+using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
@@ -44,9 +45,10 @@ namespace Toast.Sms.Triggers
 
         [FunctionName(nameof(GetMessage))]
         [OpenApiOperation(operationId: "Messages.Get", tags: new[] { "messages" })]
-        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
-        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
+        [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
+        // [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
+        // [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
+        // [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
         [OpenApiParameter(name: "requestId", Type = typeof(string), In = ParameterLocation.Path, Required = true, Description = "SMS request ID")]
         [OpenApiParameter(name: "recipientSeq", Type = typeof(int), In = ParameterLocation.Query, Required = true, Description = "SMS request sequence number")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(GetMessageResponse), Example = typeof(GetMessageResponseModelExample), Description = "The OK response")]
@@ -61,7 +63,8 @@ namespace Toast.Sms.Triggers
             var headers = default(RequestHeaderModel);
             try
             {
-                headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+                headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true).Validate();
+                // headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

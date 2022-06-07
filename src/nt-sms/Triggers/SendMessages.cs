@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
+using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
@@ -45,9 +46,10 @@ namespace Toast.Sms.Triggers
 
         [FunctionName(nameof(SendMessages))]
         [OpenApiOperation(operationId: "Messages.Send", tags: new[] { "messages" })]
-        [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
+        [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
+        // [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
+        // [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
+        // [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(SendMessagesRequestBody), Example = typeof(SendMessagesRequestBodyModelExample), Description = "Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(SendMessagesResponse),  Example = typeof(SendMessagesResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
@@ -60,7 +62,8 @@ namespace Toast.Sms.Triggers
             var headers = default(RequestHeaderModel);
             try
             {
-                headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+                headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true).Validate();
+                // headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
