@@ -35,7 +35,7 @@
   <outbound />
   <on-error>
     <choose>
-      <when condition="@(context.LastError.Reason == "OperationNotFound")">
+      <when condition="@(context.LastError.Reason == &quot;OperationNotFound&quot;)">
         <return-response>
           <set-status code="301" reason="Moved Permanently" />
           <set-header name="Location" exists-action="override">
