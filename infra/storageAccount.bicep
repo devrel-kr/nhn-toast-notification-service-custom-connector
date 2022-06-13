@@ -26,6 +26,11 @@ param env string = 'dev'
 ])
 param storageAccountSku string = 'Standard_LRS'
 
+// Array item should be in the form of:
+// {
+//     name: '<container_name>'
+//     publicAccess: '<None|Blob|Container>'
+// }
 param storageAccountBlobContainers array = []
 param storageAccountTables array = []
 
@@ -144,14 +149,14 @@ resource stblob 'Microsoft.Storage/storageAccounts/blobServices@2021-06-01' = if
 }
 
 resource stblobcontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-06-01' = [for container in storage.blob.containers: if (length(storage.blob.containers) > 0) {
-    name: '${stblob.name}/${container}'
+    name: '${stblob.name}/${container.name}'
     properties: {
         immutableStorageWithVersioning: {
             enabled: false
         }
         defaultEncryptionScope: '$account-encryption-key'
         denyEncryptionScopeOverride: false
-        publicAccess: 'None'
+        publicAccess: container.publicAccess
     }
 }]
 

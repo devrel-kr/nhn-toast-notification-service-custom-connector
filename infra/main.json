@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "13809515532133216613"
+      "templateHash": "2076641608736336693"
     }
   },
   "parameters": {
@@ -95,7 +95,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "11606709763966652695"
+              "templateHash": "12247218806225203717"
             }
           },
           "parameters": {
@@ -139,7 +139,16 @@
             },
             "storageAccountBlobContainers": {
               "type": "array",
-              "defaultValue": []
+              "defaultValue": [
+                {
+                  "name": "swaggers",
+                  "publicAccess": "Blob"
+                },
+                {
+                  "name": "openapis",
+                  "publicAccess": "Blob"
+                }
+              ]
             },
             "storageAccountTables": {
               "type": "array",
@@ -253,7 +262,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "2157701964129384717"
+                      "templateHash": "212616037089379935"
                     }
                   },
                   "parameters": {
@@ -432,14 +441,14 @@
                       },
                       "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                       "apiVersion": "2021-06-01",
-                      "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()])]",
+                      "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()].name)]",
                       "properties": {
                         "immutableStorageWithVersioning": {
                           "enabled": false
                         },
                         "defaultEncryptionScope": "$account-encryption-key",
                         "denyEncryptionScopeOverride": false,
-                        "publicAccess": "None"
+                        "publicAccess": "[variables('storage').blob.containers[copyIndex()].publicAccess]"
                       },
                       "dependsOn": [
                         "[resourceId('Microsoft.Storage/storageAccounts/blobServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
@@ -1221,7 +1230,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "10502187499531211324"
+              "templateHash": "6787583442659978172"
             }
           },
           "parameters": {
@@ -1392,7 +1401,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "2157701964129384717"
+                      "templateHash": "212616037089379935"
                     }
                   },
                   "parameters": {
@@ -1571,14 +1580,14 @@
                       },
                       "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                       "apiVersion": "2021-06-01",
-                      "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()])]",
+                      "name": "[format('{0}/{1}', format('{0}/default', variables('storage').name), variables('storage').blob.containers[copyIndex()].name)]",
                       "properties": {
                         "immutableStorageWithVersioning": {
                           "enabled": false
                         },
                         "defaultEncryptionScope": "$account-encryption-key",
                         "denyEncryptionScopeOverride": false,
-                        "publicAccess": "None"
+                        "publicAccess": "[variables('storage').blob.containers[copyIndex()].publicAccess]"
                       },
                       "dependsOn": [
                         "[resourceId('Microsoft.Storage/storageAccounts/blobServices', split(format('{0}/default', variables('storage').name), '/')[0], split(format('{0}/default', variables('storage').name), '/')[1])]"
