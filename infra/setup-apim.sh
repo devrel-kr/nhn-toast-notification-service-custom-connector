@@ -45,7 +45,7 @@ do
         -u $bicep_url \
         -p name=$AZ_RESOURCE_NAME \
         -p env=$AZ_ENVIRONMENT_CODE \
-        -p apiMgmtNameValueName=$api_name \
+        -p apiMgmtNameValueName=$api_nv_name \
         -p apiMgmtNameValueDisplayName=$api_nv_name \
         -p apiMgmtNameValueValue=$api_nv_value \
         -p apiMgmtApiName=$api_upper_suffix \
