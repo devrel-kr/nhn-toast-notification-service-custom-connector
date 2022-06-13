@@ -49,6 +49,7 @@ namespace Toast.Sms
             services.AddScoped<IValidator<ListMessagesRequestQueries>, ListMessagesRequestQueryValidator>();
             services.AddScoped<IValidator<ListMessageStatusRequestQueries>, ListMessageStatusRequestQueryValidator>();
             services.AddScoped<IValidator<SendMessagesRequestBody>, SendMessagesRequestBodyValidator>();
+            services.AddScoped<IValidator<ListSendersRequestQueries>, ListSendersRequestQueryValidator>();
         }
     }
 }

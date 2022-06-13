@@ -25,6 +25,11 @@ param env string = 'dev'
     'Premium_ZRS'
 ])
 param storageAccountSku string = 'Standard_LRS'
+// Array item should be in the form of:
+// {
+//     name: '<container_name>'
+//     publicAccess: '<None|Blob|Container>'
+// }
 param storageAccountBlobContainers array = []
 param storageAccountTables array = []
 
