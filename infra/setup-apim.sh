@@ -89,7 +89,7 @@ do
 done
 
 # Export swagger.json from APIM API
-api_vesion="2021-12-01-preview"
+api_version="2021-12-01-preview"
 api_name="sms"
 apim_export_url="https://management.azure.com/subscriptions/$subscription_id/resourceGroups/$resource_group/providers/Microsoft.ApiManagement/service/$apim_name/apis/$api_name\?api-version=$api_version&export=true&format=swagger-json"
 swaggerdoc=$(az rest --method get --url $apim_export_url)
