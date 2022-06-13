@@ -40,11 +40,11 @@ namespace Toast.Common.Tests.Models
             var pis = typeof(FakeResponseCollectionBodyModel).GetProperties();
 
             pis.SingleOrDefault(p => p.Name == "PageNumber").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(int));
+               .And.Subject.PropertyType.Should().Be(typeof(int?));
             pis.SingleOrDefault(p => p.Name == "PageSize").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(int));
+               .And.Subject.PropertyType.Should().Be(typeof(int?));
             pis.SingleOrDefault(p => p.Name == "TotalCount").Should().NotBeNull()
-               .And.Subject.PropertyType.Should().Be(typeof(int));
+               .And.Subject.PropertyType.Should().Be(typeof(int?));
             pis.SingleOrDefault(p => p.Name == "Data").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(List<string>));
         }
@@ -79,11 +79,11 @@ namespace Toast.Common.Tests.Models
             deserialised.Keys.Should().Contain("data");
 
             var pageNum = deserialised["pageNum"];
-            pageNum.Should().Be(0);
+            pageNum.Should().BeNull();
             var pageSize = deserialised["pageSize"];
-            pageSize.Should().Be(0);
+            pageSize.Should().BeNull();
             var totalCount = deserialised["totalCount"];
-            totalCount.Should().Be(0);
+            totalCount.Should().BeNull();
             var data = deserialised["data"];
             data.Should().BeNull();
         }
