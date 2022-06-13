@@ -13,6 +13,7 @@
     "Toast__Endpoints__SendMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
     "Toast__Endpoints__ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
     "Toast__Endpoints__GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
-    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results"
+    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results",
+    "Toast__Endpoints__ListSenders": "/sms/{version}/appKeys/{appKey}/sendNos"
   }
 }

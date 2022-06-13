@@ -24,17 +24,17 @@ namespace Toast.Common.Models
         /// Gets or sets the page number.
         /// </summary>
         [JsonProperty("pageNum")]
-        public virtual int PageNumber { get; set; }
+        public virtual int? PageNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the page size.
         /// </summary>
-        public virtual int PageSize { get; set; }
+        public virtual int? PageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the total count.
         /// </summary>
-        public virtual int TotalCount { get; set; }
+        public virtual int? TotalCount { get; set; }
 
         /// <summary>
         /// Gets or sets the list of data.

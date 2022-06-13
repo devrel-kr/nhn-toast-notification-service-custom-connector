@@ -24,5 +24,10 @@ namespace Toast.Sms.Configurations
         /// Gets or sets the endpoint to get the list of message status.
         /// </summary>
         public virtual string ListMessageStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the endpoint to get the list of senders.
+        /// </summary>
+        public virtual string ListSenders { get; set; }
     }
 }
