@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "14283376337041290641"
+      "templateHash": "7300247211068324612"
     }
   },
   "parameters": {
@@ -56,16 +56,7 @@
     },
     "env": {
       "type": "string",
-      "defaultValue": "dev",
-      "allowedValues": [
-        "dev",
-        "test",
-        "prod",
-        "kdy",
-        "kms",
-        "lsw",
-        "pjm"
-      ]
+      "defaultValue": "dev"
     },
     "apiManagementPublisherName": {
       "type": "string"
@@ -75,7 +66,7 @@
     },
     "deploymentScriptAzureCliVersion": {
       "type": "string",
-      "defaultValue": "2.33.1"
+      "defaultValue": "2.36.0"
     },
     "functionAppNames": {
       "type": "string",
@@ -210,7 +201,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "2076641608736336693"
+              "templateHash": "6403485188338703202"
             }
           },
           "parameters": {
@@ -227,16 +218,7 @@
             },
             "env": {
               "type": "string",
-              "defaultValue": "dev",
-              "allowedValues": [
-                "dev",
-                "test",
-                "prod",
-                "kdy",
-                "kms",
-                "lsw",
-                "pjm"
-              ]
+              "defaultValue": "dev"
             },
             "apiMgmtPublisherName": {
               "type": "string"
@@ -257,7 +239,7 @@
             },
             "deploymentScriptAzureCliVersion": {
               "type": "string",
-              "defaultValue": "2.33.1"
+              "defaultValue": "2.36.0"
             }
           },
           "resources": [
@@ -300,7 +282,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "12247218806225203717"
+                      "templateHash": "7568813886291707442"
                     }
                   },
                   "parameters": {
@@ -317,16 +299,7 @@
                     },
                     "env": {
                       "type": "string",
-                      "defaultValue": "dev",
-                      "allowedValues": [
-                        "dev",
-                        "test",
-                        "prod",
-                        "kdy",
-                        "kms",
-                        "lsw",
-                        "pjm"
-                      ]
+                      "defaultValue": "dev"
                     },
                     "storageAccountSku": {
                       "type": "string",
@@ -467,7 +440,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "212616037089379935"
+                              "templateHash": "14998410930178369549"
                             }
                           },
                           "parameters": {
@@ -484,16 +457,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "storageAccountSku": {
                               "type": "string",
@@ -725,7 +689,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "16033939834012252233"
+                              "templateHash": "5377950480023742702"
                             }
                           },
                           "parameters": {
@@ -742,16 +706,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "workspaceSku": {
                               "type": "string",
@@ -922,7 +877,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "12201515150811122580"
+                              "templateHash": "1867382485349125087"
                             }
                           },
                           "parameters": {
@@ -939,16 +894,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "appInsightsType": {
                               "type": "string",
@@ -1148,7 +1094,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "8106507181004519066"
+                              "templateHash": "9705224587544208741"
                             }
                           },
                           "parameters": {
@@ -1161,16 +1107,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "appInsightsId": {
                               "type": "string"
@@ -1435,7 +1372,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "6787583442659978172"
+                      "templateHash": "7061746391240498059"
                     }
                   },
                   "parameters": {
@@ -1452,16 +1389,7 @@
                     },
                     "env": {
                       "type": "string",
-                      "defaultValue": "dev",
-                      "allowedValues": [
-                        "dev",
-                        "test",
-                        "prod",
-                        "kdy",
-                        "kms",
-                        "lsw",
-                        "pjm"
-                      ]
+                      "defaultValue": "dev"
                     },
                     "storageAccountSku": {
                       "type": "string",
@@ -1606,7 +1534,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "212616037089379935"
+                              "templateHash": "14998410930178369549"
                             }
                           },
                           "parameters": {
@@ -1623,16 +1551,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "storageAccountSku": {
                               "type": "string",
@@ -1867,7 +1786,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "16033939834012252233"
+                              "templateHash": "5377950480023742702"
                             }
                           },
                           "parameters": {
@@ -1884,16 +1803,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "workspaceSku": {
                               "type": "string",
@@ -2067,7 +1977,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "12201515150811122580"
+                              "templateHash": "1867382485349125087"
                             }
                           },
                           "parameters": {
@@ -2084,16 +1994,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "appInsightsType": {
                               "type": "string",
@@ -2275,7 +2176,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "12335638363744197337"
+                              "templateHash": "13942258608187888947"
                             }
                           },
                           "parameters": {
@@ -2292,16 +2193,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "consumptionPlanIsLinux": {
                               "type": "bool",
@@ -2480,7 +2372,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.6.18.56646",
-                              "templateHash": "1016790929927723497"
+                              "templateHash": "497794050695556335"
                             }
                           },
                           "parameters": {
@@ -2497,16 +2389,7 @@
                             },
                             "env": {
                               "type": "string",
-                              "defaultValue": "dev",
-                              "allowedValues": [
-                                "dev",
-                                "test",
-                                "prod",
-                                "kdy",
-                                "kms",
-                                "lsw",
-                                "pjm"
-                              ]
+                              "defaultValue": "dev"
                             },
                             "storageAccountId": {
                               "type": "string"
@@ -2819,7 +2702,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "16337191896818708703"
+                      "templateHash": "1340409127682355964"
                     }
                   },
                   "parameters": {
@@ -2832,16 +2715,7 @@
                     },
                     "env": {
                       "type": "string",
-                      "defaultValue": "dev",
-                      "allowedValues": [
-                        "dev",
-                        "test",
-                        "prod",
-                        "kdy",
-                        "kms",
-                        "lsw",
-                        "pjm"
-                      ]
+                      "defaultValue": "dev"
                     },
                     "principalType": {
                       "type": "string",
@@ -2856,7 +2730,7 @@
                     },
                     "azureCliVersion": {
                       "type": "string",
-                      "defaultValue": "2.33.1"
+                      "defaultValue": "2.36.0"
                     },
                     "functionAppSuffixes": {
                       "type": "string"

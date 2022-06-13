@@ -60,7 +60,6 @@ Param(
 
     [string]
     [Parameter(Mandatory=$false)]
-    [ValidateSet("dev", "test", "prod", "kdy", "kms", "lsw", "pjm")]
     $Environment = "dev",
 
     ### Storage Account ###

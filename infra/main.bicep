@@ -1,17 +1,8 @@
 param name string
 param location string = resourceGroup().location
 param suffixes string = 'sms,sms-verify'
-@allowed([
-    'dev'
-    'test'
-    'prod'
-
-    'kdy'
-    'kms'
-    'lsw'
-    'pjm'
-])
 param env string = 'dev'
+
 param apiMgmtPublisherName string
 param apiMgmtPublisherEmail string
 @allowed([
@@ -22,7 +13,7 @@ param apiMgmtPublisherEmail string
     'User'
 ])
 param deploymentScriptPrincipalType string = 'ServicePrincipal'
-param deploymentScriptAzureCliVersion string = '2.33.1'
+param deploymentScriptAzureCliVersion string = '2.36.0'
 
 module apim './provision-apiManagement.bicep' = {
     name: 'Provision-ApiManagement'

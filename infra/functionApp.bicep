@@ -1,17 +1,6 @@
 param name string
 param suffix string = ''
 param location string = resourceGroup().location
-
-@allowed([
-    'dev'
-    'test'
-    'prod'
-
-    'kdy'
-    'kms'
-    'lsw'
-    'pjm'
-])
 param env string = 'dev'
 
 param storageAccountId string

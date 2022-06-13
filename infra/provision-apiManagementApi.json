@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "13562727815394432639"
+      "templateHash": "10707124901999030770"
     }
   },
   "parameters": {
@@ -18,16 +18,7 @@
     },
     "env": {
       "type": "string",
-      "defaultValue": "dev",
-      "allowedValues": [
-        "dev",
-        "test",
-        "prod",
-        "kdy",
-        "kms",
-        "lsw",
-        "pjm"
-      ]
+      "defaultValue": "dev"
     },
     "apiMgmtNameValueName": {
       "type": "string"
@@ -173,7 +164,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "10031038445999354079"
+              "templateHash": "13509683212165637550"
             }
           },
           "parameters": {
@@ -186,16 +177,7 @@
             },
             "env": {
               "type": "string",
-              "defaultValue": "dev",
-              "allowedValues": [
-                "dev",
-                "test",
-                "prod",
-                "kdy",
-                "kms",
-                "lsw",
-                "pjm"
-              ]
+              "defaultValue": "dev"
             },
             "apiMgmtNameValueName": {
               "type": "string"

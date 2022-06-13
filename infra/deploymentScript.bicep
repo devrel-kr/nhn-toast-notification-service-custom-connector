@@ -1,16 +1,5 @@
 param name string
 param location string = resourceGroup().location
-
-@allowed([
-    'dev'
-    'test'
-    'prod'
-
-    'kdy'
-    'kms'
-    'lsw'
-    'pjm'
-])
 param env string = 'dev'
 
 @allowed([
@@ -21,7 +10,7 @@ param env string = 'dev'
     'User'
 ])
 param principalType string = 'ServicePrincipal'
-param azureCliVersion string = '2.33.1'
+param azureCliVersion string = '2.36.0'
 param functionAppSuffixes string
 
 var locationCodeMap = {

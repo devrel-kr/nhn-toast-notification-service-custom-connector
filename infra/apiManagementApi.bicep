@@ -1,20 +1,10 @@
 param name string
 param location string = resourceGroup().location
-
-@allowed([
-    'dev'
-    'test'
-    'prod'
-
-    'kdy'
-    'kms'
-    'lsw'
-    'pjm'
-])
 param env string = 'dev'
 
 param apiMgmtNameValueName string
 param apiMgmtNameValueDisplayName string
+
 @secure()
 param apiMgmtNameValueValue string
 

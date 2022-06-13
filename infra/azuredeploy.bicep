@@ -40,21 +40,11 @@ param name string
     'West US 3'
 ])
 param location string = 'Korea Central'
-@allowed([
-    'dev'
-    'test'
-    'prod'
-
-    'kdy'
-    'kms'
-    'lsw'
-    'pjm'
-])
 param env string = 'dev'
 
 param apiManagementPublisherName string
 param apiManagementPublisherEmail string
-param deploymentScriptAzureCliVersion string = '2.33.1'
+param deploymentScriptAzureCliVersion string = '2.36.0'
 param functionAppNames string = 'sms,sms-verify'
 
 var locationCodeMap = {
