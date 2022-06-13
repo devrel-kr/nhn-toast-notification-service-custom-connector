@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "6403485188338703202"
+      "templateHash": "7176805386279164302"
     }
   },
   "parameters": {
@@ -86,7 +86,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "7568813886291707442"
+              "templateHash": "2843257988214538202"
             }
           },
           "parameters": {
@@ -244,7 +244,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "14998410930178369549"
+                      "templateHash": "10865803800513891495"
                     }
                   },
                   "parameters": {
@@ -400,6 +400,27 @@
                       "properties": {
                         "deleteRetentionPolicy": {
                           "enabled": false
+                        },
+                        "cors": {
+                          "corsRules": [
+                            {
+                              "allowedOrigins": [
+                                "https://flow.microsoft.com",
+                                "https://asia.flow.microsoft.com",
+                                "https://korea.flow.microsoft.com"
+                              ],
+                              "allowedMethods": [
+                                "GET"
+                              ],
+                              "allowedHeaders": [
+                                "*"
+                              ],
+                              "exposedHeaders": [
+                                "*"
+                              ],
+                              "maxAgeInSeconds": 0
+                            }
+                          ]
                         }
                       },
                       "dependsOn": [
@@ -1176,7 +1197,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "7061746391240498059"
+              "templateHash": "3542139371716250097"
             }
           },
           "parameters": {
@@ -1338,7 +1359,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.6.18.56646",
-                      "templateHash": "14998410930178369549"
+                      "templateHash": "10865803800513891495"
                     }
                   },
                   "parameters": {
@@ -1494,6 +1515,27 @@
                       "properties": {
                         "deleteRetentionPolicy": {
                           "enabled": false
+                        },
+                        "cors": {
+                          "corsRules": [
+                            {
+                              "allowedOrigins": [
+                                "https://flow.microsoft.com",
+                                "https://asia.flow.microsoft.com",
+                                "https://korea.flow.microsoft.com"
+                              ],
+                              "allowedMethods": [
+                                "GET"
+                              ],
+                              "allowedHeaders": [
+                                "*"
+                              ],
+                              "exposedHeaders": [
+                                "*"
+                              ],
+                              "maxAgeInSeconds": 0
+                            }
+                          ]
                         }
                       },
                       "dependsOn": [

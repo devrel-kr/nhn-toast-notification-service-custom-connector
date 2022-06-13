@@ -134,6 +134,27 @@ resource stblob 'Microsoft.Storage/storageAccounts/blobServices@2021-06-01' = if
         deleteRetentionPolicy: {
             enabled: false
         }
+        cors: {
+            corsRules: [
+                {
+                    allowedOrigins: [
+                        'https://flow.microsoft.com'
+                        'https://asia.flow.microsoft.com'
+                        'https://korea.flow.microsoft.com'
+                    ]
+                    allowedMethods: [
+                        'GET'
+                    ]
+                    allowedHeaders: [
+                        '*'
+                    ]
+                    exposedHeaders: [
+                        '*'
+                    ]
+                    maxAgeInSeconds: 0
+                }
+            ]
+        }
     }
 }
 
