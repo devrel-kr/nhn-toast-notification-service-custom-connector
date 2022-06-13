@@ -13,8 +13,9 @@
     <cors allow-credentials="true">
       <allowed-origins>
         <origin>https://{{RESOURCE_NAME}}.azure-api.net</origin>
-        <origin>https://asia.flow.microsoft.com</origin>
         <origin>https://flow.microsoft.com</origin>
+        <origin>https://asia.flow.microsoft.com</origin>
+        <origin>https://korea.flow.microsoft.com</origin>
       </allowed-origins>
       <allowed-methods>
         <method>*</method>
