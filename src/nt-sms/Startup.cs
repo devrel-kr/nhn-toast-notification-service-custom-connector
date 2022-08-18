@@ -1,4 +1,5 @@
 using FluentValidation;
+
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using Toast.Common.Configurations;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
+using Toast.Sms.Workflows;
 
 [assembly: FunctionsStartup(typeof(Toast.Sms.Startup))]
 
@@ -27,6 +29,7 @@ namespace Toast.Sms
         {
             ConfigureAppSettings(builder.Services);
             ConfigureHttpClient(builder.Services);
+            ConfigureWorkflows(builder.Services);
             ConfigureValidators(builder.Services);
         }
 
@@ -41,6 +44,11 @@ namespace Toast.Sms
         private static void ConfigureHttpClient(IServiceCollection services)
         {
             services.AddHttpClient("messages");
+        }
+
+        private static void ConfigureWorkflows(IServiceCollection services)
+        {
+            services.AddScoped<IHttpTriggerWorkflow, HttpTriggerWorkflow>();
         }
 
         private static void ConfigureValidators(IServiceCollection services)

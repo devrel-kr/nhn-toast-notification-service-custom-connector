@@ -25,19 +25,22 @@ using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
+using Toast.Sms.Workflows;
 
 namespace Toast.Sms.Triggers
 {
     public class GetMessage
     {
         private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly IHttpTriggerWorkflow _workflow;
         private readonly IValidator<GetMessageRequestQueries> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<GetMessage> _logger;
 
-        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IValidator<GetMessageRequestQueries> validator, IHttpClientFactory factory, ILogger<GetMessage> log)
+        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IHttpTriggerWorkflow workflow, IValidator<GetMessageRequestQueries> validator, IHttpClientFactory factory, ILogger<GetMessage> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
+            this._workflow = workflow.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
@@ -72,7 +75,7 @@ namespace Toast.Sms.Triggers
             }
 
             var queries = default(GetMessageRequestQueries);
-            try 
+            try
             {
                 queries = await req.To<GetMessageRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }
