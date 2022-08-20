@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "9052450055153327216"
+      "templateHash": "12643030778761739108"
     }
   },
   "parameters": {
@@ -66,7 +66,7 @@
     },
     "deploymentScriptAzureCliVersion": {
       "type": "string",
-      "defaultValue": "2.36.0"
+      "defaultValue": "2.37.0"
     },
     "functionAppNames": {
       "type": "string",
@@ -201,7 +201,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.9.1.41621",
-              "templateHash": "17904408950648126333"
+              "templateHash": "8640315403788254352"
             }
           },
           "parameters": {
@@ -239,7 +239,7 @@
             },
             "deploymentScriptAzureCliVersion": {
               "type": "string",
-              "defaultValue": "2.36.0"
+              "defaultValue": "2.37.0"
             }
           },
           "resources": [
