@@ -10,7 +10,7 @@ param env string = 'dev'
     'User'
 ])
 param principalType string = 'ServicePrincipal'
-param azureCliVersion string = '2.36.0'
+param azureCliVersion string = '2.37.0'
 param functionAppSuffixes string
 
 var locationCodeMap = {

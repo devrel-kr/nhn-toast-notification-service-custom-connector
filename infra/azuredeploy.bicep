@@ -44,7 +44,7 @@ param env string = 'dev'
 
 param apiManagementPublisherName string
 param apiManagementPublisherEmail string
-param deploymentScriptAzureCliVersion string = '2.36.0'
+param deploymentScriptAzureCliVersion string = '2.37.0'
 param functionAppNames string = 'sms,sms-verify'
 
 var locationCodeMap = {

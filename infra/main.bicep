@@ -13,7 +13,7 @@ param apiMgmtPublisherEmail string
     'User'
 ])
 param deploymentScriptPrincipalType string = 'ServicePrincipal'
-param deploymentScriptAzureCliVersion string = '2.36.0'
+param deploymentScriptAzureCliVersion string = '2.37.0'
 
 module apim './provision-apiManagement.bicep' = {
     name: 'Provision-ApiManagement'

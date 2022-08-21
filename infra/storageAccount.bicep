@@ -140,7 +140,10 @@ resource stblob 'Microsoft.Storage/storageAccounts/blobServices@2021-06-01' = if
                     allowedOrigins: [
                         'https://flow.microsoft.com'
                         'https://asia.flow.microsoft.com'
+                        'https://australia.flow.microsoft.com'
                         'https://korea.flow.microsoft.com'
+                        'https://make.powerapps.com'
+                        'https://make.powerautomate.com'
                     ]
                     allowedMethods: [
                         'GET'
