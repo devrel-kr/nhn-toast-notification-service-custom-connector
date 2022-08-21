@@ -142,7 +142,10 @@ namespace Toast.Sms.Validators
             }
             else
             {
-                return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
+                RegexDateTimeWrapper singleTone = new RegexDateTimeWrapper();
+
+                //return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
+                return singleTone.IsMatch(date);
             }
         }
     }
