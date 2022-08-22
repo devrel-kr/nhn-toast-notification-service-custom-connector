@@ -56,7 +56,8 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNum,
                 PageSize = pageSize
             };
-            var RegexDateTimeWrapper = new RegexDateTimeWrapper();
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
             var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
 
             var result = validator.Validate(queries);
@@ -106,7 +107,9 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNum,
                 PageSize = pageSize
             };
-            var validator = new ListMessagesRequestQueryValidator();
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
 
             Func<Task> func = async () => await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
@@ -142,7 +145,9 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNum,
                 PageSize = pageSize
             };
-            var validator = new ListMessagesRequestQueryValidator(queries);
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
 
             var result = await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
