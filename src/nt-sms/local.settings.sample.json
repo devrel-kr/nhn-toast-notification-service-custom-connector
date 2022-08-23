@@ -5,8 +5,9 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
 
     "OpenApi__Version": "v3",
-    "OpenApi__DocTitle": "NHN Cloud SMS API",
     "OpenApi__DocVersion": "v1.0.0",
+    "OpenApi__DocTitle": "NHN Cloud SMS API",
+    "OpenApi__DocDescription": "This is an API for sending SMS messages through the NHN Cloud SMS service.",
 
     "Toast__BaseUrl": "https://api-sms.cloud.toast.com/",
     "Toast__Version": "v3.0",
