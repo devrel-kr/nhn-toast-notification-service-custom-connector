@@ -48,7 +48,9 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(iRegexDateTimeWrapper);
 
             var result = validator.Validate(payloads);
 
@@ -88,7 +90,9 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(iRegexDateTimeWrapper);
 
             Func<Task> func = async () => await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 
@@ -126,7 +130,9 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+
+            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(iRegexDateTimeWrapper);
 
             var result = await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 
