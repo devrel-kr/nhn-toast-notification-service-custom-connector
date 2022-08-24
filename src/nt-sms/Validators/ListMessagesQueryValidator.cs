@@ -37,27 +37,6 @@ namespace Toast.Sms.Validators
         }
     }
 
-    public interface IRegexDateTimeWrapper
-    {
-        bool IsMatch(string date);
-    }
-
-    public class RegexDateTimeWrapper : IRegexDateTimeWrapper
-    {
-        private static Regex regex = new Regex(@"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
-
-        public bool IsMatch(string date)
-        {
-            if (date == null)
-            {
-                return false;
-            }
-            else
-            {
-                return regex.IsMatch(date);
-            }
-        }
-    }
     public class ListMessagesRequestQueryValidator : AbstractValidator<ListMessagesRequestQueries>
     {
         /// <summary>
@@ -129,8 +108,6 @@ namespace Toast.Sms.Validators
 
             this.RuleFor(p => p.PageSize).GreaterThan(0);
         }
-
-
 
         List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
         List<string> resultCodeType = new List<string>() { "MTR1", "MTR2" };
