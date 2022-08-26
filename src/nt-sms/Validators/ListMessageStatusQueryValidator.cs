@@ -42,13 +42,16 @@ namespace Toast.Sms.Validators
     /// </summary>
     public class ListMessageStatusRequestQueryValidator : AbstractValidator<ListMessageStatusRequestQueries>
     {
+        private readonly IRegexDateTimeWrapper _regex;
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessageStatusRequestQueryValidator"/> class.
         /// </summary>
-        public ListMessageStatusRequestQueryValidator(IRegexDateTimeWrapper iRegexDateTimeWrapper)
+        public ListMessageStatusRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
-            this.RuleFor(p => p.StartUpdateDate).Must(iRegexDateTimeWrapper.IsMatch).NotEmpty();
-            this.RuleFor(p => p.EndUpdateDate).Must(iRegexDateTimeWrapper.IsMatch).NotEmpty().GreaterThan(q => q.StartUpdateDate);
+            this._regex = regex;
+
+            this.RuleFor(p => p.StartUpdateDate).Must(IsValidDateFormat).NotEmpty();
+            this.RuleFor(p => p.EndUpdateDate).Must(IsValidDateFormat).NotEmpty().GreaterThan(q => q.StartUpdateDate);
             When(p => p.MessageType != null, () =>
             {
                 this.RuleFor(p => p.MessageType).Must(p => MsgType.Contains(p));
@@ -57,6 +60,19 @@ namespace Toast.Sms.Validators
             this.RuleFor(p => p.PageSize).GreaterThan(0);
 
         }
+
+        private bool IsValidDateFormat(string date)
+        {
+            if (date == null)
+            {
+                return false;
+            }
+            else
+            {
+                return this._regex.IsMatch(date);
+            }
+        }
+        
         List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
     }
 }
