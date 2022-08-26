@@ -39,11 +39,13 @@ namespace Toast.Sms.Validators
 
     public class ListMessagesRequestQueryValidator : AbstractValidator<ListMessagesRequestQueries>
     {
+        private readonly IRegexDateTimeWrapper _regex;
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessagesRequestQueryValidator"/> class.
         /// </summary>
-        public ListMessagesRequestQueryValidator(IRegexDateTimeWrapper iRegexDateTimeWrapper)
+        public ListMessagesRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
+            this._regex = regex;
 
             this.RuleFor(p => p.RequestId)
                 .NotEmpty()
@@ -56,14 +58,14 @@ namespace Toast.Sms.Validators
 
             this.RuleFor(p => p.StartRequestDate)
                 .NotEmpty()
-                .Must(iRegexDateTimeWrapper.IsMatch)
+                .Must(IsValidDateFormat)
                 .When(p => p.RequestId == null)
                 .When(p => p.StartCreateDate == null)
                 .When(p => p.EndCreateDate == null);
 
             this.RuleFor(p => p.EndRequestDate)
                 .NotEmpty()
-                .Must(iRegexDateTimeWrapper.IsMatch)
+                .Must(IsValidDateFormat)
                 .GreaterThan(p => p.StartRequestDate)
                 .When(p => p.RequestId == null)
                 .When(p => p.StartCreateDate == null)
@@ -71,22 +73,22 @@ namespace Toast.Sms.Validators
 
             this.RuleFor(p => p.StartCreateDate)
                 .NotEmpty()
-                .Must(iRegexDateTimeWrapper.IsMatch)
+                .Must(IsValidDateFormat)
                 .When(p => p.RequestId == null)
                 .When(p => p.StartRequestDate == null)
                 .When(p => p.EndRequestDate == null);
 
             this.RuleFor(p => p.EndCreateDate)
                 .NotEmpty()
-                .Must(iRegexDateTimeWrapper.IsMatch)
+                .Must(IsValidDateFormat)
                 .GreaterThan(p => p.StartCreateDate)
                 .When(p => p.RequestId == null)
                 .When(p => p.StartRequestDate == null)
                 .When(p => p.EndRequestDate == null);
 
-            this.RuleFor(p => p.StartResultDate).Must(iRegexDateTimeWrapper.IsMatch).When(p => p.StartResultDate != null);
+            this.RuleFor(p => p.StartResultDate).Must(IsValidDateFormat).When(p => p.StartResultDate != null);
 
-            this.RuleFor(p => p.EndResultDate).Must(iRegexDateTimeWrapper.IsMatch).GreaterThan(p => p.StartResultDate).When(p => p.EndResultDate != null);
+            this.RuleFor(p => p.EndResultDate).Must(IsValidDateFormat).GreaterThan(p => p.StartResultDate).When(p => p.EndResultDate != null);
 
             this.RuleFor(p => p.SendNumber).MaximumLength(13);
 
@@ -107,6 +109,18 @@ namespace Toast.Sms.Validators
             this.RuleFor(p => p.PageNumber).GreaterThan(0);
 
             this.RuleFor(p => p.PageSize).GreaterThan(0);
+        }
+
+        private bool IsValidDateFormat(string date)
+        {
+            if (date == null)
+            {
+                return false;
+            }
+            else
+            {
+                return this._regex.IsMatch(date);
+            }
         }
 
         List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
