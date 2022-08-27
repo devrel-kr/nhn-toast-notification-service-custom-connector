@@ -23,14 +23,7 @@ namespace Toast.Sms.Validators
         /// <inheritdoc />
         public bool IsMatch(string date)
         {
-            if (date == null)
-            {
-                return false;
-            }
-            else
-            {
-                return _regex.IsMatch(date);
-            }
+            return date != null ? _regex.IsMatch(date) : false ;
         }
     }
 }

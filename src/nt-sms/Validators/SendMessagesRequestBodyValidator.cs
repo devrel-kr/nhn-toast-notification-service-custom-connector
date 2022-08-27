@@ -45,7 +45,7 @@ namespace Toast.Sms.Validators
         ///
         public SendMessagesRequestBodyValidator(IRegexDateTimeWrapper regex)
         {
-            this._regex = regex;
+            this._regex = regex == null ? new RegexDateTimeWrapper() : regex ;
 
             this.RuleFor(p => p.TemplateId).MaximumLength(50).When(p => p.TemplateId != null);
             this.RuleFor(p => p.Body).NotNull().MaximumLength(255);
@@ -59,14 +59,7 @@ namespace Toast.Sms.Validators
 
         private bool IsValidDateFormat(string date)
         {
-            if (date == null)
-            {
-                return false;
-            }
-            else
-            {
-                return this._regex.IsMatch(date);
-            }
+            return date != null ? _regex.IsMatch(date) : false ;
         }
     }
     /// <summary>
