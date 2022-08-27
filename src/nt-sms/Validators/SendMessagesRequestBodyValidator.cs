@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using FluentValidation;
-
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
@@ -45,7 +45,7 @@ namespace Toast.Sms.Validators
         ///
         public SendMessagesRequestBodyValidator(IRegexDateTimeWrapper regex)
         {
-            this._regex = (regex == null) ? new RegexDateTimeWrapper() : regex ;
+            this._regex = regex.ThrowIfNullOrDefault();
 
             this.RuleFor(p => p.TemplateId).MaximumLength(50).When(p => p.TemplateId != null);
             this.RuleFor(p => p.Body).NotNull().MaximumLength(255);

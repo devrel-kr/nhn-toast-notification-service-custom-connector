@@ -7,6 +7,7 @@ using FluentValidation;
 
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 
 namespace Toast.Sms.Validators
 {
@@ -48,7 +49,7 @@ namespace Toast.Sms.Validators
         /// </summary>
         public ListMessageStatusRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
-            this._regex = (regex == null) ? new RegexDateTimeWrapper() : regex ;
+            this._regex = regex.ThrowIfNullOrDefault();
 
             this.RuleFor(p => p.StartUpdateDate).Must(IsValidDateFormat).NotEmpty();
             this.RuleFor(p => p.EndUpdateDate).Must(IsValidDateFormat).NotEmpty().GreaterThan(q => q.StartUpdateDate);
