@@ -22,9 +22,14 @@ namespace Toast.Sms.Tests.Validators
         [DataRow("2022-0&-OO 00:oo:OT", false)]
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string date, bool expected)
         {
-            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
+            //Arrange
+            var wapper = new RegexDateTimeWrapper();
 
-            var result = iRegexDateTimeWrapper.IsMatch(date).Should().Be(expected);
+            //Act
+            var result = wapper.IsMatch(date);
+
+            //Assert
+            result.Should().Be(expected);
         }
 
     }
