@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using FluentValidation;
-
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
@@ -45,7 +45,7 @@ namespace Toast.Sms.Validators
         /// </summary>
         public ListMessagesRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
-            this._regex = regex == null ? new RegexDateTimeWrapper() : regex ;
+            this._regex = regex.ThrowIfNullOrDefault();
 
             this.RuleFor(p => p.RequestId)
                 .NotEmpty()
