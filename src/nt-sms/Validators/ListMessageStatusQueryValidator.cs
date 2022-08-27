@@ -48,7 +48,7 @@ namespace Toast.Sms.Validators
         /// </summary>
         public ListMessageStatusRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
-            this._regex = regex == null ? new RegexDateTimeWrapper() : regex ;
+            this._regex = (regex == null) ? new RegexDateTimeWrapper() : regex ;
 
             this.RuleFor(p => p.StartUpdateDate).Must(IsValidDateFormat).NotEmpty();
             this.RuleFor(p => p.EndUpdateDate).Must(IsValidDateFormat).NotEmpty().GreaterThan(q => q.StartUpdateDate);
@@ -63,7 +63,7 @@ namespace Toast.Sms.Validators
 
         private bool IsValidDateFormat(string date)
         {
-            return date != null ? _regex.IsMatch(date) : false ;
+            return (date != null) ? _regex.IsMatch(date) : false ;
         }
         
         List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
