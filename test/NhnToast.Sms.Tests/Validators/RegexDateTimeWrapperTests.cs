@@ -30,6 +30,7 @@ namespace Toast.Sms.Tests.Validators
 
             //Assert
             result.Should().Be(expected);
+
         }
 
     }

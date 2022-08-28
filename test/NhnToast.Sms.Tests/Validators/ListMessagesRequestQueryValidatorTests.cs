@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Moq;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Exceptions;
@@ -56,9 +58,10 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNum,
                 PageSize = pageSize
             };
+            var wrapper = new Mock<IRegexDateTimeWrapper>();
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
 
-            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
-            var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
 
             var result = validator.Validate(queries);
 
@@ -108,8 +111,9 @@ namespace Toast.Sms.Tests.Validators
                 PageSize = pageSize
             };
 
-            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
-            var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
+            var wrapper = new Mock<IRegexDateTimeWrapper>();
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
 
             Func<Task> func = async () => await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
@@ -146,8 +150,9 @@ namespace Toast.Sms.Tests.Validators
                 PageSize = pageSize
             };
 
-            IRegexDateTimeWrapper iRegexDateTimeWrapper = new RegexDateTimeWrapper();
-            var validator = new ListMessagesRequestQueryValidator(iRegexDateTimeWrapper);
+            var wrapper = new Mock<IRegexDateTimeWrapper>();
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
 
             var result = await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
