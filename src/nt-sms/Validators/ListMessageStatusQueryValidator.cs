@@ -64,7 +64,7 @@ namespace Toast.Sms.Validators
 
         private bool IsValidDateFormat(string date)
         {
-            return _regex.IsMatch(date);
+            return this._regex.IsMatch(date);
         }
 
         List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
