@@ -18,12 +18,19 @@ namespace Toast.Sms.Validators
     /// </summary>
     public class RegexDateTimeWrapper : IRegexDateTimeWrapper
     {
-        private static Regex _regex = new Regex(@"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
+        private static Regex regex = new Regex(@"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
 
         /// <inheritdoc />
         public bool IsMatch(string date)
         {
-            return (date != null) ? _regex.IsMatch(date) : false ;
+            if (date == null)
+            {
+                return false;
+            }
+            else
+            {
+                return regex.IsMatch(date);
+            }
         }
     }
 }
