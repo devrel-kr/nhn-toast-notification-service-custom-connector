@@ -38,7 +38,7 @@ namespace Toast.Sms.Tests.Validators
             };
 
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(false);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(expected);
             var validator = new ListMessageStatusRequestQueryValidator(wrapper.Object);
 
             var result = validator.Validate(queries);
@@ -68,7 +68,7 @@ namespace Toast.Sms.Tests.Validators
             };
 
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(false);
             var validator = new ListMessageStatusRequestQueryValidator(wrapper.Object);
 
 

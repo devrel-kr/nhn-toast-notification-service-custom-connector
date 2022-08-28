@@ -51,7 +51,7 @@ namespace Toast.Sms.Tests.Validators
                 StatsId = statsId
             };
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(expected);
             var validator = new SendMessagesRequestBodyValidator(wrapper.Object);
 
             var result = validator.Validate(payloads);
@@ -94,7 +94,7 @@ namespace Toast.Sms.Tests.Validators
             };
 
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(false);
             var validator = new SendMessagesRequestBodyValidator(wrapper.Object);
 
             Func<Task> func = async () => await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
