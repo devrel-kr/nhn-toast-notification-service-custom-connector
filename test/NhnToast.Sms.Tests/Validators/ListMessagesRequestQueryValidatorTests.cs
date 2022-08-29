@@ -27,11 +27,11 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, null, null, null, "2022-05-11 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow(null, "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow(null, null, "2022-05-11 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
-        [DataRow(null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, null, null, false)]
-        [DataRow(null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
+        [DataRow(null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, null, null, true)]
+        [DataRow(null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, null, null, null, null, true)]
         [DataRow(null, null, null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow(null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
-        [DataRow("1234567890", null, null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, false)]
+        [DataRow("1234567890", null, null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, true)]
         [DataRow("1234567890", null, null, null, null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, false)]
 
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string requestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate,
@@ -59,7 +59,7 @@ namespace Toast.Sms.Tests.Validators
                 PageSize = pageSize
             };
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(expected);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
             var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
 
 
