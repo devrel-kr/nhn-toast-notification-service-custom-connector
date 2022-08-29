@@ -113,7 +113,7 @@ namespace Toast.Sms.Validators
 
         private bool IsValidDateFormat(string date)
         {
-            return _regex.IsMatch(date);
+            return this._regex.IsMatch(date);
         }
 
         List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };

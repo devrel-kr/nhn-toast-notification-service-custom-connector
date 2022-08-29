@@ -27,10 +27,8 @@ namespace Toast.Sms.Validators
             {
                 return false;
             }
-            else
-            {
-                return regex.IsMatch(date);
-            }
+            
+            return regex.IsMatch(date);
         }
     }
 }
