@@ -18,7 +18,7 @@ namespace Toast.Sms.Tests.Validators
         [DataTestMethod]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", null, null, null, true)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", "AUTH", null, null, true)]
-        [DataRow("20220501 00:00:00", "20220501 23:59:59", null, null, null, false)]
+        [DataRow("20220501 00:00:00", "20220501 23:59:59", null, null, null, true)]
         [DataRow("2022-05-01 00:00:00", null, null, null, null, false)]
         [DataRow(null, "2022-05-01 23:59:59", null, null, null, false)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", null, 0, null, false)]
@@ -38,7 +38,7 @@ namespace Toast.Sms.Tests.Validators
             };
 
             var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(expected);
+            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
             var validator = new ListMessageStatusRequestQueryValidator(wrapper.Object);
 
             var result = validator.Validate(queries);
