@@ -23,7 +23,7 @@ namespace Toast.Sms.Validators
         /// <inheritdoc />
         public bool IsMatch(string date)
         {
-            if (date == null)
+            if (string.IsNullOrWhiteSpace(date))
             {
                 return false;
             }
