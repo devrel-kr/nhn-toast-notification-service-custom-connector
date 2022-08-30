@@ -22,7 +22,7 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, "Hello world", "1234567890", "2022-05-10 00:00:00", null, null, null, null, null, null, null, false)]
         [DataRow(null, "Hello world", null, "2022-05-10 00:00:00", null, "0987654321", null, null, null, null, null, false)]
         [DataRow(null, null, "1234567890", "2022-05-10 00:00:00", null, "0987654321", null, null, null, null, null, false)]
-        [DataRow(null, "Hello world", "1234567890", "2022051000000", null, "0987654321", null, null, null, null, null, true)]
+        [DataRow(null, "Hello world", "1234567890", "2022051000000", null, "0987654321", null, null, null, null, null, false)]
         [DataRow(null, "Hello world", "12345678901234567890", "2022-05-10 00:00:00", null, "0987654321", null, null, null, null, null, false)]
         [DataRow(null, "Hello world", "1234567890", "2022-05-10 00:00:00", null, "098765432109876543210987654321", null, null, null, null, null, false)]
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string templateId, string body, string sendNo, string requestDate, string senderGroupingKey,
@@ -50,9 +50,8 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
-            var validator = new SendMessagesRequestBodyValidator(wrapper.Object);
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             var result = validator.Validate(payloads);
 
