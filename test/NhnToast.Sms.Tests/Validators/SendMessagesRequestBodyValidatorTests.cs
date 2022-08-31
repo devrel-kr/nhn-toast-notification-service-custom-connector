@@ -23,7 +23,7 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, "Hello world", "1234567890", "2022051000000", null, "0987654321", null, null, null, null, null, false)]
         [DataRow(null, "Hello world", "12345678901234567890", "2022-05-10 00:00:00", null, "0987654321", null, null, null, null, null, false)]
         [DataRow(null, "Hello world", "1234567890", "2022-05-10 00:00:00", null, "098765432109876543210987654321", null, null, null, null, null, false)]
-        public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string templateId, string body, string sendNo, string requestDate, string senderGroupingKey, 
+        public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string templateId, string body, string sendNo, string requestDate, string senderGroupingKey,
             string recipientNo, string countryCode, string InternationalRecipientNo, string recipientGroupingKey, string userId, string statsId, bool expected)
         {
             var recipient = new SendMessagesRequestRecipient()
@@ -48,7 +48,8 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             var result = validator.Validate(payloads);
 
@@ -88,7 +89,9 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             Func<Task> func = async () => await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 
@@ -126,7 +129,9 @@ namespace Toast.Sms.Tests.Validators
                 UserId = userId,
                 StatsId = statsId
             };
-            var validator = new SendMessagesRequestBodyValidator();
+
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             var result = await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 

@@ -35,7 +35,9 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
-            var validator = new ListMessageStatusRequestQueryValidator();
+
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessageStatusRequestQueryValidator(wrapper);
 
             var result = validator.Validate(queries);
 
@@ -62,7 +64,10 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
-            var validator = new ListMessageStatusRequestQueryValidator();
+
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessageStatusRequestQueryValidator(wrapper);
+
 
             Func<Task> func = async () => await ListMessageStatusRequestQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
@@ -84,7 +89,9 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
-            var validator = new ListMessageStatusRequestQueryValidator();
+
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessageStatusRequestQueryValidator(wrapper);
 
             var result = await ListMessageStatusRequestQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 

@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using FluentValidation;
-
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
@@ -36,13 +36,16 @@ namespace Toast.Sms.Validators
             throw new RequestQueryNotValidException("Invalid Query Parameter") { StatusCode = HttpStatusCode.BadRequest };
         }
     }
+
     public class ListMessagesRequestQueryValidator : AbstractValidator<ListMessagesRequestQueries>
     {
+        private readonly IRegexDateTimeWrapper _regex;
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessagesRequestQueryValidator"/> class.
         /// </summary>
-        public ListMessagesRequestQueryValidator()
+        public ListMessagesRequestQueryValidator(IRegexDateTimeWrapper regex)
         {
+            this._regex = regex.ThrowIfNullOrDefault();
 
             this.RuleFor(p => p.RequestId)
                 .NotEmpty()
@@ -51,6 +54,7 @@ namespace Toast.Sms.Validators
                 .When(p => p.EndRequestDate == null)
                 .When(p => p.StartCreateDate == null)
                 .When(p => p.EndCreateDate == null);
+
 
             this.RuleFor(p => p.StartRequestDate)
                 .NotEmpty()
@@ -97,7 +101,7 @@ namespace Toast.Sms.Validators
             this.RuleFor(p => p.ResultCode).MaximumLength(10).Must(p => resultCodeType.Contains(p)).When(p => p.ResultCode != null);
 
             this.RuleFor(p => p.SubResultCode).MaximumLength(10).Must(p => subResultCodeType.Contains(p)).When(p => p.SubResultCode != null);
-            
+
             this.RuleFor(p => p.SenderGroupingKey).MaximumLength(100);
 
             this.RuleFor(p => p.RecipientGroupingKey).MaximumLength(100);
@@ -107,19 +111,14 @@ namespace Toast.Sms.Validators
             this.RuleFor(p => p.PageSize).GreaterThan(0);
         }
 
+        private bool IsValidDateFormat(string date)
+        {
+            return this._regex.IsMatch(date);
+        }
+
         List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
         List<string> resultCodeType = new List<string>() { "MTR1", "MTR2" };
         List<string> subResultCodeType = new List<string>() { "MTR2_1", "MTR2_2", "MTR2_3" };
-        private bool IsValidDateFormat(string date)
-        {
-            if (date == null)
-            {
-                return false;
-            }
-            else
-            {
-                return Regex.IsMatch(date, @"^([0-9][0-9][0-9][0-9])-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) ([01][0-9]|2[0123]):([0-5][0-9]):([0-5][0-9])$");
-            }
-        }
+
     }
 }
