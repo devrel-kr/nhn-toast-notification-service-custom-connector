@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
-using Moq;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Exceptions;
@@ -110,9 +108,8 @@ namespace Toast.Sms.Tests.Validators
                 PageSize = pageSize
             };
 
-            var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(false);
-            var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessagesRequestQueryValidator(wrapper);
 
             Func<Task> func = async () => await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
@@ -148,10 +145,8 @@ namespace Toast.Sms.Tests.Validators
                 PageNumber = pageNum,
                 PageSize = pageSize
             };
-
-            var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
-            var validator = new ListMessagesRequestQueryValidator(wrapper.Object);
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new ListMessagesRequestQueryValidator(wrapper);
 
             var result = await ListMessagesQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 

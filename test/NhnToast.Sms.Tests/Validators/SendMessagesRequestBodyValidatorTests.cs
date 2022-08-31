@@ -6,8 +6,6 @@ using FluentAssertions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Moq;
-
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
@@ -92,9 +90,8 @@ namespace Toast.Sms.Tests.Validators
                 StatsId = statsId
             };
 
-            var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(false);
-            var validator = new SendMessagesRequestBodyValidator(wrapper.Object);
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             Func<Task> func = async () => await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 
@@ -133,9 +130,8 @@ namespace Toast.Sms.Tests.Validators
                 StatsId = statsId
             };
 
-            var wrapper = new Mock<IRegexDateTimeWrapper>();
-            wrapper.Setup(p => p.IsMatch(It.IsAny<string>())).Returns(true);
-            var validator = new SendMessagesRequestBodyValidator(wrapper.Object);
+            var wrapper = new RegexDateTimeWrapper();
+            var validator = new SendMessagesRequestBodyValidator(wrapper);
 
             var result = await SendMessagesRequestBodyValidatorExtension.Validate(Task.FromResult(payloads), validator).ConfigureAwait(false);
 
