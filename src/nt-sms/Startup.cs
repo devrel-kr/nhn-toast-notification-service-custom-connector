@@ -53,6 +53,7 @@ namespace Toast.Sms
 
         private static void ConfigureValidators(IServiceCollection services)
         {
+            services.AddSingleton<IRegexDateTimeWrapper, RegexDateTimeWrapper>();
             services.AddScoped<IValidator<GetMessageRequestQueries>, GetMessageRequestQueryValidator>();
             services.AddScoped<IValidator<ListMessagesRequestQueries>, ListMessagesRequestQueryValidator>();
             services.AddScoped<IValidator<ListMessageStatusRequestQueries>, ListMessageStatusRequestQueryValidator>();

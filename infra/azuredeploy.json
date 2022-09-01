@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.6.18.56646",
-      "templateHash": "789566112759471441"
+      "version": "0.9.1.41621",
+      "templateHash": "12643030778761739108"
     }
   },
   "parameters": {
@@ -66,7 +66,7 @@
     },
     "deploymentScriptAzureCliVersion": {
       "type": "string",
-      "defaultValue": "2.36.0"
+      "defaultValue": "2.37.0"
     },
     "functionAppNames": {
       "type": "string",
@@ -200,8 +200,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "7176805386279164302"
+              "version": "0.9.1.41621",
+              "templateHash": "8640315403788254352"
             }
           },
           "parameters": {
@@ -239,7 +239,7 @@
             },
             "deploymentScriptAzureCliVersion": {
               "type": "string",
-              "defaultValue": "2.36.0"
+              "defaultValue": "2.37.0"
             }
           },
           "resources": [
@@ -281,8 +281,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.6.18.56646",
-                      "templateHash": "2843257988214538202"
+                      "version": "0.9.1.41621",
+                      "templateHash": "17013745264967326415"
                     }
                   },
                   "parameters": {
@@ -439,8 +439,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "10865803800513891495"
+                              "version": "0.9.1.41621",
+                              "templateHash": "7727169497799998137"
                             }
                           },
                           "parameters": {
@@ -603,7 +603,10 @@
                                       "allowedOrigins": [
                                         "https://flow.microsoft.com",
                                         "https://asia.flow.microsoft.com",
-                                        "https://korea.flow.microsoft.com"
+                                        "https://australia.flow.microsoft.com",
+                                        "https://korea.flow.microsoft.com",
+                                        "https://make.powerapps.com",
+                                        "https://make.powerautomate.com"
                                       ],
                                       "allowedMethods": [
                                         "GET"
@@ -709,8 +712,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "5377950480023742702"
+                              "version": "0.9.1.41621",
+                              "templateHash": "6056004651716096647"
                             }
                           },
                           "parameters": {
@@ -897,8 +900,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "1867382485349125087"
+                              "version": "0.9.1.41621",
+                              "templateHash": "10269611157572255787"
                             }
                           },
                           "parameters": {
@@ -1114,8 +1117,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "9705224587544208741"
+                              "version": "0.9.1.41621",
+                              "templateHash": "7904709338194089888"
                             }
                           },
                           "parameters": {
@@ -1392,8 +1395,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.6.18.56646",
-                      "templateHash": "3542139371716250097"
+                      "version": "0.9.1.41621",
+                      "templateHash": "11004751468057403107"
                     }
                   },
                   "parameters": {
@@ -1554,8 +1557,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "10865803800513891495"
+                              "version": "0.9.1.41621",
+                              "templateHash": "7727169497799998137"
                             }
                           },
                           "parameters": {
@@ -1718,7 +1721,10 @@
                                       "allowedOrigins": [
                                         "https://flow.microsoft.com",
                                         "https://asia.flow.microsoft.com",
-                                        "https://korea.flow.microsoft.com"
+                                        "https://australia.flow.microsoft.com",
+                                        "https://korea.flow.microsoft.com",
+                                        "https://make.powerapps.com",
+                                        "https://make.powerautomate.com"
                                       ],
                                       "allowedMethods": [
                                         "GET"
@@ -1827,8 +1833,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "5377950480023742702"
+                              "version": "0.9.1.41621",
+                              "templateHash": "6056004651716096647"
                             }
                           },
                           "parameters": {
@@ -2018,8 +2024,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "1867382485349125087"
+                              "version": "0.9.1.41621",
+                              "templateHash": "10269611157572255787"
                             }
                           },
                           "parameters": {
@@ -2217,8 +2223,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "13942258608187888947"
+                              "version": "0.9.1.41621",
+                              "templateHash": "9852033216752408319"
                             }
                           },
                           "parameters": {
@@ -2413,8 +2419,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.6.18.56646",
-                              "templateHash": "497794050695556335"
+                              "version": "0.9.1.41621",
+                              "templateHash": "5703652317185051150"
                             }
                           },
                           "parameters": {
@@ -2743,8 +2749,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.6.18.56646",
-                      "templateHash": "1340409127682355964"
+                      "version": "0.9.1.41621",
+                      "templateHash": "7038325741603652472"
                     }
                   },
                   "parameters": {
@@ -2772,7 +2778,7 @@
                     },
                     "azureCliVersion": {
                       "type": "string",
-                      "defaultValue": "2.36.0"
+                      "defaultValue": "2.37.0"
                     },
                     "functionAppSuffixes": {
                       "type": "string"
