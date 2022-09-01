@@ -1,9 +1,10 @@
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using FluentValidation;
+
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
+
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
@@ -39,6 +40,7 @@ namespace Toast.Sms.Validators
     public class SendMessagesRequestBodyValidator : AbstractValidator<SendMessagesRequestBody>
     {
         private readonly IRegexDateTimeWrapper _regex;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SendMessagesRequestBodyValidator"/> class.
         /// </summary>
@@ -62,6 +64,7 @@ namespace Toast.Sms.Validators
             return this._regex.IsMatch(date);
         }
     }
+
     /// <summary>
     /// this represents the validator entity for the SendMessages request recipient parameters.
     /// </summary>

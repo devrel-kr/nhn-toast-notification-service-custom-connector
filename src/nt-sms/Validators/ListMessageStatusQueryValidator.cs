@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 using FluentValidation;
 
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
+
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 
 namespace Toast.Sms.Validators
 {
@@ -44,6 +44,7 @@ namespace Toast.Sms.Validators
     public class ListMessageStatusRequestQueryValidator : AbstractValidator<ListMessageStatusRequestQueries>
     {
         private readonly IRegexDateTimeWrapper _regex;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessageStatusRequestQueryValidator"/> class.
         /// </summary>
@@ -59,7 +60,6 @@ namespace Toast.Sms.Validators
             });
             this.RuleFor(p => p.PageNumber).GreaterThan(0);
             this.RuleFor(p => p.PageSize).GreaterThan(0);
-
         }
 
         private bool IsValidDateFormat(string date)
@@ -67,6 +67,6 @@ namespace Toast.Sms.Validators
             return this._regex.IsMatch(date);
         }
 
-        List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
+        private List<string> MsgType = new List<string>() { "SMS", "LMS", "MMS", "AUTH" };
     }
 }

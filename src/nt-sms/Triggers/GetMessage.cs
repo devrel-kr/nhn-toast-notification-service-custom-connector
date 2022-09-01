@@ -23,6 +23,7 @@ using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
+using Toast.Sms.Examples;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
 
@@ -72,7 +73,7 @@ namespace Toast.Sms.Triggers
             }
 
             var queries = default(GetMessageRequestQueries);
-            try 
+            try
             {
                 queries = await req.To<GetMessageRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
             }

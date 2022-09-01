@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 
 using Newtonsoft.Json;
-using Toast.Common.Models;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Newtonsoft.Json.Serialization;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Resolvers;
+
+using Toast.Common.Models;
 
 namespace Toast.Sms.Models
 {
     /// <summary>
     /// This represents the entity for SendMessages response.
     /// </summary>
-    public class SendMessagesResponse : ResponseModel<ResponseItemBodyModel<SendMessagesResponseData>> { }
+    public class SendMessagesResponse : ResponseModel<ResponseItemBodyModel<SendMessagesResponseData>>
+    { }
 
     /// <summary>
     /// This represents the entity for SendMessages response data.
@@ -26,7 +26,7 @@ namespace Toast.Sms.Models
         /// <summary>
         /// Gets or sets the request status code.
         /// </summary>
-        /// 
+        ///
         public virtual string StatusCode { get; set; }
 
         /// <summary>
@@ -40,7 +40,6 @@ namespace Toast.Sms.Models
         /// </summary>
         [JsonProperty("sendResultList")]
         public virtual List<SendMessagesResponseResult> SendResults { get; set; }
-
     }
 
     /// <summary>
@@ -75,60 +74,5 @@ namespace Toast.Sms.Models
         /// </summary>
         [JsonProperty("recipientGroupingKey")]
         public virtual string RecipientGroupKey { get; set; }
-
     }
-
-    /// <summary>
-    /// This represents the example entity for SendMessages response body.
-    /// </summary>
-    public class SendMessagesResponseModelExample : OpenApiExample<SendMessagesResponse>
-    {
-        public override IOpenApiExample<SendMessagesResponse> Build(NamingStrategy namingStrategy = null)
-        {
-
-            var exampleInstance = new SendMessagesResponse()
-            {
-                Header = new ResponseHeaderModel()
-                {
-                    IsSuccessful = true,
-                    ResultCode = 0,
-                    ResultMessage = "SUCCESS"
-                },
-                Body = new ResponseItemBodyModel<SendMessagesResponseData>()
-                {
-                    Data = new SendMessagesResponseData()
-                    {
-                        RequestId = "201808100000000000000000",
-                        StatusCode = "2",
-                        SenderGroupKey = "SenderGroupingKey",
-                        SendResults = new List<SendMessagesResponseResult>()
-                        {
-                                    new SendMessagesResponseResult()
-                                    {
-                                        RecipientNumber = "01000000000",
-                                        ResultCode = 0,
-                                        ResultMessage = "SUCCESS",
-                                        RecipientSequence = 1,
-                                        RecipientGroupKey = "RecipientGroupingKey"
-                                    }
-                        }
-                    }
-                }
-            };
-
-            this.Examples.Add(
-                OpenApiExampleResolver.Resolve(
-                    "sample",
-                    "This represents the example entity for SendMessages response body.",
-                    exampleInstance,
-                    namingStrategy
-                )
-            );
-
-            return this;
-        }
-
-
-    }
-
 }

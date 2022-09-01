@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Newtonsoft.Json;
 
 using Toast.Common.Configurations;
 using Toast.Common.Models;
@@ -15,13 +15,9 @@ namespace Toast.Common.Builders
     public class RequestUrlBuilder
     {
         private ToastSettings _settings;
-
         private RequestHeaderModel _headers;
-
         private string _endpoint;
-
         private string _queries;
-
         private Dictionary<string, string> _paths;
 
         /// <summary>
@@ -67,7 +63,6 @@ namespace Toast.Common.Builders
 
             this._queries = string.Join("&", deserialised.Select(x => $"{x.Key}={x.Value}"));
 
-
             return this;
         }
 
@@ -87,7 +82,6 @@ namespace Toast.Common.Builders
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
 
             this._paths = deserialised;
-
 
             return this;
         }

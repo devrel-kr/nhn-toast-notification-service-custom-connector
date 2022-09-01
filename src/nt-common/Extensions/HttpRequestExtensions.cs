@@ -8,8 +8,18 @@ using Toast.Common.Models;
 
 namespace Toast.Common.Extensions
 {
+    /// <summary>
+    /// This represents the extension entity for <see cref="HttpRequest"/>.
+    /// </summary>
     public static class HttpRequestExtensions
     {
+        /// <summary>
+        /// Convert the HTTP request header in <see cref="HttpRequest"/> to <see cref="RequestHeaderModel"/>.
+        /// </summary>
+        /// <typeparam name="T">Type of HTTP request header model.</typeparam>
+        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
+        /// <param name="useBasicAuthHeader">Value indicating whether to use the basic auth header or not.</param>
+        /// <returns>Returns <see cref="RequestHeaderModel"/> instance.</returns>
         public static T To<T>(this HttpRequest req, bool useBasicAuthHeader) where T : RequestHeaderModel
         {
             var values = req.Headers["Authorization"]

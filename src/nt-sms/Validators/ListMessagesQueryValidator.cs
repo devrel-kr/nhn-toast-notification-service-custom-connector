@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 using FluentValidation;
+
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
+
 using Toast.Common.Exceptions;
 using Toast.Sms.Models;
 
@@ -40,6 +41,7 @@ namespace Toast.Sms.Validators
     public class ListMessagesRequestQueryValidator : AbstractValidator<ListMessagesRequestQueries>
     {
         private readonly IRegexDateTimeWrapper _regex;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListMessagesRequestQueryValidator"/> class.
         /// </summary>
@@ -54,7 +56,6 @@ namespace Toast.Sms.Validators
                 .When(p => p.EndRequestDate == null)
                 .When(p => p.StartCreateDate == null)
                 .When(p => p.EndCreateDate == null);
-
 
             this.RuleFor(p => p.StartRequestDate)
                 .NotEmpty()
@@ -116,9 +117,8 @@ namespace Toast.Sms.Validators
             return this._regex.IsMatch(date);
         }
 
-        List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
-        List<string> resultCodeType = new List<string>() { "MTR1", "MTR2" };
-        List<string> subResultCodeType = new List<string>() { "MTR2_1", "MTR2_2", "MTR2_3" };
-
+        private List<string> MsgStatusType = new List<string>() { "0", "1", "2", "3", "4", "5" };
+        private List<string> resultCodeType = new List<string>() { "MTR1", "MTR2" };
+        private List<string> subResultCodeType = new List<string>() { "MTR2_1", "MTR2_2", "MTR2_3" };
     }
 }
