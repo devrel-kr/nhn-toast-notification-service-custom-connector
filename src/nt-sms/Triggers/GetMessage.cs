@@ -23,6 +23,7 @@ using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
+using Toast.Sms.Examples;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
 using Toast.Sms.Workflows;
@@ -65,7 +66,7 @@ namespace Toast.Sms.Triggers
 
             var workflow = new HttpTriggerWorkflow();
             await workflow.ValidateHeaderAsync(req)
-                          .ValidateQueriesAsync(req, this._validator)
+                          .ValidateQueriesAsync<GetMessageRequestQueries>(req, this._validator)
                           .ConfigureAwait(false);
 
             var headers = default(RequestHeaderModel);

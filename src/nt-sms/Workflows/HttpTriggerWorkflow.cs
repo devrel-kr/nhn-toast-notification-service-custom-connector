@@ -9,10 +9,12 @@ using FluentValidation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Toast.Common.Builders;
+using Toast.Common.Configurations;
 using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
+using Toast.Sms.Configurations;
 using Toast.Sms.Validators;
 
 namespace Toast.Sms.Workflows
@@ -30,6 +32,8 @@ namespace Toast.Sms.Workflows
         Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req);
 
         Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries;
+    
+        Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null);
     }
 
     /// <summary>
@@ -39,6 +43,8 @@ namespace Toast.Sms.Workflows
     {
         private RequestHeaderModel _headers;
         private BaseRequestQueries _queries;
+
+        private string _requestUrl;
 
         /// <inheritdoc />
         public async Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req)
@@ -61,5 +67,22 @@ namespace Toast.Sms.Workflows
 
             return await Task.FromResult(this).ConfigureAwait(false);
         }
+
+        public async Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null) {
+            // var paths = new GetMessageRequestPaths() { RequestId = requestId };
+
+            var _endpoint = nameof(Tresult);
+
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(settings, _endpoint)
+                .WithHeaders(_headers) 
+                .WithQueries(_queries)
+                .WithPaths(paths).Build();
+
+            this._requestUrl = requestUrl;
+ 
+            return await Task.FromResult(this).ConfigureAwait(false);   
+        }
+
     }
 }
