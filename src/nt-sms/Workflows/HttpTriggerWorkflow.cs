@@ -100,4 +100,13 @@ namespace Toast.Sms.Workflows
         }
 
     }
+    public static class HttpTriggerWorkflowExtensions
+    {
+        public static async Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(this Task<IHttpTriggerWorkflow> workflow, HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries
+        {
+            var instance = await workflow.ConfigureAwait(false);
+
+            return await instance.ValidateQueriesAsync(req, validator);
+        }
+    }        
 }
