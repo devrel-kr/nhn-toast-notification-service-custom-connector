@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Net.Http;
 using Aliencube.AzureFunctions.Extensions.Common;
 
 using FluentValidation;
@@ -44,6 +44,8 @@ namespace Toast.Sms.Workflows
         private RequestHeaderModel _headers;
         private BaseRequestQueries _queries;
 
+        private readonly HttpClient _http;
+        private object _payload;
         private string _requestUrl;
 
         /// <inheritdoc />
@@ -82,6 +84,19 @@ namespace Toast.Sms.Workflows
             this._requestUrl = requestUrl;
  
             return await Task.FromResult(this).ConfigureAwait(false);   
+        }
+
+        public async Task<IHttpTriggerWorkflow> Invoke<T>(ResponseModel<ResponseItemBodyModel<T>> response)
+        {
+            
+          
+            this._http.DefaultRequestHeaders.Add("X-Secret-Key", _headers.SecretKey);
+            var result = await this._http.GetAsync(_requestUrl).ConfigureAwait(false);
+            var payload = await result.Content.ReadAsAsync<T>().ConfigureAwait(false);
+            this._payload = payload;
+                
+            return await Task.FromResult(this).ConfigureAwait(false);
+            
         }
 
     }
