@@ -16,6 +16,7 @@ using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Configurations;
 using Toast.Sms.Validators;
+using System.Reflection;
 
 namespace Toast.Sms.Workflows
 {
@@ -43,7 +44,6 @@ namespace Toast.Sms.Workflows
     {
         private RequestHeaderModel _headers;
         private BaseRequestQueries _queries;
-
         private readonly HttpClient _http;
         private object _payload;
         private string _requestUrl;
@@ -73,10 +73,12 @@ namespace Toast.Sms.Workflows
         public async Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null) {
             // var paths = new GetMessageRequestPaths() { RequestId = requestId };
 
-            var _endpoint = nameof(Tresult);
-
+            Type type = settings.Endpoints.GetType();
+            string name = nameof(Tresult);
+            PropertyInfo endpoint = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
+ 
             var requestUrl = new RequestUrlBuilder()
-                .WithSettings(settings, _endpoint)
+                .WithSettings(settings, endpoint.GetValue(settings.Endpoints).ToString())
                 .WithHeaders(_headers) 
                 .WithQueries(_queries)
                 .WithPaths(paths).Build();
@@ -92,6 +94,7 @@ namespace Toast.Sms.Workflows
           
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", _headers.SecretKey);
             var result = await this._http.GetAsync(_requestUrl).ConfigureAwait(false);
+            
             var payload = await result.Content.ReadAsAsync<T>().ConfigureAwait(false);
             this._payload = payload;
                 
@@ -109,4 +112,5 @@ namespace Toast.Sms.Workflows
             return await instance.ValidateQueriesAsync(req, validator);
         }
     }        
+
 }
