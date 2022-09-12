@@ -1,20 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 using FluentAssertions;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
-
+using Toast.Common.Configurations;
 using Toast.Common.Exceptions;
 using Toast.Common.Models;
+using Toast.Sms.Configurations;
+using Toast.Sms.Triggers;
 using Toast.Sms.Workflows;
 
 namespace Toast.Sms.Tests.Workflows
@@ -123,5 +122,35 @@ namespace Toast.Sms.Tests.Workflows
             field.AppKey.Should().Be(username);
             field.SecretKey.Should().Be(password);
         }
+
+        [TestMethod]
+        // setting이 null일 떄 
+        public void Given_NullSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_Exception()
+        { 
+            var set = new Mock<ToastSettings<SmsEndpointSettings>>();
+            var workflow = new HttpTriggerWorkflow();
+
+            Func<Task> func = async () => await workflow.BuildRequestUrl<GetMessage>(set.Object);
+
+            func.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        // 잘못된 이름의 endpoint일 때 
+        public void Given_InvalidEndpoint_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_ExceptionAsync()
+        {
+            var settings = new ToastSettings<SmsEndpointSettings>();
+            var workflow = new HttpTriggerWorkflow();
+
+            //Func<Task> func = async () => await workflow.BuildRequestUrl<Endpoint>(settings);
+            // var result = workflow.BuildRequestUrl<GetMessage>(settings);
+            // var fi = result.GetType().GetField("name", BindingFlags.NonPublic);
+            // var f = fi.GetValue(result);
+            // f.Should().BeNull();
+            Type t = settings.Endpoints.GetType();
+            
+            //func.Should().ThrowAsync<ArgumentException>();
+        }
+
     }
 }
