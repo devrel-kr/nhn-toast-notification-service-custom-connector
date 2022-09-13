@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Configurations;
-using Toast.Common.Tests.Fakes;
+using Toast.Tests.Common.Fakes;
 
 namespace Toast.Common.Tests.Configurations
 {

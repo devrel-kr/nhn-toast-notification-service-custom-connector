@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\nt-common\NhnToast.Common.csproj" />
+    <ProjectReference Include="..\NhnToast.Tests.Common\NhnToast.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>

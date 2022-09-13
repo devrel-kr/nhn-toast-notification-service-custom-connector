@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 using Toast.Common.Models;
-using Toast.Common.Tests.Fakes;
+using Toast.Tests.Common.Fakes;
 
 namespace Toast.Common.Tests.Models
 {

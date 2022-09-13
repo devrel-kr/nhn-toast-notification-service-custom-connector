@@ -9,8 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-using Toast.Common.Models;
-using Toast.Common.Tests.Fakes;
+using Toast.Tests.Common.Fakes;
 
 namespace Toast.Common.Tests.Models
 {
@@ -48,8 +47,6 @@ namespace Toast.Common.Tests.Models
             pis.SingleOrDefault(p => p.Name == "Data").Should().NotBeNull()
                .And.Subject.PropertyType.Should().Be(typeof(List<string>));
         }
-
-
 
         [TestMethod]
         public void Given_Default_ResponseItemBodyModel_Instance_When_Serialised_Then_It_Should_Return_Result()

@@ -1,6 +1,6 @@
 using Toast.Common.Models;
 
-namespace Toast.Common.Tests.Fakes
+namespace Toast.Tests.Common.Fakes
 {
     public class FakeResponseItemBodyModel : ResponseItemBodyModel<string>
     {

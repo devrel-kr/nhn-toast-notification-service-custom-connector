@@ -1,4 +1,4 @@
-namespace Toast.Common.Tests.Fakes
+namespace Toast.Tests.Common.Fakes
 {
     public class FakeEndpointSettings
     {

@@ -1,9 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
+using Aliencube.AzureFunctions.Extensions.Common;
 
 using FluentAssertions;
 
@@ -16,16 +20,33 @@ using Moq;
 using Toast.Common.Exceptions;
 using Toast.Common.Models;
 using Toast.Sms.Workflows;
+using Toast.Tests.Common.Fakes;
+
+using WorldDomination.Net.Http;
 
 namespace Toast.Sms.Tests.Workflows
 {
     [TestClass]
     public class HttpTriggerWorkflowTests
     {
+        private Mock<IHttpClientFactory> _factory;
+
+        [TestInitialize]
+        public void Init()
+        {
+            this._factory = new Mock<IHttpClientFactory>();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            this._factory = null;
+        }
+
         [TestMethod]
         public void Given_Type_When_Initiated_Then_It_Should_Implement_Interface()
         {
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             var hasInterface = workflow.GetType().HasInterface<IHttpTriggerWorkflow>();
 
@@ -36,7 +57,7 @@ namespace Toast.Sms.Tests.Workflows
         public void Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception()
         {
             var req = new Mock<HttpRequest>();
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
@@ -52,7 +73,7 @@ namespace Toast.Sms.Tests.Workflows
             var req = new Mock<HttpRequest>();
             req.SetupGet(p => p.Headers).Returns(headers);
 
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
@@ -73,7 +94,7 @@ namespace Toast.Sms.Tests.Workflows
             var req = new Mock<HttpRequest>();
             req.SetupGet(p => p.Headers).Returns(headers);
 
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
@@ -93,7 +114,7 @@ namespace Toast.Sms.Tests.Workflows
             var req = new Mock<HttpRequest>();
             req.SetupGet(p => p.Headers).Returns(headers);
 
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             var result = await workflow.ValidateHeaderAsync(req.Object);
 
@@ -113,7 +134,7 @@ namespace Toast.Sms.Tests.Workflows
             var req = new Mock<HttpRequest>();
             req.SetupGet(p => p.Headers).Returns(headers);
 
-            var workflow = new HttpTriggerWorkflow();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
 
             var result = await workflow.ValidateHeaderAsync(req.Object);
             var fi = workflow.GetType().GetField("_headers", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -122,6 +143,56 @@ namespace Toast.Sms.Tests.Workflows
             field.Should().NotBeNull();
             field.AppKey.Should().Be(username);
             field.SecretKey.Should().Be(password);
+        }
+
+        [DataTestMethod]
+        [DataRow(HttpVerbs.POST, HttpStatusCode.OK, true, 200, "hello world", "lorem ipsum")]
+        public async Task Given_Payload_When_Invoke_InvokeAsync_Then_It_Should_Return_Result(string method, HttpStatusCode statusCode, bool isSuccessful, int resultCode, string resultMessage, string body)
+        {
+            var model = new FakeResponseModel()
+            {
+                Header = new ResponseHeaderModel()
+                {
+                    IsSuccessful = isSuccessful,
+                    ResultCode = resultCode,
+                    ResultMessage = resultMessage
+                },
+                Body = body
+            };
+            var content = new ObjectContent<FakeResponseModel>(model, new JsonMediaTypeFormatter(), MediaTypeNames.Application.Json);
+            var options = new HttpMessageOptions()
+            {
+                HttpResponseMessage = new HttpResponseMessage(statusCode) { Content = content }
+            };
+
+            var handler = new FakeHttpMessageHandler(options);
+
+            var http = new HttpClient(handler);
+            this._factory.Setup(p => p.CreateClient(It.IsAny<string>())).Returns(http);
+
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
+
+            var header = new RequestHeaderModel() { AppKey = "hello", SecretKey = "world" };
+            var headers = typeof(HttpTriggerWorkflow).GetField("_headers", BindingFlags.Instance | BindingFlags.NonPublic);
+            headers.SetValue(workflow, header);
+
+            var url = "http://localhost:7071/api/HttpTrigger";
+            var requestUrl = typeof(HttpTriggerWorkflow).GetField("_requestUrl", BindingFlags.Instance | BindingFlags.NonPublic);
+            requestUrl.SetValue(workflow, url);
+
+            var load = new FakeRequestModel()
+            {
+                FakeProperty1 = "lorem ipsum"
+            };
+            var payload = typeof(HttpTriggerWorkflow).GetField("_payload", BindingFlags.Instance | BindingFlags.NonPublic);
+            payload.SetValue(workflow, load);
+
+            var result = await workflow.InvokeAsync<FakeResponseModel>(new HttpMethod(method)).ConfigureAwait(false);
+
+            result.Header.IsSuccessful.Should().Be(isSuccessful);
+            result.Header.ResultCode.Should().Be(resultCode);
+            result.Header.ResultMessage.Should().Be(resultMessage);
+            result.Body.Should().Be(body);
         }
     }
 }
