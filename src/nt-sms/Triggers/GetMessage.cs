@@ -63,10 +63,12 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var workflow = new HttpTriggerWorkflow();
-            await workflow.ValidateHeaderAsync(req)
-                          .ValidateQueriesAsync(req, this._validator)
-                          .ConfigureAwait(false);
+            var workflow = new HttpTriggerWorkflow(this._http);
+            var payload_ = await workflow.ValidateHeaderAsync(req)
+                                         .ValidateQueriesAsync(req, this._validator)
+                                         .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
+                                         .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
+                                         .ConfigureAwait(false);
 
             var headers = default(RequestHeaderModel);
             try
