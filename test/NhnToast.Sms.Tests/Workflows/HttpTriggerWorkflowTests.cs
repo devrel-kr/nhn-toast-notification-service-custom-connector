@@ -17,6 +17,7 @@ using Toast.Sms.Triggers;
 using Toast.Sms.Workflows;
 using Toast.Sms.Models;
 using System.Net.Http;
+using FluentValidation;
 
 namespace Toast.Sms.Tests.Workflows
 {
@@ -124,7 +125,45 @@ namespace Toast.Sms.Tests.Workflows
             field.AppKey.Should().Be(username);
             field.SecretKey.Should().Be(password);
         }
+        //쿼리 유효성 검사 통과X
+        [TestMethod]
+        public void Given_ValidQueries_fails_When_Invoke_ValidateQueriesAsync_Then_It_Should_Throw_Exception()
+        {
+            var queries = new QueryString();
+            queries.Add("Name","Value");
+            //var queries = new BaseRequestQueries();
+            
+            var req = new Mock<HttpRequest>();
+            req.SetupGet(p => p.QueryString).Returns(queries);
+            
+            //var validator = new RequestQueryValidator();
+            var validator = new Mock<IValidator<BaseRequestQueries>>();
+            var workflow = new HttpTriggerWorkflow();
+            Func<Task> func = async () => await workflow.ValidateQueriesAsync<BaseRequestQueries>(req.Object, validator);
 
+            func.Should().ThrowAsync<RequestQueryNotValidException>();
+            //bool isValid = queries.IsValid();
+            //Assert.IsTrue(isValid);
+        }
+        //쿼리 유효성 검사 통과o
+        [DataTestMethod]
+        [DataRow("hello", "world")]
+        public async Task Given_ValidQueries_When_Invoke_ValidateQueriesAsync_Then_It_Should_Return_Result(string name, string value)
+        {
+            var queries = new QueryString();
+            queries.Add("Name","Value");
+
+            var req = new Mock<HttpRequest>();
+            req.SetupGet(p => p.QueryString).Returns(queries);
+
+            var validator = new Mock<IValidator<BaseRequestQueries>>();
+            var workflow = new HttpTriggerWorkflow();
+
+            var result = await workflow.ValidateQueriesAsync<BaseRequestQueries>(req.Object, validator);
+
+            result.Should().BeOfType<HttpTriggerWorkflow>();
+        }        
+        
         [TestMethod]
         // setting이 null일 떄 
         public void Given_NullSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_Exception()
