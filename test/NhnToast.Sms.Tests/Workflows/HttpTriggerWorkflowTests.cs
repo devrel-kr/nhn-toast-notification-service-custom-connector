@@ -15,6 +15,8 @@ using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Triggers;
 using Toast.Sms.Workflows;
+using Toast.Sms.Models;
+using System.Net.Http;
 
 namespace Toast.Sms.Tests.Workflows
 {
@@ -150,6 +152,29 @@ namespace Toast.Sms.Tests.Workflows
             Type t = settings.Endpoints.GetType();
             
             //func.Should().ThrowAsync<ArgumentException>();
+        }
+        //invoke
+        [TestMethod]
+        public void Given_GetMessageResponse_Invoke_Then_It_Should_Throw_Exception()
+        {
+            // var headers = new HeaderDictionary();
+            // headers.Add("Authorization", "Basic");
+
+            // var req = new Mock<HttpRequest>();
+            // req.SetupGet(p => p.Headers).Returns(headers);
+
+            // var http = new HttpClient();
+            // string requestUrl;
+            var workflow = new HttpTriggerWorkflow();
+            // var result = await workflow.Invoke<GetMessageResponse>();
+            
+            Func<Task> func = async () => await workflow.ValidateInvokeAsync<GetMessageResponse>();
+
+
+            func.Should().BeOfType<HttpTriggerWorkflow>();
+            // func.Should().ThrowAsync<RequestHeaderNotValidException>();
+            // func.Should().ThrowAsync<RequestBodyNotValidException>();
+            // func.Should().ThrowAsync<RequestHeaderNotValidException>();
         }
 
     }
