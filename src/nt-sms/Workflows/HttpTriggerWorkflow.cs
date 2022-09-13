@@ -32,9 +32,14 @@ namespace Toast.Sms.Workflows
         /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
         Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req);
 
+        Task<IHttpTriggerWorkflow> ValidateInvokeAsync<T>();
+
         Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries;
     
         Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null);
+
+    
+
     }
 
     /// <summary>
@@ -88,10 +93,8 @@ namespace Toast.Sms.Workflows
             return await Task.FromResult(this).ConfigureAwait(false);   
         }
 
-        public async Task<IHttpTriggerWorkflow> Invoke<T>(ResponseModel<ResponseItemBodyModel<T>> response)
+        public async Task<IHttpTriggerWorkflow> ValidateInvokeAsync<T>()
         {
-            
-          
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", _headers.SecretKey);
             var result = await this._http.GetAsync(_requestUrl).ConfigureAwait(false);
             
