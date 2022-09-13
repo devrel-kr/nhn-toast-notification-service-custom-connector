@@ -67,7 +67,8 @@ namespace Toast.Sms.Triggers
             var workflow = new HttpTriggerWorkflow();
             await workflow.ValidateHeaderAsync(req)
                           .ValidateQueriesAsync<GetMessageRequestQueries>(req, this._validator)
-                          .ValidateInvokeAsync<GetMessageResponse>()
+                          .BuildRequestUrl<GetMessage>(_settings)
+                          .InvokeAsync<GetMessageResponse>()
                           .ConfigureAwait(false);
 
             var headers = default(RequestHeaderModel);
