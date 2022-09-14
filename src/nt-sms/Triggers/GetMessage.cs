@@ -38,12 +38,11 @@ namespace Toast.Sms.Triggers
         private readonly HttpClient _http;
         private readonly ILogger<GetMessage> _logger;
 
-        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IHttpTriggerWorkflow workflow, IValidator<GetMessageRequestQueries> validator, IHttpClientFactory factory, ILogger<GetMessage> log)
+        public GetMessage(ToastSettings<SmsEndpointSettings> settings, IHttpTriggerWorkflow workflow, IValidator<GetMessageRequestQueries> validator, ILogger<GetMessage> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._workflow = workflow.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
-            this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
             this._logger = log.ThrowIfNullOrDefault();
         }
 
@@ -63,49 +62,19 @@ namespace Toast.Sms.Triggers
             string requestId)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            var workflow = new HttpTriggerWorkflow(this._http);
-            var payload_ = await workflow.ValidateHeaderAsync(req)
-                                         .ValidateQueriesAsync(req, this._validator)
-                                         .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
-                                         .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
-                                         .ConfigureAwait(false);
-
-            var headers = default(RequestHeaderModel);
             try
             {
-                headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true).Validate();
-                // headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+                var payload_ = await this._workflow.ValidateHeaderAsync(req)
+                                                   .ValidateQueriesAsync(req, this._validator)
+                                                   .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
+                                                   .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
+                                                   .ConfigureAwait(false);
+                return new OkObjectResult(payload_);
             }
             catch (Exception ex)
             {
                 return new BadRequestResult();
             }
-
-            var queries = default(GetMessageRequestQueries);
-            try
-            {
-                queries = await req.To<GetMessageRequestQueries>(SourceFrom.Query).Validate(this._validator).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestResult();
-            }
-
-            var paths = new GetMessageRequestPaths() { RequestId = requestId };
-
-            var requestUrl = new RequestUrlBuilder()
-                .WithSettings(this._settings, this._settings.Endpoints.GetMessage)
-                .WithHeaders(headers)
-                .WithQueries(queries)
-                .WithPaths(paths).Build();
-
-            this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
-            var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);
-
-            var payload = await result.Content.ReadAsAsync<GetMessageResponse>().ConfigureAwait(false);
-
-            return new OkObjectResult(payload);
         }
     }
 }
