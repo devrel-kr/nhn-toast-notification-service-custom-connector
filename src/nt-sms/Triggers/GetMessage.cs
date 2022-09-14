@@ -64,13 +64,12 @@ namespace Toast.Sms.Triggers
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var paths = new GetMessageRequestPaths() { RequestId = requestId };
             var workflow = new HttpTriggerWorkflow(this._http);
-            await workflow.ValidateHeaderAsync(req)
-                          .ValidateQueriesAsync<GetMessageRequestQueries>(req, this._validator)
-                          .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
-                          .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
-                          .ConfigureAwait(false);
+            var payload_ = await workflow.ValidateHeaderAsync(req)
+                                         .ValidateQueriesAsync(req, this._validator)
+                                         .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
+                                         .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
+                                         .ConfigureAwait(false);
 
             var headers = default(RequestHeaderModel);
             try
@@ -93,12 +92,13 @@ namespace Toast.Sms.Triggers
                 return new BadRequestResult();
             }
 
+            var paths = new GetMessageRequestPaths() { RequestId = requestId };
+
             var requestUrl = new RequestUrlBuilder()
                 .WithSettings(this._settings, this._settings.Endpoints.GetMessage)
                 .WithHeaders(headers)
                 .WithQueries(queries)
                 .WithPaths(paths).Build();
-
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

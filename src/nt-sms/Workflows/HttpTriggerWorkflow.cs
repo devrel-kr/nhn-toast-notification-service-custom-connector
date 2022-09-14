@@ -1,25 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Text;
+using System.Threading.Tasks;
+
 using Aliencube.AzureFunctions.Extensions.Common;
 
 using FluentValidation;
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
+
 using Newtonsoft.Json;
+
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
-using Toast.Sms.Configurations;
 using Toast.Sms.Validators;
-using System.Reflection;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 
 namespace Toast.Sms.Workflows
 {
@@ -35,14 +33,32 @@ namespace Toast.Sms.Workflows
         /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
         Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req);
 
-        Task<T> InvokeAsync<T>(HttpMethod method) where T : ResponseModel;
-
+        /// <summary>
+        /// Validates the request queries.
+        /// </summary>
+        /// <typeparam name="T">Type of the request query object.</typeparam>
+        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
+        /// <param name="validator"><see cref="IValidator{T}"/> instance.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
         Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries;
-    
-        Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null);
 
-         Task<IHttpTriggerWorkflow> ValidatePayloadAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestPayload;
+        /// <summary>
+        /// Builds the request URL with given path parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of request path object.</typeparam>
+        /// <param name="endpoint">API endpoint.</param>
+        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
+        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
+        Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths;
 
+        /// <summary>
+        /// Invokes the API request.
+        /// </summary>
+        /// <typeparam name="T">Type of response model.</typeparam>
+        /// <param name="method"><see cref="HttpMethod"/> value.</param>
+        /// <returns>Returns the instance inheriting <see cref="ResponseModel"/> class.</returns>
+        Task<T> InvokeAsync<T>(HttpMethod method) where T : ResponseModel;
     }
 
     /// <summary>
@@ -50,23 +66,32 @@ namespace Toast.Sms.Workflows
     /// </summary>
     public class HttpTriggerWorkflow : IHttpTriggerWorkflow
     {
+        private readonly HttpClient _http;
+
         private RequestHeaderModel _headers;
         private BaseRequestQueries _queries;
-        private readonly HttpClient _http;
-        private object _payload;
+        private BaseRequestPayload _payload;
         private string _requestUrl;
-        
-        /// <inheritdoc />
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
+        /// </summary>
+        /// <param name="http"><see cref="HttpClient"/> instance.</param>
         public HttpTriggerWorkflow(HttpClient http)
         {
             this._http = http.ThrowIfNullOrDefault();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
+        /// </summary>
+        /// <param name="factory"><see cref="IHttpClientFactory"/> instance.</param>
         public HttpTriggerWorkflow(IHttpClientFactory factory)
         {
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
         }
 
+        /// <inheritdoc />
         public async Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req)
         {
             var headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true)
@@ -77,6 +102,7 @@ namespace Toast.Sms.Workflows
             return await Task.FromResult(this).ConfigureAwait(false);
         }
 
+        /// <inheritdoc />
         public async Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries
         {
             var queries = await req.To<T>(SourceFrom.Query)
@@ -87,46 +113,28 @@ namespace Toast.Sms.Workflows
 
             return await Task.FromResult(this).ConfigureAwait(false);
         }
-        public async Task<IHttpTriggerWorkflow> ValidatePayloadAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestPayload
-        {
-            var payload = await req.To<T>(SourceFrom.Body)
-                                   .Validate(validator)
-                                   .ConfigureAwait(false);
 
-            this._payload = payload;
+        /// <inheritdoc />
+        public async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths
+        {
+            var builder = new RequestUrlBuilder()
+                             .WithSettings(settings, endpoint)
+                             .WithHeaders(this._headers)
+                             .WithQueries(this._queries);
+
+            if (!paths.IsNullOrDefault())
+            {
+                builder = builder.WithPaths(paths);
+            }
+
+            var requestUrl = builder.Build();
+
+            this._requestUrl = requestUrl;
 
             return await Task.FromResult(this).ConfigureAwait(false);
         }
 
-        public async Task<IHttpTriggerWorkflow> BuildRequestUrl<Tresult>(ToastSettings<SmsEndpointSettings> settings, BaseRequestPaths paths = null) {
-            // var paths = new GetMessageRequestPaths() { RequestId = requestId };
-
-            Type type = settings.Endpoints.GetType();
-            string name = nameof(Tresult);
-            PropertyInfo endpoint = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
- 
-            var requestUrl = new RequestUrlBuilder()
-                .WithSettings(settings, endpoint.GetValue(settings.Endpoints).ToString())
-                .WithHeaders(_headers) 
-                .WithQueries(_queries)
-                .WithPaths(paths).Build();
-
-            this._requestUrl = requestUrl;
- 
-            return await Task.FromResult(this).ConfigureAwait(false);   
-        }
-
-        // public async Task<IHttpTriggerWorkflow> InvokeAsync<T>()
-        // {
-        //     this._http.DefaultRequestHeaders.Add("X-Secret-Key", _headers.SecretKey);
-        //     var result = await this._http.GetAsync(_requestUrl).ConfigureAwait(false);
-            
-        //     var payload = await result.Content.ReadAsAsync<T>().ConfigureAwait(false);
-        //     this._payload = payload;
-                
-        //     return await Task.FromResult(this).ConfigureAwait(false);
-            
-        // }
+        /// <inheritdoc />
         public async Task<T> InvokeAsync<T>(HttpMethod method) where T : ResponseModel
         {
             var request = new HttpRequestMessage(method, this._requestUrl);
@@ -143,22 +151,55 @@ namespace Toast.Sms.Workflows
 
             return await Task.FromResult(payload).ConfigureAwait(false);
         }
-
     }
+
+    /// <summary>
+    /// This represents the extension class for <see cref="IHttpTriggerWorkflow"/>.
+    /// </summary>
     public static class HttpTriggerWorkflowExtensions
     {
+        /// <summary>
+        /// Validates the request queries.
+        /// </summary>
+        /// <typeparam name="T">Type of the request query object.</typeparam>
+        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
+        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
+        /// <param name="validator"><see cref="IValidator{T}"/> instance.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
         public static async Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(this Task<IHttpTriggerWorkflow> workflow, HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries
         {
             var instance = await workflow.ConfigureAwait(false);
 
             return await instance.ValidateQueriesAsync(req, validator);
         }
+
+        /// <summary>
+        /// Builds the request URL with given path parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of request path object.</typeparam>
+        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
+        /// <param name="endpoint">API endpoint.</param>
+        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
+        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
+        public static async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(this Task<IHttpTriggerWorkflow> workflow, string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths
+        {
+            var instance = await workflow.ConfigureAwait(false);
+
+            return await instance.BuildRequestUrlAsync<T>(endpoint, settings, paths);
+        }
+
+        /// <summary>
+        /// Validates the request payload.
+        /// </summary>
+        /// <typeparam name="T">Type of the request payload object.</typeparam>
+        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
+        /// <param name="method"><see cref="HttpMethod"/> value.</param>
         public static async Task<T> InvokeAsync<T>(this Task<IHttpTriggerWorkflow> workflow, HttpMethod method) where T : ResponseModel
         {
             var instance = await workflow.ConfigureAwait(false);
 
             return await instance.InvokeAsync<T>(method);
         }
-    }        
-
+    }
 }
