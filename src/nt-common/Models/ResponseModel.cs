@@ -14,6 +14,7 @@ namespace Toast.Common.Models
     /// <summary>
     /// This represents the model entity for response.
     /// </summary>
+    /// <typeparam name="T">Type of model entity representing the response body.</typeparam>
     public abstract class ResponseModel<T> : ResponseModel
     {
         /// <summary>

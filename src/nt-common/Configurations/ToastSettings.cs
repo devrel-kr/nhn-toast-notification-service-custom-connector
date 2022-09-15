@@ -49,7 +49,7 @@ namespace Toast.Common.Configurations
     /// <summary>
     /// This represents the app settings entity for Toast API.
     /// </summary>
-    /// <typeparam name="T">Type of entyt representing the endpoints.</typeparam>
+    /// <typeparam name="T">Type of entity representing the endpoints.</typeparam>
     public class ToastSettings<T> : ToastSettings
     {
         /// <summary>
