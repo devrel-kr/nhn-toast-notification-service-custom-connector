@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
+using Toast.Common.Exceptions;
 using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
@@ -71,9 +72,32 @@ namespace Toast.Sms.Triggers
                                                    .ConfigureAwait(false);
                 return new OkObjectResult(payload);
             }
-            catch (Exception ex)
+            catch (RequestHeaderNotValidException ex)
             {
-                return new BadRequestResult();
+                var error = new ErrorMessageResponse();
+                error.Header.IsSuccessful = false;
+                error.Header.ResultCode = (int)ex.StatusCode;
+                error.Header.ResultMessage = ex.Message;
+
+                return new OkObjectResult(error);
+            }
+            catch(RequestQueryNotValidException ex)
+            {
+                var error = new ErrorMessageResponse();
+                error.Header.IsSuccessful = false;
+                error.Header.ResultCode = (int)ex.StatusCode;
+                error.Header.ResultMessage = ex.Message;
+
+                return new OkObjectResult(error);
+            }
+            catch(Exception ex)
+            {
+                var error = new ErrorMessageResponse();
+                error.Header.IsSuccessful = false;
+                error.Header.ResultCode = (int)HttpStatusCode.InternalServerError;
+                error.Header.ResultMessage = ex.Message;
+
+                return new OkObjectResult(error);
             }
         }
     }
