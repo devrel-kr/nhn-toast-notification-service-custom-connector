@@ -11,6 +11,9 @@ namespace Toast.Common.Models
         public virtual ResponseHeaderModel Header { get; set; } = new ResponseHeaderModel();
     }
     
+    /// <summary>
+    /// This represents the model entity for response.
+    /// </summary>
     public abstract class ResponseModel<T> : ResponseModel
     {
         /// <summary>
