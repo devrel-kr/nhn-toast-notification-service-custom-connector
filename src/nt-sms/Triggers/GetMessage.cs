@@ -35,7 +35,6 @@ namespace Toast.Sms.Triggers
         private readonly ToastSettings<SmsEndpointSettings> _settings;
         private readonly IHttpTriggerWorkflow _workflow;
         private readonly IValidator<GetMessageRequestQueries> _validator;
-        private readonly HttpClient _http;
         private readonly ILogger<GetMessage> _logger;
 
         public GetMessage(ToastSettings<SmsEndpointSettings> settings, IHttpTriggerWorkflow workflow, IValidator<GetMessageRequestQueries> validator, ILogger<GetMessage> log)
@@ -64,9 +63,10 @@ namespace Toast.Sms.Triggers
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             try
             {
+                var paths = new GetMessageRequestPaths() {RequestId = requestId};
                 var payload_ = await this._workflow.ValidateHeaderAsync(req)
                                                    .ValidateQueriesAsync(req, this._validator)
-                                                   .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, new GetMessageRequestPaths() { RequestId = requestId })
+                                                   .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, paths)
                                                    .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
                                                    .ConfigureAwait(false);
                 return new OkObjectResult(payload_);
