@@ -76,15 +76,6 @@ namespace Toast.Sms.Workflows
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
         /// </summary>
-        /// <param name="http"><see cref="HttpClient"/> instance.</param>
-        public HttpTriggerWorkflow(HttpClient http)
-        {
-            this._http = http.ThrowIfNullOrDefault();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
-        /// </summary>
         /// <param name="factory"><see cref="IHttpClientFactory"/> instance.</param>
         public HttpTriggerWorkflow(IHttpClientFactory factory)
         {
