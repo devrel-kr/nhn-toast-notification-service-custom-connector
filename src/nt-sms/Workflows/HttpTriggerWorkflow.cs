@@ -181,9 +181,9 @@ namespace Toast.Sms.Workflows
         }
 
         /// <summary>
-        /// Validates the request payload.
+        /// Invokes the API request.
         /// </summary>
-        /// <typeparam name="T">Type of the request payload object.</typeparam>
+        /// <typeparam name="T">Type of response model.</typeparam>
         /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
         /// <param name="method"><see cref="HttpMethod"/> value.</param>
         public static async Task<T> InvokeAsync<T>(this Task<IHttpTriggerWorkflow> workflow, HttpMethod method) where T : ResponseModel
