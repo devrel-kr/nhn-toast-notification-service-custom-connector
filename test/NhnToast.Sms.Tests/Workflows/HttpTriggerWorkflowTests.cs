@@ -149,44 +149,52 @@ namespace Toast.Sms.Tests.Workflows
             field.AppKey.Should().Be(username);
             field.SecretKey.Should().Be(password);
         }
-        //쿼리 유효성 검사 통과X
-        // [TestMethod]
-        // public void Given_ValidQueries_fails_When_Invoke_ValidateQueriesAsync_Then_It_Should_Throw_Exception()
-        // {
-        //     var queries = new QueryString();
-        //     queries.Add("Name","Value");
-        //     //var queries = new BaseRequestQueries();
+        
+        /*
+        //쿼리 예외 테스트
+        [TestMethod]
+        public void Given_ValidQueries_fails_When_Invoke_ValidateQueriesAsync_Then_It_Should_Throw_Exception()
+        {
+            var queries = new QueryString();
+            queries.Add("name","value");
             
-        //     var req = new Mock<HttpRequest>();
-        //     req.SetupGet(p => p.QueryString).Returns(queries);
+            var req = new Mock<HttpRequest>();
+            req.SetupGet(p => p.QueryString).Returns(queries);
             
-        //     //var validator = new RequestQueryValidator();
-        //     var validator = new Mock<IValidator<BaseRequestQueries>>();
-        //     var workflow = new HttpTriggerWorkflow(this._factory.Object);
-        //     //Func<Task> func = async () => await workflow.ValidateQueriesAsync<BaseRequestQueries>(req.Object, validator);
+            var validator = new Mock<IValidator<FakeRequestQueries>>();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
+            Func<Task> func = async () => await workflow.ValidateQueriesAsync<FakeRequestQueries>(req.Object, validator.Object);
 
-        //     //func.Should().ThrowAsync<RequestQueryNotValidException>();
-        //     //bool isValid = queries.IsValid();
-        //     //Assert.IsTrue(isValid);
-        // }
-        //쿼리 유효성 검사 통과o
-        // [DataTestMethod]
-        // [DataRow("hello", "world")]
-        // public async Task Given_ValidQueries_When_Invoke_ValidateQueriesAsync_Then_It_Should_Return_Result(string name, string value)
-        // {
-        //     var queries = new QueryString();
-        //     queries.Add("Name","Value");
+            func.Should().ThrowAsync<RequestQueryNotValidException>();
+        }
 
-        //     var req = new Mock<HttpRequest>();
-        //     req.SetupGet(p => p.QueryString).Returns(queries);
+        //쿼리 테스트
+        [DataTestMethod]
+        [DataRow("Hello","world")]
+        public async Task Given_ValidQueries_When_Invoke_ValidateQueriesAsync_Then_It_Should_Return_Result(string name, string value)
+        {
+            //var bytes = Encoding.UTF8.GetBytes($"{value}");
+            //var encoded = Convert.ToBase64String(bytes);
 
-        //     var validator = new Mock<IValidator<BaseRequestQueries>>();
-        //     var workflow = new HttpTriggerWorkflow(this._factory.Object);
+            var queries = new QueryString();
+            queries.Add("Name","Value");
 
-        //     var result = await workflow.ValidateQueriesAsync<BaseRequestQueries>(req.Object, validator);
+            var req = new Mock<HttpRequest>();
+            req.SetupGet(p => p.QueryString).Returns(queries);
 
-        //     result.Should().BeOfType<HttpTriggerWorkflow>();
-        // }        
+            var validator = new Mock<IValidator<FakeRequestQueries>>();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object);
+
+            await workflow.ValidateQueriesAsync<FakeRequestQueries>(req.Object, validator.Object);
+
+            var fi = workflow.GetType().GetField("_queries", BindingFlags.NonPublic | BindingFlags.Instance);
+            var result = (FakeRequestQueries)fi.GetValue(workflow);
+
+            result.Should().BeOfType<FakeRequestQueries>();
+
+            //result.PropertyA.Should().Be(expected);
+        }             
+        */
         
         //[TestMethod]
         // setting이 null일 떄 
