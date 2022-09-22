@@ -66,13 +66,13 @@ namespace Toast.Sms.Triggers
             {
                 var paths = new GetMessageRequestPaths() {RequestId = requestId};
                 var payload = await this._workflow.ValidateHeaderAsync(req)
-                                                   .ValidateQueriesAsync(req, this._validator)
-                                                   .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, paths)
-                                                   .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
-                                                   .ConfigureAwait(false);
+                                                  .ValidateQueriesAsync(req, this._validator)
+                                                  .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, paths)
+                                                  .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
+                                                  .ConfigureAwait(false);
                 return new OkObjectResult(payload);
             }
-            catch (RequestHeaderNotValidException ex)
+            catch (ToastException ex)
             {
                 var error = new ErrorMessageResponse();
                 error.Header.IsSuccessful = false;
@@ -81,16 +81,7 @@ namespace Toast.Sms.Triggers
 
                 return new OkObjectResult(error);
             }
-            catch(RequestQueryNotValidException ex)
-            {
-                var error = new ErrorMessageResponse();
-                error.Header.IsSuccessful = false;
-                error.Header.ResultCode = (int)ex.StatusCode;
-                error.Header.ResultMessage = ex.Message;
-
-                return new OkObjectResult(error);
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var error = new ErrorMessageResponse();
                 error.Header.IsSuccessful = false;
