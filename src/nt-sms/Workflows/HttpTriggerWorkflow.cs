@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,13 +74,16 @@ namespace Toast.Sms.Workflows
         private BaseRequestPayload _payload;
         private string _requestUrl;
 
+        private readonly MediaTypeFormatter _formatter;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
         /// </summary>
         /// <param name="factory"><see cref="IHttpClientFactory"/> instance.</param>
-        public HttpTriggerWorkflow(IHttpClientFactory factory)
+        public HttpTriggerWorkflow(IHttpClientFactory factory, MediaTypeFormatter formatter)
         {
             this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
+            this._formatter = formatter.ThrowIfNullOrDefault();
         }
 
         /// <inheritdoc />
@@ -131,8 +135,8 @@ namespace Toast.Sms.Workflows
             var request = new HttpRequestMessage(method, this._requestUrl);
             if (!this._payload.IsNullOrDefault())
             {
-                var serialised = JsonConvert.SerializeObject(this._payload);
-                request.Content = new StringContent(serialised, Encoding.UTF8, MediaTypeNames.Application.Json);
+                request.Content = new ObjectContent(
+                    this._payload.GetType(), this._payload, this._formatter);
             }
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", this._headers.SecretKey);

@@ -1,3 +1,4 @@
+using System.Net.Http.Formatting;
 using FluentValidation;
 
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -48,6 +49,7 @@ namespace Toast.Sms
 
         private static void ConfigureWorkflows(IServiceCollection services)
         {
+            services.AddSingleton<MediaTypeFormatter, JsonMediaTypeFormatter>();
             services.AddScoped<IHttpTriggerWorkflow, HttpTriggerWorkflow>();
         }
 
