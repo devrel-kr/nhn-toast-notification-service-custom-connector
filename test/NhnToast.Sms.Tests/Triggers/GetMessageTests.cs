@@ -3,18 +3,24 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using FluentAssertions;
-
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using Moq;
 using Toast.Common.Builders;
 using Toast.Common.Configurations;
+using Toast.Common.Exceptions;
 using Toast.Common.Models;
 using Toast.Sms.Configurations;
 using Toast.Sms.Models;
 using Toast.Sms.Tests.Configurations;
+using Toast.Sms.Triggers;
+using Toast.Sms.Workflows;
 using Toast.Tests.Common.Configurations;
 
 namespace Toast.Sms.Tests.Triggers
@@ -24,6 +30,9 @@ namespace Toast.Sms.Tests.Triggers
     {
         private RequestHeaderModel _headers;
         private ToastTestSettings<SmsEndpointSettings, SmsExamplesSettings> _settings;
+        private readonly IHttpTriggerWorkflow _workflow;
+        private readonly IValidator<GetMessageRequestQueries> _validator;
+        private readonly ILogger<GetMessage> _logger;
 
         [TestInitialize]
         public void TestInit()
@@ -59,7 +68,6 @@ namespace Toast.Sms.Tests.Triggers
                 .WithPaths(paths)
                 .Build();
 
-
             var http = new HttpClient();
 
             // Act
@@ -73,6 +81,26 @@ namespace Toast.Sms.Tests.Triggers
             ((bool)payload.header.isSuccessful).Should().Be(expected);
 
             result.Dispose();
+        }
+    
+        [DataTestMethod]
+        [DataRow("name")]
+        //[ExpectedException(typeof(ToastException))]
+        public async Task Given_Exception_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_ToastException (string requestId)
+        {
+            var req = new Mock<HttpRequest>();
+            var workflow = new Mock<IHttpTriggerWorkflow>();
+
+            workflow.Setup(p => p.ValidateHeaderAsync(It.IsAny<HttpRequest>())).Throws<RequestHeaderNotValidException>();
+
+            var trigger = new GetMessage(this._settings, this._workflow, this._validator, this._logger);
+            var result = await trigger.Run(req.Object, requestId).ConfigureAwait(false);
+            
+            //result.Should().BeOfType<ToastException>();
+            //result.Should().Be(workflow);
+            result.Should().BeOfType<OkObjectResult>();
+            var objectResult = (OkObjectResult)result;
+            objectResult.Value.Should().BeOfType<ErrorMessageResponse>();
         }
     }
 }
