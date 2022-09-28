@@ -82,7 +82,7 @@ namespace Toast.Sms.Tests.Triggers
 
             result.Dispose();
         }
-    
+    /*
         [DataTestMethod]
         [DataRow("name")]
         //[ExpectedException(typeof(ToastException))]
@@ -102,5 +102,6 @@ namespace Toast.Sms.Tests.Triggers
             var objectResult = (OkObjectResult)result;
             objectResult.Value.Should().BeOfType<ErrorMessageResponse>();
         }
+    */
     }
 }
