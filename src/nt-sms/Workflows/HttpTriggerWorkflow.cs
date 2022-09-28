@@ -46,12 +46,12 @@ namespace Toast.Sms.Workflows
         /// <summary>
         /// Builds the request URL with given path parameters.
         /// </summary>
-        /// <typeparam name="T">Type of request path object.</typeparam>
         /// <param name="endpoint">API endpoint.</param>
         /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
         /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
         /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths;
+        Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null);
+
 
         /// <summary>
         /// Invokes the API request.
@@ -110,7 +110,7 @@ namespace Toast.Sms.Workflows
         }
 
         /// <inheritdoc />
-        public async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths
+        public async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
         {
             var builder = new RequestUrlBuilder()
                              .WithSettings(settings, endpoint)
@@ -177,11 +177,11 @@ namespace Toast.Sms.Workflows
         /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
         /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
         /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        public static async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync<T>(this Task<IHttpTriggerWorkflow> workflow, string endpoint, ToastSettings settings, T paths = null) where T : BaseRequestPaths
+        public static async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(this Task<IHttpTriggerWorkflow> workflow, string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
         {
             var instance = await workflow.ConfigureAwait(false);
 
-            return await instance.BuildRequestUrlAsync<T>(endpoint, settings, paths);
+            return await instance.BuildRequestUrlAsync(endpoint, settings, paths);
         }
 
         /// <summary>

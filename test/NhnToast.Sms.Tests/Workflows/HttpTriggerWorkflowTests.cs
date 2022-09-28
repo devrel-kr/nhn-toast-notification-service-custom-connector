@@ -27,6 +27,8 @@ using System.Net.Http;
 using FluentValidation;
 
 using WorldDomination.Net.Http;
+using Toast.Tests.Common.Configurations;
+using Toast.Sms.Tests.Configurations;
 
 namespace Toast.Sms.Tests.Workflows
 {
@@ -198,34 +200,30 @@ namespace Toast.Sms.Tests.Workflows
         }             
         */
         
-        //[TestMethod]
-        // setting이 null일 떄 
-        //public void Given_NullSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_Exception()
-        //{ 
-            //var set = new Mock<ToastSettings<SmsEndpointSettings>>();
-            //var workflow = new HttpTriggerWorkflow(this._factory.Object);
+        // [TestMethod]
+        // public void Given_NullSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_Exception()
+        // { 
+        //     var set = new Mock<ToastSettings<SmsEndpointSettings>>();
+        //     var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
 
-            //Func<Task> func = async () => await workflow.BuildRequestUrl<GetMessage>(set.Object);
+        //     var func = async () => await workflow.BuildRequestUrlAsync(set.Object.Endpoints.GetMessage, set.Object);
+   
+        //     func.Should().ThrowAsync<InvalidOperationException>();
+        //     // 해결해야 하는 부분 모든 예외처리에 대해 Test가 통과된다. 
+        // }
 
-            //func.Should().ThrowAsync<InvalidOperationException>();
-        //}
+        // [TestMethod]
+        // public void Given_ValidSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_ExceptionAsync()
+        // {
+        //     var settings = new FakeEndpointSettings()
+        //     {
+                
+        //     };
 
-        //[TestMethod]
-        // 잘못된 이름의 endpoint일 때 
-        //public void Given_InvalidEndpoint_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_ExceptionAsync()
-        //{
-            //var settings = new ToastSettings<SmsEndpointSettings>();
-            //var workflow = new HttpTriggerWorkflow(this._factory.Object);
-
-            //Func<Task> func = async () => await workflow.BuildRequestUrl<Endpoint>(settings);
-            // var result = workflow.BuildRequestUrl<GetMessage>(settings);
-            // var fi = result.GetType().GetField("name", BindingFlags.NonPublic);
-            // var f = fi.GetValue(result);
-            // f.Should().BeNull();
-            //Type t = settings.Endpoints.GetType();
+        //     var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
             
-            //func.Should().ThrowAsync<ArgumentException>();
-        //}
+        // }
+
 
         //invoke
         // [TestMethod]
