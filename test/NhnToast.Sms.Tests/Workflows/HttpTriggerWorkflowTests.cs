@@ -29,6 +29,7 @@ using FluentValidation;
 using WorldDomination.Net.Http;
 using Toast.Tests.Common.Configurations;
 using Toast.Sms.Tests.Configurations;
+using Toast.Common.Builders;
 
 namespace Toast.Sms.Tests.Workflows
 {
@@ -62,6 +63,9 @@ namespace Toast.Sms.Tests.Workflows
             hasInterface.Should().BeTrue();
         }
 
+
+        /*예외를 정확하게 잡지 못함 */
+
         [TestMethod]
         public void Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception()
         {
@@ -70,7 +74,7 @@ namespace Toast.Sms.Tests.Workflows
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
-            func.Should().ThrowAsync<RequestHeaderNotValidException>();
+            func.Should().ThrowAsync<NullReferenceException>();
         }
 
         [TestMethod]
@@ -200,30 +204,40 @@ namespace Toast.Sms.Tests.Workflows
         }             
         */
         
-        // [TestMethod]
-        // public void Given_NullSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_Exception()
-        // { 
-        //     var set = new Mock<ToastSettings<SmsEndpointSettings>>();
-        //     var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
+        [TestMethod]
+        public void Given_NullSettings_When_Invoke_RequestUrlBuilder_Then_It_Should_Throw_Exception()
+        { 
+            var set = new Mock<ToastSettings<SmsEndpointSettings>>();
 
-        //     var func = async () => await workflow.BuildRequestUrlAsync(set.Object.Endpoints.GetMessage, set.Object);
-   
-        //     func.Should().ThrowAsync<InvalidOperationException>();
-        //     // 해결해야 하는 부분 모든 예외처리에 대해 Test가 통과된다. 
-        // }
+            Assert.ThrowsException<RankException>(() => new RequestUrlBuilder().WithSettings(set.Object, "test"));
+        }
 
-        // [TestMethod]
-        // public void Given_ValidSettings_When_Invoke_BuildRequestUrl_Then_It_Should_Throw_ExceptionAsync()
-        // {
-        //     var settings = new FakeEndpointSettings()
-        //     {
-                
-        //     };
+        [TestMethod]
+        public void Given_ValidSettings_When_Invoke_BuildRequestUrlAsync_Then_It_Return_requestUrl()
+        {
+            var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
+            var settings = new FakeEndpointSettings()
+            {
+                BaseUrl = "http://localhost:7071/api/{version}/appKeys/{appKey}",
+                Version = "v3.0"
 
-        //     var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
+            };
+
+            var header = new RequestHeaderModel() { AppKey = "hello", SecretKey = "world" };
+            var headers = typeof(HttpTriggerWorkflow).GetField("_headers", BindingFlags.Instance | BindingFlags.NonPublic);
+            headers.SetValue(workflow, header);
+
+            var query = new FakeRequestQueries() {};
+            var queries = typeof(HttpTriggerWorkflow).GetField("_queries", BindingFlags.Instance | BindingFlags.NonPublic);
+            queries.SetValue(workflow, query);
+
+            workflow.BuildRequestUrlAsync("HttpTrigger", settings);
+            var fi = workflow.GetType().GetField("_requestUrl", BindingFlags.NonPublic | BindingFlags.Instance);
+            var field = fi.GetValue(workflow);
+
+            field.Should().Be("http://localhost:7071/api/v3.0/appKeys/hello/HttpTrigger");
             
-        // }
-
+        }
 
         //invoke
         // [TestMethod]
