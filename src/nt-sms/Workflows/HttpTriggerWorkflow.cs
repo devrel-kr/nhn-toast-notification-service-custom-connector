@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Mime;
@@ -73,8 +74,8 @@ namespace Toast.Sms.Workflows
         private BaseRequestQueries _queries;
         private BaseRequestPayload _payload;
         private string _requestUrl;
-
         private readonly MediaTypeFormatter _formatter;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpTriggerWorkflow"/> class.
@@ -116,7 +117,7 @@ namespace Toast.Sms.Workflows
                              .WithSettings(settings, endpoint)
                              .WithHeaders(this._headers)
                              .WithQueries(this._queries);
-
+        
             if (!paths.IsNullOrDefault())
             {
                 builder = builder.WithPaths(paths);

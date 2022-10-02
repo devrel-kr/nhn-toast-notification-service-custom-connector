@@ -31,6 +31,12 @@ namespace Toast.Common.Builders
             this._settings = settings;
             this._endpoint = endpoint;
 
+            if (this._settings == null)
+            {
+                throw new InvalidOperationException("Invalid ToastSettings.");
+                
+            }
+
             return this;
         }
 
