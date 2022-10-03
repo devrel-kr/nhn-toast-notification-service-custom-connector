@@ -63,18 +63,15 @@ namespace Toast.Sms.Tests.Workflows
             hasInterface.Should().BeTrue();
         }
 
-
-        /*예외를 정확하게 잡지 못함 */
-
         [TestMethod]
-        public void Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception()
+        public async Task Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_ExceptionAsync()
         {
             var req = new Mock<HttpRequest>();
             var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
-            func.Should().ThrowAsync<NullReferenceException>();
+            await func.Should().ThrowAsync<NullReferenceException>();
         }
 
         [TestMethod]
@@ -209,7 +206,18 @@ namespace Toast.Sms.Tests.Workflows
         { 
             var set = new Mock<ToastSettings<SmsEndpointSettings>>();
 
-            Assert.ThrowsException<RankException>(() => new RequestUrlBuilder().WithSettings(set.Object, "test"));
+            Assert.ThrowsException<InvalidOperationException>(() => new RequestUrlBuilder().WithSettings(set.Object, "test"));
+        }
+
+        [TestMethod]
+        public async Task Given_NoSettings_When_Invoke_BuildRequestUrlAync_Then_It_Should_Throw_Exception()
+        { 
+            var set = new Mock<ToastSettings<SmsEndpointSettings>>();
+            var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
+
+            Func<Task> func = async () => await workflow.BuildRequestUrlAsync("Test", null);
+
+            await func.Should().ThrowAsync<InvalidOperationException>();
         }
 
         [TestMethod]

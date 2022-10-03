@@ -31,7 +31,7 @@ namespace Toast.Common.Builders
             this._settings = settings;
             this._endpoint = endpoint;
 
-            if (this._settings == null)
+            if (this._settings == null || string.IsNullOrWhiteSpace(this._settings.BaseUrl))
             {
                 throw new InvalidOperationException("Invalid ToastSettings.");
                 
@@ -59,10 +59,10 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithQueries<T>(T queries) where T : BaseRequestQueries
         {
-            if (this._settings == null)
-            {
-                throw new InvalidOperationException("Invalid ToastSettings.");
-            }
+            // if (this._settings == null)
+            // {
+            //     throw new InvalidOperationException("Invalid ToastSettings.");
+            // } 불필요한 코드
 
             var serialised = JsonConvert.SerializeObject(queries, this._settings.JsonFormatter.SerializerSettings);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
@@ -79,10 +79,10 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithPaths<T>(T paths) where T : BaseRequestPaths
         {
-            if (this._settings == null)
-            {
-                throw new InvalidOperationException("Invalid ToastSettings.");
-            }
+            // if (this._settings == null)
+            // {
+            //     throw new InvalidOperationException("Invalid ToastSettings.");
+            // } 불필요한 코드 
 
             var serialised = JsonConvert.SerializeObject(paths, this._settings.JsonFormatter.SerializerSettings);
             var deserialised = JsonConvert.DeserializeObject<Dictionary<string, string>>(serialised);
