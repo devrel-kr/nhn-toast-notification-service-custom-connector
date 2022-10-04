@@ -215,7 +215,7 @@ namespace Toast.Sms.Tests.Workflows
             var set = new Mock<ToastSettings<SmsEndpointSettings>>();
             var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
 
-            Func<Task> func = async () => await workflow.BuildRequestUrlAsync("Test", set);
+            Func<Task> func = async () => await workflow.BuildRequestUrlAsync("Test", set.Object);
 
             await func.Should().ThrowAsync<InvalidOperationException>();
         }
