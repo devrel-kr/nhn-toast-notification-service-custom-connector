@@ -64,7 +64,7 @@ namespace Toast.Sms.Tests.Workflows
         }
 
         [TestMethod]
-        public async Task Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_ExceptionAsync()
+        public async Task Given_NullHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_NullReferenceException()
         {
             var req = new Mock<HttpRequest>();
             var workflow = new HttpTriggerWorkflow(this._factory.Object, this._fomatter.Object);
@@ -75,7 +75,7 @@ namespace Toast.Sms.Tests.Workflows
         }
 
         [TestMethod]
-        public void Given_NoHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception()
+        public async Task Given_NoHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_InvalidOperationException()
         {
             var headers = new HeaderDictionary();
             headers.Add("Authorization", "Basic");
@@ -87,13 +87,14 @@ namespace Toast.Sms.Tests.Workflows
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
-            func.Should().ThrowAsync<RequestHeaderNotValidException>();
+            await func.Should().ThrowAsync<InvalidOperationException>();
+
         }
 
         [DataTestMethod]
-        [DataRow("hello", null)]
-        [DataRow(null, "world")]
-        public void Given_InvalidHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception(string username, string password)
+        [DataRow("hello", " ")]
+        [DataRow(" ", "world")]
+        public async Task Given_InvalidHeader_When_Invoke_ValidateHeaderAsync_Then_It_Should_Throw_Exception(string username, string password)
         {
             var bytes = Encoding.UTF8.GetBytes($"{username}:{password}");
             var encoded = Convert.ToBase64String(bytes);
@@ -108,7 +109,7 @@ namespace Toast.Sms.Tests.Workflows
 
             Func<Task> func = async () => await workflow.ValidateHeaderAsync(req.Object);
 
-            func.Should().ThrowAsync<RequestHeaderNotValidException>();
+            await func.Should().ThrowAsync<RequestHeaderNotValidException>();
         }
 
         [DataTestMethod]
