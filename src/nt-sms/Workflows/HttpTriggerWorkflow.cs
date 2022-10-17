@@ -28,32 +28,7 @@ namespace Toast.Sms.Workflows
     /// </summary>
     public interface IHttpTriggerWorkflow
     {
-        /// <summary>
-        /// Validates the request header.
-        /// </summary>
-        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
-        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req);
-
-        /// <summary>
-        /// Validates the request queries.
-        /// </summary>
-        /// <typeparam name="T">Type of the request query object.</typeparam>
-        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
-        /// <param name="validator"><see cref="IValidator{T}"/> instance.</param>
-        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries;
-
-        /// <summary>
-        /// Builds the request URL with given path parameters.
-        /// </summary>
-        /// <param name="endpoint">API endpoint.</param>
-        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
-        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
-        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null);
-
-
+        
         /// <summary>
         /// Invokes the API request.
         /// </summary>
@@ -87,49 +62,8 @@ namespace Toast.Sms.Workflows
             this._formatter = formatter.ThrowIfNullOrDefault();
         }
 
-        /// <inheritdoc />
-        public async Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req)
-        {
-            var headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true)
-                             .Validate();
-
-            this._headers = headers;
-
-            return await Task.FromResult(this).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries
-        {
-            var queries = await req.To<T>(SourceFrom.Query)
-                                   .Validate(validator)
-                                   .ConfigureAwait(false);
-
-            this._queries = queries;
-
-            return await Task.FromResult(this).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
-        {
-            var builder = new RequestUrlBuilder()
-                             .WithSettings(settings, endpoint)
-                             .WithHeaders(this._headers)
-                             .WithQueries(this._queries);
+       
         
-            if (!paths.IsNullOrDefault())
-            {
-                builder = builder.WithPaths(paths);
-            }
-
-            var requestUrl = builder.Build();
-
-            this._requestUrl = requestUrl;
-
-            return await Task.FromResult(this).ConfigureAwait(false);
-        }
-
         /// <inheritdoc />
         public async Task<T> InvokeAsync<T>(HttpMethod method) where T : ResponseModel
         {
@@ -154,36 +88,6 @@ namespace Toast.Sms.Workflows
     /// </summary>
     public static class HttpTriggerWorkflowExtensions
     {
-        /// <summary>
-        /// Validates the request queries.
-        /// </summary>
-        /// <typeparam name="T">Type of the request query object.</typeparam>
-        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
-        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
-        /// <param name="validator"><see cref="IValidator{T}"/> instance.</param>
-        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        public static async Task<IHttpTriggerWorkflow> ValidateQueriesAsync<T>(this Task<IHttpTriggerWorkflow> workflow, HttpRequest req, IValidator<T> validator) where T : BaseRequestQueries
-        {
-            var instance = await workflow.ConfigureAwait(false);
-
-            return await instance.ValidateQueriesAsync(req, validator);
-        }
-
-        /// <summary>
-        /// Builds the request URL with given path parameters.
-        /// </summary>
-        /// <typeparam name="T">Type of request path object.</typeparam>
-        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
-        /// <param name="endpoint">API endpoint.</param>
-        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
-        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
-        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
-        public static async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(this Task<IHttpTriggerWorkflow> workflow, string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
-        {
-            var instance = await workflow.ConfigureAwait(false);
-
-            return await instance.BuildRequestUrlAsync(endpoint, settings, paths);
-        }
 
         /// <summary>
         /// Invokes the API request.

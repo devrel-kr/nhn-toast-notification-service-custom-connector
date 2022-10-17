@@ -65,10 +65,7 @@ namespace Toast.Sms.Triggers
             try
             {
                 var paths = new GetMessageRequestPaths() {RequestId = requestId};
-                var payload = await this._workflow.ValidateHeaderAsync(req)
-                                                  .ValidateQueriesAsync(req, this._validator)
-                                                  .BuildRequestUrlAsync(this._settings.Endpoints.GetMessage, this._settings, paths)
-                                                  .InvokeAsync<GetMessageResponse>(HttpMethod.Get)
+                var payload = await this._workflow.InvokeAsync<GetMessageResponse>(HttpMethod.Get)
                                                   .ConfigureAwait(false);
                 return new OkObjectResult(payload);
             }
