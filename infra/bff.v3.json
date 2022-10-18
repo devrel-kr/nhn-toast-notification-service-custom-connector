@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://apim-hje-dev-krc.azure-api.net/BFF"
+      "url": "https://apim-hje-dev-krc.azure-api.net/bff"
     }
   ],
   "paths": {
