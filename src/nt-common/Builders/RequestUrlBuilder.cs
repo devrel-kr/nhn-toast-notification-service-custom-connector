@@ -28,6 +28,11 @@ namespace Toast.Common.Builders
         /// <returns>Returns the <see cref="RequestUrlBuilder"/> instance.</returns>
         public RequestUrlBuilder WithSettings<T>(T settings, string endpoint) where T : ToastSettings
         {
+            if (settings == null || string.IsNullOrWhiteSpace(settings.BaseUrl))
+            {
+                throw new InvalidOperationException("Invalid ToastSettings.");   
+            }
+
             this._settings = settings;
             this._endpoint = endpoint;
 

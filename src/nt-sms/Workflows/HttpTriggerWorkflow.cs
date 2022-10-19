@@ -33,12 +33,23 @@ namespace Toast.Sms.Workflows{
         /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
         Task<IHttpTriggerWorkflow> ValidateHeaderAsync(HttpRequest req);
 
+        /// <summary>
+        /// Builds the request URL with given path parameters.
+        /// </summary>
+        /// <param name="endpoint">API endpoint.</param>
+        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
+        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
+        Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null);
+
     }
 
     /// <inheritdoc />
     public class HttpTriggerWorkflow : IHttpTriggerWorkflow{
         private readonly HttpClient _http;
         private RequestHeaderModel _headers;
+        private BaseRequestQueries _queries;
+        private string _requestUrl;
         private readonly MediaTypeFormatter _formatter;
 
         /// <summary>
@@ -62,6 +73,26 @@ namespace Toast.Sms.Workflows{
 
             return await Task.FromResult(this).ConfigureAwait(false);
         }
+
+        /// <inheritdoc />
+        public async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
+        {
+            var builder = new RequestUrlBuilder()
+                             .WithSettings(settings, endpoint)
+                             .WithHeaders(this._headers)
+                             .WithQueries(this._queries);
+        
+            if (!paths.IsNullOrDefault())
+            {
+                builder = builder.WithPaths(paths);
+            }
+
+            var requestUrl = builder.Build();
+
+            this._requestUrl = requestUrl;
+
+            return await Task.FromResult(this).ConfigureAwait(false);
+        }
     }
 
      /// <summary>
@@ -69,6 +100,21 @@ namespace Toast.Sms.Workflows{
     /// </summary>
     public static class HttpTriggerWorkflowExtensions
     {
-       
+       /// <summary>
+        /// Builds the request URL with given path parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of request path object.</typeparam>
+        /// <param name="workflow"><see cref="IHttpTriggerWorkflow"/> instance wrapped with <see cref="Task"/>.</param>
+        /// <param name="endpoint">API endpoint.</param>
+        /// <param name="settings"><see cref="ToastSettings"/> instance.</param>
+        /// <param name="paths">Instance inheriting <see cref="BaseRequestPaths"/> class.</param>
+        /// <returns>Returns the <see cref="IHttpTriggerWorkflow"/> instance.</returns>
+        public static async Task<IHttpTriggerWorkflow> BuildRequestUrlAsync(this Task<IHttpTriggerWorkflow> workflow, string endpoint, ToastSettings settings, BaseRequestPaths paths = null)
+        {
+            var instance = await workflow.ConfigureAwait(false);
+
+            return await instance.BuildRequestUrlAsync(endpoint, settings, paths);
+        }
+
     }
 }
