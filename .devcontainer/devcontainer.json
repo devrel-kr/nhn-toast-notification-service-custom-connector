@@ -119,7 +119,7 @@
         "gitlens.showWhatsNewAfterUpgrades": false,
 
         // Uncomment if you prefer the light colour theme
-        "workbench.colorTheme": "Default Light+",
+        // "workbench.colorTheme": "Default Light+",
 
         // Recommended settings for the explorer pane
         "explorer.sortOrder": "type",
