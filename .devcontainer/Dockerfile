@@ -1,17 +1,7 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.203.0/containers/codespaces-linux/.devcontainer/base.Dockerfile
+# [Choice] .NET version: 6.0-bullseye-slim, 6.0-jammy, 6.0-focal
+ARG VARIANT="6.0-jammy"
+FROM mcr.microsoft.com/dotnet/sdk:${VARIANT}
 
-FROM mcr.microsoft.com/vscode/devcontainers/universal:1-focal
-
-# ** [Optional] Uncomment this section to install additional packages. **
-# USER root
-
+# [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
-
-# USER codespace
-
-WORKDIR /home/
-
-COPY . .
-
-RUN bash ./setup.sh
