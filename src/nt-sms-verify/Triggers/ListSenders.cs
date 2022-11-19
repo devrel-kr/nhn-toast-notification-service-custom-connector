@@ -17,11 +17,13 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Toast.Common.Builders;
 using Toast.Common.Configurations;
 using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
 using Toast.Sms.Verification.Configurations;
+using Toast.Sms.Verification.Examples;
 using Toast.Sms.Verification.Models;
 using Toast.Sms.Verification.Validators;
 
@@ -60,19 +62,16 @@ namespace Toast.Sms.Verification.Triggers
         [FunctionName(nameof(ListSenders))]
         [OpenApiOperation(operationId: "Senders.List", tags: new[] { "senders" })]
         [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
-        // [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
-        // [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
-        // [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
         [OpenApiParameter(name: "sendNo", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Sender's phone number")]
         [OpenApiParameter(name: "useYn", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Value indicating whether the number is used or not")]
         [OpenApiParameter(name: "blockYn", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Value indicating whether the number is blocked or not")]
         [OpenApiParameter(name: "pageNum", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page number in the pagination. Default value is '1'")]
         [OpenApiParameter(name: "pageSize", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "Page size in the pagination. Default value is '15'")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "The OK response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(ListSendersResponse), Example = typeof(ListSendersResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "senders")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "senders")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -107,7 +106,11 @@ namespace Toast.Sms.Verification.Triggers
                 PageNum = queries.PageNumber,
                 PageSize = queries.PageSize,
             };
-            var requestUrl = this._settings.Formatter.Format($"{this._settings.BaseUrl.TrimEnd('/')}/{this._settings.Endpoints.ListSenders.TrimStart('/')}", options);
+
+            var requestUrl = new RequestUrlBuilder()
+                .WithSettings(this._settings, this._settings.Endpoints.ListSenders)
+                .WithHeaders(headers).WithQueries(queries)
+                .Build();
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
             var result = await this._http.GetAsync(requestUrl).ConfigureAwait(false);

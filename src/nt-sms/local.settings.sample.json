@@ -6,15 +6,14 @@
 
     "OpenApi__Version": "v3",
     "OpenApi__DocVersion": "v1.0.0",
-    "OpenApi__DocTitle": "NHN Cloud SMS API",
-    "OpenApi__DocDescription": "This is an API for sending SMS messages through the NHN Cloud SMS service.",
+    "OpenApi__DocTitle": "NHN Cloud SMS API Facade",
+    "OpenApi__DocDescription": "This is a facade API for sending SMS messages through the NHN Cloud Notification service.",
 
     "Toast__BaseUrl": "https://api-sms.cloud.toast.com/",
     "Toast__Version": "v3.0",
     "Toast__Endpoints__SendMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
     "Toast__Endpoints__ListMessages": "/sms/{version}/appKeys/{appKey}/sender/sms",
     "Toast__Endpoints__GetMessage": "/sms/{version}/appKeys/{appKey}/sender/sms/{requestId}",
-    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results",
-    "Toast__Endpoints__ListSenders": "/sms/{version}/appKeys/{appKey}/sendNos"
+    "Toast__Endpoints__ListMessageStatus": "/sms/{version}/appKeys/{appKey}/message-results"
   }
 }

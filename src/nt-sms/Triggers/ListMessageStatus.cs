@@ -40,16 +40,13 @@ namespace Toast.Sms.Triggers
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
-            this._http = factory.ThrowIfNullOrDefault().CreateClient("messages");
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("sms");
             this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(ListMessageStatus))]
-        [OpenApiOperation(operationId: "Messages.Status", tags: new[] { "messages" })]
+        [OpenApiOperation(operationId: "SMS.Status", tags: new[] { "sms" })]
         [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
-        // [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header, Description = "Toast app key")]
-        // [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header, Description = "Toast secret key")]
-        // [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "Functions API key")]
         [OpenApiParameter(name: "startUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "StartDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "endUpdateDate", Type = typeof(string), In = ParameterLocation.Query, Required = true, Description = "endDate for message list (`yyyy-MM-dd HH:mm:ss`)")]
         [OpenApiParameter(name: "messageType", Type = typeof(string), In = ParameterLocation.Query, Required = false, Description = "message type (`SMS`/`LMS`/`MMS`/`AUTH`)")]
@@ -59,7 +56,7 @@ namespace Toast.Sms.Triggers
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "messages/status")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "messages/status")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 

@@ -6,8 +6,8 @@
 
     "OpenApi__Version": "v3",
     "OpenApi__DocVersion": "v1.0.0",
-    "OpenApi__DocTitle": "NHN Cloud SMS Verification API",
-    "OpenApi__DocDescription": "This is an API for verifying the message senders through the NHN Cloud SMS service.",
+    "OpenApi__DocTitle": "NHN Cloud Sender API facade",
+    "OpenApi__DocDescription": "This is a facade API for verifying the message senders through the NHN Cloud Notification service.",
 
     "Toast__BaseUrl": "https://api-sms.cloud.toast.com/",
     "Toast__Version": "v3.0",

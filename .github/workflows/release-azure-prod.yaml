@@ -14,25 +14,36 @@ jobs:
     uses: ./.github/workflows/build-test-upload.yaml
     needs: 
     - call_make_function_apps_matrix
+    secrets: inherit
     with:
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
-    secrets: inherit
 
   call_deployment_azure_prod:
     uses: ./.github/workflows/deployment-azure.yaml
     needs:
     - call_make_function_apps_matrix
     - call_build_test_upload
+    secrets: inherit
     with:
       gh_environment: PROD
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
-    secrets: inherit
 
   call_deployment_github:
     uses: ./.github/workflows/deployment-github.yaml
     needs: 
     - call_make_function_apps_matrix
     - call_build_test_upload
+    secrets: inherit
+    with:
+      gh_tag: ${{ github.ref }}
+      matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}
+
+  call_deployment_dockerhub:
+    uses: ./.github/workflows/deployment-dockerhub.yaml
+    needs: 
+    - call_make_function_apps_matrix
+    - call_build_test_upload
+    secrets: inherit
     with:
       gh_tag: ${{ github.ref }}
       matrix_json: ${{ needs.call_make_function_apps_matrix.outputs.matrix_json }}

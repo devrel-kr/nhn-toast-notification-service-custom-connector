@@ -1,7 +1,11 @@
+using System;
+
 using FluentValidation;
 
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,6 +41,16 @@ namespace Toast.Sms
                                         .GetService<IConfiguration>()
                                         .Get<ToastSettings<SmsEndpointSettings>>(ToastSettings.Name);
             services.AddSingleton(toastSettings);
+
+            var options = new DefaultOpenApiConfigurationOptions();
+            /* ⬇️⬇️⬇️ for GH Codespaces ⬇️⬇️⬇️ */
+            var codespaces = bool.TryParse(Environment.GetEnvironmentVariable("OpenApi__RunOnCodespaces"), out var isCodespaces) && isCodespaces;
+            if (codespaces)
+            {
+                options.IncludeRequestingHostName = false;
+            }
+            /* ⬆️⬆️⬆️ for GH Codespaces ⬆️⬆️⬆️ */
+            services.AddSingleton<IOpenApiConfigurationOptions>(options);
         }
 
         private static void ConfigureHttpClient(IServiceCollection services)
@@ -51,7 +65,6 @@ namespace Toast.Sms
             services.AddScoped<IValidator<ListMessagesRequestQueries>, ListMessagesRequestQueryValidator>();
             services.AddScoped<IValidator<ListMessageStatusRequestQueries>, ListMessageStatusRequestQueryValidator>();
             services.AddScoped<IValidator<SendMessagesRequestBody>, SendMessagesRequestBodyValidator>();
-            services.AddScoped<IValidator<ListSendersRequestQueries>, ListSendersRequestQueryValidator>();
         }
     }
 }

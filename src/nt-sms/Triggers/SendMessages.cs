@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 
 using Aliencube.AzureFunctions.Extensions.Common;
@@ -41,22 +40,19 @@ namespace Toast.Sms.Triggers
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
-            this._http = factory.ThrowIfNullOrDefault().CreateClient("senders");
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("sms");
             this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(SendMessages))]
-        [OpenApiOperation(operationId: "Messages.Send", tags: new[] { "messages" })]
+        [OpenApiOperation(operationId: "SMS.Send", tags: new[] { "sms" })]
         [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
-        // [OpenApiSecurity("app_key", SecuritySchemeType.ApiKey, Name = "x-app-key", In = OpenApiSecurityLocationType.Header)]
-        // [OpenApiSecurity("secret_key", SecuritySchemeType.ApiKey, Name = "x-secret-key", In = OpenApiSecurityLocationType.Header)]
-        // [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(SendMessagesRequestBody), Example = typeof(SendMessagesRequestBodyModelExample), Description = "Message payload to send")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(SendMessagesResponse),  Example = typeof(SendMessagesResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "messages")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "POST", Route = "messages")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 

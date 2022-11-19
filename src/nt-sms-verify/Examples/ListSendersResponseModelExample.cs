@@ -6,12 +6,12 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Resolvers;
 using Newtonsoft.Json.Serialization;
 
 using Toast.Common.Models;
-using Toast.Sms.Models;
+using Toast.Sms.Verification.Models;
 
-namespace Toast.Sms.Examples
+namespace Toast.Sms.Verification.Examples
 {
     /// <summary>
-    /// This represents the example entity for GetMessage response body.
+    /// This represents the example entity for ListSenders response body.
     /// </summary>
     public class ListSendersResponseModelExample : OpenApiExample<ListSendersResponse>
     {
