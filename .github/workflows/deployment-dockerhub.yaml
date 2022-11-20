@@ -45,5 +45,5 @@ jobs:
         curl https://raw.githubusercontent.com/${{ github.repository }}/main/src/nt-${{ matrix.fncapp-name }}/.dockerignore > .dockerignore
         curl https://raw.githubusercontent.com/${{ github.repository }}/main/src/nt-${{ matrix.fncapp-name }}/local.settings.sample.json > local.settings.json
 
-        docker build . -t ${{ matrix.fncapp-name }}:latest -t ${{ matrix.fncapp-name }}:${{ env.RELEASE_VERSION }}
-        docker push -a ${{ matrix.fncapp-name }}
+        docker build . -t devrelkr/nt-${{ matrix.fncapp-name }}:latest -t devrelkr/nt-${{ matrix.fncapp-name }}:${{ env.RELEASE_VERSION }}
+        docker push -a devrelkr/nt-${{ matrix.fncapp-name }}
