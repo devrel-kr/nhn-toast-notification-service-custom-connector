@@ -1,0 +1,626 @@
+openapi: 3.0.1
+info:
+  title: Power Platform BFF for NHN Cloud Notification Service
+  description: This is a BFF API for Power Platform to the NHN Cloud Notification service.
+  version: 1.0.0
+servers:
+  - url: https://apim-nt-prod-krc.azure-api.net/pp
+paths:
+  /messages/{requestId}:
+    get:
+      tags:
+        - sms
+      operationId: SMS.Get
+      parameters:
+        - name: requestId
+          in: path
+          description: SMS request ID
+          required: true
+          schema:
+            type: string
+        - name: recipientSeq
+          in: query
+          description: SMS request sequence number
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: The OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getMessageResponse'
+              examples:
+                sample:
+                  summary: This represents the example entity for GetMessage response body.
+                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"data":{"requestId":"2018081000000000000000000","requestDate":"2018-08-10 10:06:30.0","resultDate":"2018-08-10 10:06:42.0","templateId":"TemplateId","templateName":"TemplateName","categoryId":"0","categoryName":"CategoryName","body":"Body","sendNo":"00000000","countryCode":"82","recipientNo":"01000000000","msgStatus":"3","msgStatusName":"success","resultCode":"1000","resultCodeName":"success","telecomCode":10001,"telecomCodeName":"SKT","recipientSeq":1,"sendType":"0","messageType":"SMS","userId":"tester","adYn":"N","resultMessage":"success","senderGroupingKey":"SenderGroupingKey","recipientGroupingKey":"RecipientGroupingKey"}}}'
+        '400':
+          description: The input was invalid
+        '500':
+          description: The service has got an unexpected error
+      security:
+        - app_auth: []
+  /messages:
+    get:
+      tags:
+        - sms
+      operationId: SMS.List
+      parameters:
+        - name: requestId
+          in: query
+          description: RequestId to search. `requestId` or `startRequestDate` + `endRequestDate` or `startCreateDate` + `endCreateDate` must be filled
+          schema:
+            type: string
+        - name: startRequestDate
+          in: query
+          description: Message sending request start date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: endRequestDate
+          in: query
+          description: Message sending request end date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: startCreateDate
+          in: query
+          description: Message sending registration start date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: endCreateDate
+          in: query
+          description: Message sending registration end date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: startResultDate
+          in: query
+          description: Message sending complete start date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: endResultDate
+          in: query
+          description: Message sending complete end date (`yyyy-MM-dd HH:mm:ss`)
+          schema:
+            type: string
+        - name: sendNo
+          in: query
+          description: Sender's phone number
+          schema:
+            type: string
+        - name: recipientNo
+          in: query
+          description: Receiver's phone number
+          schema:
+            type: string
+        - name: templateId
+          in: query
+          description: Template number
+          schema:
+            type: string
+        - name: msgStatus
+          in: query
+          description: 'Message status code (`0`: fail, `1`: request, `2`: processing, `3`: success, `4`: Reservation cancellation, `5`: Duplicate failed)'
+          schema:
+            type: string
+        - name: resultCode
+          in: query
+          description: 'Receive result code (`MTR1`: success, `MTR2`: fail)'
+          schema:
+            type: string
+        - name: subResultCode
+          in: query
+          description: 'Receive result detail code (`MTR2_1`: Validation failed, `MTR2_2`: carrier problem, `MTR2_3`: Device problem)'
+          schema:
+            type: string
+        - name: senderGroupingKey
+          in: query
+          description: Sender's group key
+          schema:
+            type: string
+        - name: recipientGroupingKey
+          in: query
+          description: Receiver's group key
+          schema:
+            type: string
+        - name: pageNum
+          in: query
+          description: Page number in the pagination. Default value is '1'
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: Page size in the pagination. Default value is '15'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listMessagesResponse'
+              examples:
+                sample:
+                  summary: This represents the example entity for ListMessages response body.
+                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"pageNum":1,"pageSize":15,"totalCount":1,"data":[{"requestId":"2018081000000000000000000","requestDate":"2018-08-10 10:06:30.0","resultDate":"2018-08-10 10:06:42.0","templateId":"TemplateId","templateName":"템플릿명","categoryId":"0","categoryName":"카테고리명","body":"단문 테스트","sendNo":"00000000","countryCode":"82","recipientNo":"01000000000","msgStatus":"3","msgStatusName":"성공","resultCode":"1000","resultCodeName":"성공","telecomCode":10001,"telecomCodeName":"통신사","recipientSeq":1,"sendType":"0","messageType":"SMS","userId":"tester","adYn":"N","resultMessage":"","senderGroupingKey":"SenderGroupingKey","recipientGroupingKey":"RecipientGroupingKey"}]}}'
+        '400':
+          description: The input was invalid
+        '500':
+          description: The service has got an unexpected error
+      security:
+        - app_auth: []
+    post:
+      tags:
+        - sms
+      operationId: SMS.Send
+      requestBody:
+        description: Message payload to send
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sendMessagesRequestBody'
+            examples:
+              sample:
+                summary: This represents the example entity for SendMessages request body.
+                value: '{"templateId":"TemplateId","body":"body","sendNo":"00000000","requestDate":"2018-08-10 10:00","senderGroupingKey":"SenderGroupingKey","recipientList":[{"recipientNo":"01000000000","countryCode":"82","internationalRecipientNo":"821000000000","templateParameter":{"key":"value"},"recipientGroupingKey":"recipientGroupingKey"}],"userId":"UserId","statsId":"statsId"}'
+      responses:
+        '200':
+          description: The OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sendMessagesResponse'
+              examples:
+                sample:
+                  summary: This represents the example entity for SendMessages response body.
+                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"data":{"requestId":"201808100000000000000000","statusCode":"2","senderGroupingKey":"SenderGroupingKey","sendResultList":[{"recipientNo":"01000000000","resultCode":0,"resultMessage":"SUCCESS","recipientSeq":1,"recipientGroupingKey":"RecipientGroupingKey"}]}}}'
+        '400':
+          description: The input was invalid
+        '500':
+          description: The service has got an unexpected error
+      security:
+        - app_auth: []
+  /messages/status:
+    get:
+      tags:
+        - sms
+      operationId: SMS.Status
+      parameters:
+        - name: startUpdateDate
+          in: query
+          description: StartDate for message list (`yyyy-MM-dd HH:mm:ss`)
+          required: true
+          schema:
+            type: string
+        - name: endUpdateDate
+          in: query
+          description: endDate for message list (`yyyy-MM-dd HH:mm:ss`)
+          required: true
+          schema:
+            type: string
+        - name: messageType
+          in: query
+          description: message type (`SMS`/`LMS`/`MMS`/`AUTH`)
+          schema:
+            type: string
+        - name: pageNum
+          in: query
+          description: Page number in the pagination. Default value is '1'
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: Page size in the pagination. Default value is '15'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listMessageStatusResponse'
+              examples:
+                sample:
+                  summary: This represents the example entity for ListMessageStatus response body.
+                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"pageNum":1,"pageSize":15,"totalCount":1,"data":[{"messageType":"SMS","requestId":"2018081000000000000000000","recipientSeq":1,"resultCode":"1000","resultCodeName":"success","requestDate":"2018-08-10 10:06:30.0","resultDate":"2018-08-10 10:06:42.0","updateDate":"2018-10-04 16:17:15.0","telecomCode":"10003","telecomCodeName":"LGU","senderGroupingKey":"SenderGroupingKey","recipientGroupingKey":"RecipientGroupingKey"}]}}'
+        '400':
+          description: The input was invalid
+        '500':
+          description: The service has got an unexpected error
+      security:
+        - app_auth: []
+  /senders:
+    get:
+      tags:
+        - senders
+      operationId: Senders.List
+      parameters:
+        - name: sendNo
+          in: query
+          description: Sender's phone number
+          schema:
+            type: string
+        - name: useYn
+          in: query
+          description: Value indicating whether the number is used or not
+          schema:
+            type: string
+        - name: blockYn
+          in: query
+          description: Value indicating whether the number is blocked or not
+          schema:
+            type: string
+        - name: pageNum
+          in: query
+          description: Page number in the pagination. Default value is '1'
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: Page size in the pagination. Default value is '15'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listSendersResponse'
+              examples:
+                sample:
+                  summary: This represents the example entity for GetMessage response body.
+                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"pageNum":1,"pageSize":15,"totalCount":2,"data":[{"serviceId":1234,"sendNo":"01012345678","useYn":"Y","blockYn":"N","blockReason":null,"createDate":"2020-01-01 00:00:00","createUser":"18ad9058-6466-48ef-8a78-08c27519ac24","updateDate":"2020-01-01 00:00:00","updateUser":"18ad9058-6466-48ef-8a78-08c27519ac24"},{"serviceId":5678,"sendNo":"01087654321","useYn":"Y","blockYn":"N","blockReason":null,"createDate":"2020-01-01 00:00:00","createUser":"18ad9058-6466-48ef-8a78-08c27519ac24","updateDate":"2020-01-01 00:00:00","updateUser":"18ad9058-6466-48ef-8a78-08c27519ac24"}]}}'
+        '400':
+          description: The input was invalid
+        '500':
+          description: The service has got an unexpected error
+      security:
+        - app_auth: []
+components:
+  schemas:
+    getMessageResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/responseHeaderModel'
+        body:
+          $ref: '#/components/schemas/responseItemBodyModel_getMessageResponseData'
+    getMessageResponseData:
+      type: object
+      properties:
+        requestId:
+          type: string
+        requestDate:
+          type: string
+        resultDate:
+          type: string
+        templateId:
+          type: string
+        templateName:
+          type: string
+        categoryId:
+          type: string
+        categoryName:
+          type: string
+        body:
+          type: string
+        sendNo:
+          type: string
+        countryCode:
+          type: string
+        recipientNo:
+          type: string
+        msgStatus:
+          type: string
+        msgStatusName:
+          type: string
+        resultCode:
+          type: string
+        resultCodeName:
+          type: string
+        telecomCode:
+          type: integer
+          format: int32
+        telecomCodeName:
+          type: string
+        recipientSeq:
+          type: integer
+          format: int32
+        sendType:
+          type: string
+        messageType:
+          type: string
+        userId:
+          type: string
+        adYn:
+          type: string
+        resultMessage:
+          type: string
+        senderGroupingKey:
+          type: string
+        recipientGroupingKey:
+          type: string
+    listMessagesResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/responseHeaderModel'
+        body:
+          $ref: '#/components/schemas/responseCollectionBodyModel_listMessagesResponseData'
+    listMessagesResponseData:
+      type: object
+      properties:
+        requestId:
+          type: string
+        requestDate:
+          type: string
+        resultDate:
+          type: string
+        templateId:
+          type: string
+        templateName:
+          type: string
+        categoryId:
+          type: string
+        categoryName:
+          type: string
+        body:
+          type: string
+        sendNo:
+          type: string
+        countryCode:
+          type: string
+        recipientNo:
+          type: string
+        msgStatus:
+          type: string
+        msgStatusName:
+          type: string
+        resultCode:
+          type: string
+        resultCodeName:
+          type: string
+        telecomCode:
+          type: integer
+          format: int32
+        telecomCodeName:
+          type: string
+        recipientSeq:
+          type: integer
+          format: int32
+        sendType:
+          type: string
+        messageType:
+          type: string
+        userId:
+          type: string
+        adYn:
+          type: string
+        resultMessage:
+          type: string
+        senderGroupingKey:
+          type: string
+        recipientGroupingKey:
+          type: string
+    listMessageStatusResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/responseHeaderModel'
+        body:
+          $ref: '#/components/schemas/responseCollectionBodyModel_listMessageStatusResponseData'
+    listMessageStatusResponseData:
+      type: object
+      properties:
+        messageType:
+          type: string
+        requestId:
+          type: string
+        recipientSeq:
+          type: integer
+          format: int32
+        resultCode:
+          type: string
+        resultCodeName:
+          type: string
+        requestDate:
+          type: string
+        resultDate:
+          type: string
+        updateDate:
+          type: string
+        telecomCode:
+          type: string
+        telecomCodeName:
+          type: string
+        senderGroupingKey:
+          type: string
+        recipientGroupingKey:
+          type: string
+    listSendersResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/responseHeaderModel'
+        body:
+          $ref: '#/components/schemas/responseCollectionBodyModel_listSendersResponseData'
+    listSendersResponseData:
+      type: object
+      properties:
+        serviceId:
+          type: integer
+          format: int32
+        sendNo:
+          type: string
+        useYn:
+          type: string
+        blockYn:
+          type: string
+        blockReason:
+          type: string
+        createDate:
+          type: string
+        createUser:
+          type: string
+        updateDate:
+          type: string
+        updateUser:
+          type: string
+
+
+    responseCollectionBodyModel_listMessagesResponseData:
+      type: object
+      properties:
+        pageNum:
+          type: integer
+          format: int32
+          nullable: true
+        pageSize:
+          type: integer
+          format: int32
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/listMessagesResponseData'
+    responseCollectionBodyModel_listMessageStatusResponseData:
+      type: object
+      properties:
+        pageNum:
+          type: integer
+          format: int32
+          nullable: true
+        pageSize:
+          type: integer
+          format: int32
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/listMessageStatusResponseData'
+    responseCollectionBodyModel_listSendersResponseData:
+      type: object
+      properties:
+        pageNum:
+          type: integer
+          format: int32
+          nullable: true
+        pageSize:
+          type: integer
+          format: int32
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/listSendersResponseData'
+    responseHeaderModel:
+      type: object
+      properties:
+        isSuccessful:
+          type: boolean
+        resultCode:
+          type: integer
+          format: int32
+        resultMessage:
+          type: string
+    responseItemBodyModel_getMessageResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/getMessageResponseData'
+    responseItemBodyModel_sendMessagesResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/sendMessagesResponseData'
+    sendMessagesRequestBody:
+      type: object
+      properties:
+        templateId:
+          type: string
+        body:
+          type: string
+        sendNo:
+          type: string
+        requestDate:
+          type: string
+        senderGroupingKey:
+          type: string
+        recipientList:
+          type: array
+          items:
+            $ref: '#/components/schemas/sendMessagesRequestRecipient'
+        userId:
+          type: string
+        statsId:
+          type: string
+    sendMessagesRequestRecipient:
+      type: object
+      properties:
+        recipientNo:
+          type: string
+        countryCode:
+          type: string
+        internationalRecipientNo:
+          type: string
+        templateParameter:
+          type: object
+          additionalProperties:
+            type: object
+        recipientGroupingKey:
+          type: string
+    sendMessagesResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/responseHeaderModel'
+        body:
+          $ref: '#/components/schemas/responseItemBodyModel_sendMessagesResponseData'
+    sendMessagesResponseData:
+      type: object
+      properties:
+        requestId:
+          type: string
+        statusCode:
+          type: string
+        senderGroupingKey:
+          type: string
+        sendResultList:
+          type: array
+          items:
+            $ref: '#/components/schemas/sendMessagesResponseResult'
+    sendMessagesResponseResult:
+      type: object
+      properties:
+        recipientNo:
+          type: string
+        resultCode:
+          type: integer
+          format: int32
+        resultMessage:
+          type: string
+        recipientSeq:
+          type: integer
+          format: int32
+        recipientGroupingKey:
+          type: string
+  securitySchemes:
+    app_auth:
+      type: http
+      description: Toast API basic auth
+      scheme: basic
