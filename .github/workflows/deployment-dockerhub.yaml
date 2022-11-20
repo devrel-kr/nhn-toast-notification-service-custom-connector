@@ -37,9 +37,13 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push Docker images to DockerHub
-      shell: pwsh
+      shell: bash
       run: |
-        CD ${{ matrix.fncapp-name }}
+        cd ${{ matrix.fncapp-name }}
+
+        curl https://raw.githubusercontent.com/${{ github.repository }}/main/src/${{ matrix.fncapp-name }}/Dockerfile > Dockerfile
+        curl https://raw.githubusercontent.com/${{ github.repository }}/main/src/${{ matrix.fncapp-name }}/.dockerignore > .dockerignore
+        curl https://raw.githubusercontent.com/${{ github.repository }}/main/src/${{ matrix.fncapp-name }}/local.settings.sample.json > local.settings.json
 
         docker build . -t ${{ matrix.fncapp-name }}:latest -t ${{ matrix.fncapp-name }}:${{ env.RELEASE_VERSION }}
         docker push -a ${{ matrix.fncapp-name }}
