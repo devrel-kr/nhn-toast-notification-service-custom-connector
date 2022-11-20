@@ -39,7 +39,7 @@ jobs:
     - name: Build and push Docker images to DockerHub
       shell: pwsh
       run: |
-        CD ${{ matrix.funcapp-name }}
+        CD ${{ matrix.fncapp-name }}
 
-        docker build . -t ${{ matrix.funcapp-name }}:latest -t ${{ matrix.funcapp-name }}:${{ env.RELEASE_VERSION }}
-        docker push -a ${{ matrix.funcapp-name }}
+        docker build . -t ${{ matrix.fncapp-name }}:latest -t ${{ matrix.fncapp-name }}:${{ env.RELEASE_VERSION }}
+        docker push -a ${{ matrix.fncapp-name }}
