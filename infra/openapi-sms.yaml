@@ -1,12 +1,12 @@
 openapi: 3.0.1
 info:
-  title: Power Platform BFF for NHN Cloud Notification Service
-  description: This is a BFF API for Power Platform to the NHN Cloud Notification service.
-  version: 1.0.0
+  title: NHN Cloud SMS API Facade
+  description: This is a facade API for sending SMS messages through the NHN Cloud Notification service.
+  version: v1.0.0
 servers:
-  - url: http://localhost:7071/pp
+  - url: http://localhost:7071/api
 paths:
-  /messages/{requestId}:
+  '/messages/{requestId}':
     get:
       tags:
         - sms
@@ -41,7 +41,7 @@ paths:
         '500':
           description: The service has got an unexpected error
       security:
-        - app_auth: []
+        - app_auth: [ ]
   /messages:
     get:
       tags:
@@ -149,7 +149,7 @@ paths:
         '500':
           description: The service has got an unexpected error
       security:
-        - app_auth: []
+        - app_auth: [ ]
     post:
       tags:
         - sms
@@ -180,7 +180,7 @@ paths:
         '500':
           description: The service has got an unexpected error
       security:
-        - app_auth: []
+        - app_auth: [ ]
   /messages/status:
     get:
       tags:
@@ -230,55 +230,7 @@ paths:
         '500':
           description: The service has got an unexpected error
       security:
-        - app_auth: []
-  /senders:
-    get:
-      tags:
-        - senders
-      operationId: Senders.List
-      parameters:
-        - name: sendNo
-          in: query
-          description: Sender's phone number
-          schema:
-            type: string
-        - name: useYn
-          in: query
-          description: Value indicating whether the number is used or not
-          schema:
-            type: string
-        - name: blockYn
-          in: query
-          description: Value indicating whether the number is blocked or not
-          schema:
-            type: string
-        - name: pageNum
-          in: query
-          description: Page number in the pagination. Default value is '1'
-          schema:
-            type: string
-        - name: pageSize
-          in: query
-          description: Page size in the pagination. Default value is '15'
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The OK response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/listSendersResponse'
-              examples:
-                sample:
-                  summary: This represents the example entity for GetMessage response body.
-                  value: '{"header":{"isSuccessful":true,"resultCode":0,"resultMessage":"SUCCESS"},"body":{"pageNum":1,"pageSize":15,"totalCount":2,"data":[{"serviceId":1234,"sendNo":"01012345678","useYn":"Y","blockYn":"N","blockReason":null,"createDate":"2020-01-01 00:00:00","createUser":"18ad9058-6466-48ef-8a78-08c27519ac24","updateDate":"2020-01-01 00:00:00","updateUser":"18ad9058-6466-48ef-8a78-08c27519ac24"},{"serviceId":5678,"sendNo":"01087654321","useYn":"Y","blockYn":"N","blockReason":null,"createDate":"2020-01-01 00:00:00","createUser":"18ad9058-6466-48ef-8a78-08c27519ac24","updateDate":"2020-01-01 00:00:00","updateUser":"18ad9058-6466-48ef-8a78-08c27519ac24"}]}}'
-        '400':
-          description: The input was invalid
-        '500':
-          description: The service has got an unexpected error
-      security:
-        - app_auth: []
+        - app_auth: [ ]
 components:
   schemas:
     getMessageResponse:
@@ -440,37 +392,6 @@ components:
           type: string
         recipientGroupingKey:
           type: string
-    listSendersResponse:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/responseHeaderModel'
-        body:
-          $ref: '#/components/schemas/responseCollectionBodyModel_listSendersResponseData'
-    listSendersResponseData:
-      type: object
-      properties:
-        serviceId:
-          type: integer
-          format: int32
-        sendNo:
-          type: string
-        useYn:
-          type: string
-        blockYn:
-          type: string
-        blockReason:
-          type: string
-        createDate:
-          type: string
-        createUser:
-          type: string
-        updateDate:
-          type: string
-        updateUser:
-          type: string
-
-
     responseCollectionBodyModel_listMessagesResponseData:
       type: object
       properties:
@@ -509,25 +430,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/listMessageStatusResponseData'
-    responseCollectionBodyModel_listSendersResponseData:
-      type: object
-      properties:
-        pageNum:
-          type: integer
-          format: int32
-          nullable: true
-        pageSize:
-          type: integer
-          format: int32
-          nullable: true
-        totalCount:
-          type: integer
-          format: int32
-          nullable: true
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/listSendersResponseData'
     responseHeaderModel:
       type: object
       properties:
