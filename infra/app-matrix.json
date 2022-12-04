@@ -1,0 +1,12 @@
+[
+  {
+    "app_name": "sms",
+    "api_display_name": "SMS",
+    "api_path": "sms"
+  },
+  {
+    "app_name": "senders",
+    "api_display_name": "SENDERS",
+    "api_path": "senders"
+  }
+]

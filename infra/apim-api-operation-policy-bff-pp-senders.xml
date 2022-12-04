@@ -13,7 +13,7 @@
 <policies>
     <inbound>
         <base />
-        <set-backend-service base-url="https://{{RESOURCE_NAME}}.azure-api.net/sms/verify" />
+        <set-backend-service base-url="https://{{RESOURCE_NAME}}.azure-api.net/senders" />
     </inbound>
     <backend>
         <base />

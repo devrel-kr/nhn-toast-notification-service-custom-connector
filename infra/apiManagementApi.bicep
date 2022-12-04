@@ -19,6 +19,7 @@ param apiMgmtApiType string = 'http'
 param apiMgmtApiName string
 param apiMgmtApiDisplayName string
 param apiMgmtApiDescription string
+param apiMgmtApiServiceUrl string
 param apiMgmtApiPath string
 param apiMgmtApiSubscriptionRequired bool = false
 
@@ -141,6 +142,7 @@ var apiManagement = {
     apiName: apiMgmtApiName
     displayName: apiMgmtApiDisplayName
     description: apiMgmtApiDescription
+    serviceUrl: apiMgmtApiServiceUrl
     path: apiMgmtApiPath
     subscriptionRequired: apiMgmtApiSubscriptionRequired
     format: apiMgmtApiFormat
@@ -196,32 +198,53 @@ resource apimapipolicy 'Microsoft.ApiManagement/service/apis/policies@2021-08-01
 
 var operations = [
     {
+        bff: false
         name: 'openapi-v2-json'
         displayName: 'openapi/v2.json'
         method: 'GET'
         urlTemplate: '/openapi/v2.json'
+        policyFormat: ''
+        policyValue: ''
     }
     {
+        bff: false
         name: 'openapi-v3-json'
         displayName: 'openapi/v3.json'
         method: 'GET'
         urlTemplate: '/openapi/v3.json'
+        policyFormat: ''
+        policyValue: ''
     }
     {
+        bff: false
         name: 'swagger-json'
         displayName: 'swagger.json'
         method: 'GET'
         urlTemplate: '/swagger.json'
+        policyFormat: ''
+        policyValue: ''
     }
     {
+        bff: false
         name: 'swagger-ui'
         displayName: 'swagger/ui'
         method: 'GET'
         urlTemplate: '/swagger/ui'
+        policyFormat: ''
+        policyValue: ''
+    }
+    {
+        bff: true
+        name: 'swagger-ui'
+        displayName: 'swagger/ui'
+        method: 'GET'
+        urlTemplate: '/swagger/ui'
+        policyFormat: 'xml-link'
+        policyValue: 'https://raw.githubusercontent.com/${gitHubRepository}/${gitHubBranch}/infra/apim-api-policy-${toLower(app.apiName)}.xml'
     }
 ]
 
-resource apimapioperations 'Microsoft.ApiManagement/service/apis/operations@2021-08-01' = [for op in operations: {
+resource apimapioperations 'Microsoft.ApiManagement/service/apis/operations@2021-08-01' = [for op in operations: if (op.bff != true) {
     name: '${apimapi.name}/${op.name}'
     properties: {
         displayName: op.displayName
@@ -229,6 +252,14 @@ resource apimapioperations 'Microsoft.ApiManagement/service/apis/operations@2021
         urlTemplate: op.urlTemplate
         templateParameters: []
         responses: []
+    }
+}]
+
+resource apimapioperationpolicies 'Microsoft.ApiManagement/service/apis/operations/policies@2021-08-01' = [for (op, index) in operations: if (op.bff == true) {
+    name: '${apimapioperations[index].name}/policy'
+    properties: {
+        format: op.policyFormat
+        value: op.policyValue
     }
 }]
 

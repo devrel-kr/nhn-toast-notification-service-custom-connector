@@ -44,8 +44,34 @@ param env string = 'dev'
 
 param apiManagementPublisherName string
 param apiManagementPublisherEmail string
-param deploymentScriptAzureCliVersion string = '2.37.0'
-param functionAppNames string = 'sms,sms-verify'
+param deploymentScriptAzureCliVersion string = '2.40.0'
+
+param gitHubRepository string = 'devrel-kr/nhn-toast-notification-service-custom-connector'
+param gitHubBranch string = 'main'
+
+var apps = [
+    {
+        suffix: 'sms'
+        apiName: 'SMS'
+        apiPath: 'sms'
+        apiFormat: 'openapi-link'
+        apiExtension: 'yaml'
+    }
+    {
+        suffix: 'senders'
+        apiName: 'SENDERS'
+        apiPath: 'senders'
+        apiFormat: 'openapi-link'
+        apiExtension: 'yaml'
+    }
+    {
+        suffix: 'bff-pp'
+        apiName: 'PP'
+        apiPath: 'pp'
+        apiFormat: 'openapi-link'
+        apiExtension: 'yaml'
+    }
+]
 
 var locationCodeMap = {
     australiacentral: 'auc'
@@ -139,10 +165,12 @@ module resources './main.bicep' = {
     params: {
         name: name
         location: location
-        suffixes: functionAppNames
         env: env
+        gitHubRepository: gitHubRepository
+        gitHubBranch: gitHubBranch
         apiMgmtPublisherName: apiManagementPublisherName
         apiMgmtPublisherEmail: apiManagementPublisherEmail
         deploymentScriptAzureCliVersion: deploymentScriptAzureCliVersion
+        apps: apps
     }
 }

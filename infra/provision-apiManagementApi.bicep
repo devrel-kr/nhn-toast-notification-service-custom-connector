@@ -16,6 +16,7 @@ param apiMgmtApiType string = 'http'
 param apiMgmtApiName string
 param apiMgmtApiDisplayName string
 param apiMgmtApiDescription string
+param apiMgmtApiServiceUrl string
 param apiMgmtApiPath string
 param apiMgmtApiSubscriptionRequired bool = false
 @allowed([
@@ -56,6 +57,7 @@ module apimapi './apiManagementApi.bicep' = {
         apiMgmtApiName: apiMgmtApiName
         apiMgmtApiDisplayName: apiMgmtApiDisplayName
         apiMgmtApiDescription: apiMgmtApiDescription
+        apiMgmtApiServiceUrl: apiMgmtApiServiceUrl
         apiMgmtApiPath: apiMgmtApiPath
         apiMgmtApiSubscriptionRequired: apiMgmtApiSubscriptionRequired
         apiMgmtApiFormat: apiMgmtApiFormat
