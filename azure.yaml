@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: nhn-toast-notification-service-custom-connector
+
+infra:
+  provider: "bicep"
+  path: "infra"
+  module: "main"
+
+pipeline:
+  provider: "github"
+
+# services:
+#   ## An example for a python API service.
+#   ## The service is named 'python-api'.
+#   ## The language is 'python'.
+#   ## The source code is located in the project (azure.yaml) directory.
+#   ## The service will be hosted on Azure App Service.
+#   python-api:
+#     language: python
+#     project: ./
+#     host: appservice
+#   ## An example for a NodeJS API, located in src/api.
+#   nodejs-api:
+#     language: js
+#     project: ./src/api
+#     host: appservice
+#   ## An example for a React front-end app.
+#   ## The src/react-app/build folder is where the app is built to after `npm run build`.
+#   react-web:
+#     language: js
+#     project: ./src/react-app
+#     host: appservice
+#     dist: build
