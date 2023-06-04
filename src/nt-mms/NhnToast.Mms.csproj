@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
 
-    <AssemblyName>Toast.Sms.Verification</AssemblyName>
-    <RootNamespace>Toast.Sms.Verification</RootNamespace>
+    <AssemblyName>Toast.Mms</AssemblyName>
+    <RootNamespace>Toast.Mms</RootNamespace>
 
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>

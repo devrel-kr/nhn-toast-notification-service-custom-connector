@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Toast.Sms.Validators
+namespace Toast.Common.Validators
 {
     /// <summary>
     /// This describes the method that checks validation of format in its contract.
@@ -27,7 +27,7 @@ namespace Toast.Sms.Validators
             {
                 return false;
             }
-            
+
             return regex.IsMatch(date);
         }
     }

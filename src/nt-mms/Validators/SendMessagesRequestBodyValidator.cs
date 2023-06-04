@@ -7,9 +7,9 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 
 using Toast.Common.Exceptions;
 using Toast.Common.Validators;
-using Toast.Sms.Models;
+using Toast.Mms.Models;
 
-namespace Toast.Sms.Validators
+namespace Toast.Mms.Validators
 {
     /// <summary>
     /// This represents the extension entity for the request header.
@@ -50,14 +50,16 @@ namespace Toast.Sms.Validators
         {
             this._regex = regex.ThrowIfNullOrDefault();
 
-            this.RuleFor(p => p.TemplateId).MaximumLength(50).When(p => p.TemplateId != null);
-            this.RuleFor(p => p.Body).NotNull().MaximumLength(255);
+            this.RuleFor(p => p.TemplateId).MaximumLength(50).When(p => p.TemplateId.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.Title).NotEmpty().MaximumLength(120);
+            this.RuleFor(p => p.Body).NotEmpty().MaximumLength(4000);
             this.RuleFor(p => p.SenderNumber).NotEmpty().MaximumLength(13);
-            this.RuleFor(p => p.RequestDate).Must(IsValidDateFormat).When(p => !string.IsNullOrWhiteSpace(p.RequestDate));
-            this.RuleFor(p => p.SenderGroupingKey).MaximumLength(100);
+            this.RuleFor(p => p.RequestDate).Must(IsValidDateFormat).When(p => p.RequestDate.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.SenderGroupingKey).MaximumLength(100).When(p => p.SenderGroupingKey.IsNullOrWhiteSpace() == false);
             this.RuleForEach(p => p.Recipients).SetValidator(new SendMessagesRequestRecipientValidator());
-            this.RuleFor(p => p.UserId).MaximumLength(100).When(p => p.UserId != null);
-            this.RuleFor(p => p.StatsId).MaximumLength(100).When(p => p.StatsId != null);
+            this.RuleFor(p => p.UserId).MaximumLength(100).When(p => p.UserId.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.StatsId).MaximumLength(100).When(p => p.StatsId.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.OriginCode).MaximumLength(10).When(p => p.OriginCode.IsNullOrWhiteSpace() == false);
         }
 
         private bool IsValidDateFormat(string date)
@@ -71,15 +73,23 @@ namespace Toast.Sms.Validators
     /// </summary>
     public class SendMessagesRequestRecipientValidator : AbstractValidator<SendMessagesRequestRecipient>
     {
+        private readonly string _templateId;
+
+        public SendMessagesRequestRecipientValidator(string templateId = null)
+        {
+            this._templateId = templateId;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SendMessagesRequestRecipientValidator"/> class.
         /// </summary>
         public SendMessagesRequestRecipientValidator()
         {
             this.RuleFor(p => p.RecipientNumber).NotEmpty().MaximumLength(20);
-            this.RuleFor(p => p.CountryCode).MaximumLength(8).When(p => p.CountryCode != null);
-            this.RuleFor(p => p.InternationalRecipientNumber).MaximumLength(20).When(p => p.InternationalRecipientNumber != null);
-            this.RuleFor(p => p.RecipientGroupingKey).MaximumLength(100).When(p => p.RecipientGroupingKey != null);
+            this.RuleFor(p => p.CountryCode).MaximumLength(8).When(p => p.CountryCode.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.InternationalRecipientNumber).MaximumLength(20).When(p => p.InternationalRecipientNumber.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.TemplateParameters).NotEmpty().When(_ => this._templateId.IsNullOrWhiteSpace() == false);
+            this.RuleFor(p => p.RecipientGroupingKey).MaximumLength(1000).When(p => p.RecipientGroupingKey.IsNullOrWhiteSpace() == false);
         }
     }
 }
