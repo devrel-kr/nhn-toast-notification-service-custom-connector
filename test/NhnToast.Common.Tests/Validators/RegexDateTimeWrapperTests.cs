@@ -1,13 +1,10 @@
-using System;
-using System.Threading.Tasks;
-
 using FluentAssertions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Toast.Sms.Validators;
+using Toast.Common.Validators;
 
-namespace Toast.Sms.Tests.Validators
+namespace Toast.Common.Tests.Validators
 {
     [TestClass]
     public class RegexDateTimeWrapperTests
@@ -30,8 +27,6 @@ namespace Toast.Sms.Tests.Validators
 
             //Assert
             result.Should().Be(expected);
-
         }
-
     }
 }

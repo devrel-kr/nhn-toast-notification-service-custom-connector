@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Exceptions;
+using Toast.Common.Validators;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
 
@@ -24,7 +25,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", null, null, 0, false)]
         [DataRow("2022-05-01 00:00:00", "2022-04-30 00:00:00", null, null, null, false)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", "MSM", null, null, false)]
-
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize, bool expected)
         {
             var queries = new ListMessageStatusRequestQueries()
@@ -53,7 +53,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow("2022-05-01 00:00:00", "2022-04-30 23:59:59", null, null, null)]
         [DataRow("20220501000000", "2022-04-30 23:59:59", null, null, null)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", "MSM", null, null)]
-
         public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize)
         {
             var queries = new ListMessageStatusRequestQueries()
@@ -68,7 +67,6 @@ namespace Toast.Sms.Tests.Validators
             var wrapper = new RegexDateTimeWrapper();
             var validator = new ListMessageStatusRequestQueryValidator(wrapper);
 
-
             Func<Task> func = async () => await ListMessageStatusRequestQueryValidatorExtension.Validate(Task.FromResult(queries), validator).ConfigureAwait(false);
 
             func.Should().ThrowAsync<RequestQueryNotValidException>();
@@ -78,7 +76,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", null, null, null, 1, 15)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", null, 2, 10, 2, 10)]
         [DataRow("2022-05-01 00:00:00", "2022-05-01 23:59:59", "LMS", null, null, 1, 15)]
-
         public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result(string startUpdateDate, string endUpdateDate, string msgType, int? pageNumber, int? pageSize, int expectedPageNumber, int expectedPageSize)
         {
             var queries = new ListMessageStatusRequestQueries()

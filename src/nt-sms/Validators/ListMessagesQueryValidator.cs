@@ -7,6 +7,7 @@ using FluentValidation;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Extensions;
 
 using Toast.Common.Exceptions;
+using Toast.Common.Validators;
 using Toast.Sms.Models;
 
 namespace Toast.Sms.Validators

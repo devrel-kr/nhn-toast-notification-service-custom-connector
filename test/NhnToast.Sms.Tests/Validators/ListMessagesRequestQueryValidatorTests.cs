@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Exceptions;
+using Toast.Common.Validators;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
 
@@ -31,7 +32,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow("1234567890", null, null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null, false)]
         [DataRow("1234567890", null, null, null, null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, false)]
-
         public void Given_Values_When_Validate_Invoked_Then_It_Should_Return_Result(string requestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate,
             string startResultDate, string endResultDate, string sendNumber, string recipientNumber, string templateId, string msgStatus, string resultCode, string subResultCode,
             string SenderGroupingKey, string recipientGroupingkey, int? pageNum, int? pageSize, bool expected)
@@ -59,7 +59,6 @@ namespace Toast.Sms.Tests.Validators
             var wrapper = new RegexDateTimeWrapper();
             var validator = new ListMessagesRequestQueryValidator(wrapper);
 
-
             var result = validator.Validate(queries);
 
             result.IsValid.Should().Be(expected);
@@ -82,7 +81,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null)]
         [DataRow("1234567890", null, null, null, null, "20220510000000", "20220511000000", null, null, null, null, null, null, null, null, null, null)]
         [DataRow("1234567890", null, null, null, null, "2022-05-11 00:00:00", "2022-05-10 00:00:00", null, null, null, null, null, null, null, null, null, null)]
-
         public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception(string requestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate,
             string startResultDate, string endResultDate, string sendNumber, string recipientNumber, string templateId, string msgStatus, string resultCode, string subResultCode,
             string SenderGroupingKey, string recipientGroupingkey, int? pageNum, int? pageSize)
@@ -120,7 +118,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow("1234567890", "2022-05-10 00:00:00", "2022-05-11 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, 2, 10, 2, 10)]
         [DataRow("1234567890", "2022-05-10 00:00:00", "2022-05-11 00:00:00", null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, 15)]
         [DataRow("1234567890", "2022-05-10 00:00:00", "2022-05-11 00:00:00", "2022-05-10 00:00:00", "2022-05-11 00:00:00", "2022-05-10 00:00:00", "2022-05-11 00:00:00", "1234567890", "1234567890", "1234567890", "2", "MTR1", "MTR2_1", "1234567890", "1234567890", null, null, 1, 15)]
-
         public async Task Given_ValidValues_When_Validate_Invoked_Then_It_Should_Return_Result(string requestId, string startRequestDate, string endRequestDate, string startCreateDate, string endCreateDate,
             string startResultDate, string endResultDate, string sendNumber, string recipientNumber, string templateId, string msgStatus, string resultCode, string subResultCode,
             string SenderGroupingKey, string recipientGroupingkey, int? pageNum, int? pageSize, int expectedPageNumber, int expectedPageSize)

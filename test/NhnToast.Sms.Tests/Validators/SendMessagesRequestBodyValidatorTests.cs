@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Toast.Common.Exceptions;
+using Toast.Common.Validators;
 using Toast.Sms.Models;
 using Toast.Sms.Validators;
 
@@ -63,7 +64,6 @@ namespace Toast.Sms.Tests.Validators
         [DataRow(null, "Hello world", "1234567890", "2022051000000", null, "0987654321", null, null, null, null, null)]
         [DataRow(null, "Hello world", "12345678901234567890", "2022-05-10 00:00:00", null, "0987654321", null, null, null, null, null)]
         [DataRow(null, "Hello world", "1234567890", "2022-05-10 00:00:00", null, "098765432109876543210987654321", null, null, null, null, null)]
-
         public void Given_InvalidValues_When_Validate_Invoked_Then_It_Should_Throw_Exception(string templateId, string body, string sendNo, string requestDate, string senderGroupingKey,
             string recipientNo, string countryCode, string InternationalRecipientNo, string recipientGroupingKey, string userId, string statsId)
         {

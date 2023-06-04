@@ -6,8 +6,10 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>Toast.Sms.Verification.Tests</AssemblyName>
-    <RootNamespace>Toast.Sms.Verification.Tests</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <AssemblyName>Toast.Mms.Tests</AssemblyName>
+    <RootNamespace>Toast.Mms.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" Version="*" />
+    <PackageReference Include="FluentValidation" Version="*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <PackageReference Include="Moq" Version="*" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.*" />
@@ -24,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\nt-sms-verify\NhnToast.Sms.Verification.csproj" />
+    <ProjectReference Include="..\..\src\nt-mms\NhnToast.Mms.csproj" />
     <ProjectReference Include="..\NhnToast.Tests.Common\NhnToast.Tests.Common.csproj" />
   </ItemGroup>
 

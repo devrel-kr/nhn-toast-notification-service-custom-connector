@@ -22,21 +22,21 @@ using Toast.Common.Configurations;
 using Toast.Common.Extensions;
 using Toast.Common.Models;
 using Toast.Common.Validators;
-using Toast.Sms.Configurations;
-using Toast.Sms.Examples;
-using Toast.Sms.Models;
-using Toast.Sms.Validators;
+using Toast.Mms.Configurations;
+using Toast.Mms.Examples;
+using Toast.Mms.Models;
+using Toast.Mms.Validators;
 
-namespace Toast.Sms.Triggers
+namespace Toast.Mms.Triggers
 {
     public class SendMessages
     {
-        private readonly ToastSettings<SmsEndpointSettings> _settings;
+        private readonly ToastSettings<MmsEndpointSettings> _settings;
         private readonly IValidator<SendMessagesRequestBody> _validator;
         private readonly HttpClient _http;
         private readonly ILogger<SendMessages> _logger;
 
-        public SendMessages(ToastSettings<SmsEndpointSettings> settings, IValidator<SendMessagesRequestBody> validator, IHttpClientFactory factory, ILogger<SendMessages> log)
+        public SendMessages(ToastSettings<MmsEndpointSettings> settings, IValidator<SendMessagesRequestBody> validator, IHttpClientFactory factory, ILogger<SendMessages> log)
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
@@ -48,7 +48,7 @@ namespace Toast.Sms.Triggers
         [OpenApiOperation(operationId: "SMS.Send", tags: new[] { "sms" })]
         [OpenApiSecurity("app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(SendMessagesRequestBody), Example = typeof(SendMessagesRequestBodyModelExample), Description = "Message payload to send")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(SendMessagesResponseBody),  Example = typeof(SendMessagesResponseModelExample), Description = "The OK response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(SendMessagesResponseBody), Example = typeof(SendMessagesResponseModelExample), Description = "The OK response")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "The input was invalid")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.InternalServerError, Description = "The service has got an unexpected error")]
         public async Task<IActionResult> Run(
@@ -59,8 +59,10 @@ namespace Toast.Sms.Triggers
             var headers = default(RequestHeaderModel);
             try
             {
-                headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true).Validate();
-                // headers = await req.To<RequestHeaderModel>(SourceFrom.Header).Validate().ConfigureAwait(false);
+                headers = req.To<RequestHeaderModel>(useBasicAuthHeader: true)
+                             .Validate();
+                //headers = await req.To<RequestHeaderModel>(SourceFrom.Header)
+                //                   .Validate().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -71,7 +73,9 @@ namespace Toast.Sms.Triggers
             var payload = default(SendMessagesRequestBody);
             try
             {
-                payload = await req.To<SendMessagesRequestBody>(SourceFrom.Body).Validate(this._validator).ConfigureAwait(false);
+                payload = await req.To<SendMessagesRequestBody>(SourceFrom.Body)
+                                   .Validate(this._validator)
+                                   .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -80,18 +84,33 @@ namespace Toast.Sms.Triggers
             }
 
             var requestUrl = new RequestUrlBuilder()
-                .WithSettings(this._settings, this._settings.Endpoints.SendMessages)
-                .WithHeaders(headers)
-                .Build();
+                                 .WithSettings(this._settings, this._settings.Endpoints.SendMessages)
+                                 .WithHeaders(headers)
+                                 .Build();
 
             var content = new ObjectContent<SendMessagesRequestBody>(payload, this._settings.JsonFormatter, "application/json");
 
             this._http.DefaultRequestHeaders.Add("X-Secret-Key", headers.SecretKey);
-            var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
+            try
+            {
+                var result = await this._http.PostAsync(requestUrl, content).ConfigureAwait(false);
 
-            var resultPayload = await result.Content.ReadAsAsync<SendMessagesResponseBody>().ConfigureAwait(false);
+                var resultPayload = await result.Content
+                                                .ReadAsAsync<SendMessagesResponseBody>()
+                                                .ConfigureAwait(false);
 
-            return new OkObjectResult(resultPayload);
+                return new OkObjectResult(resultPayload);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+                return new ContentResult()
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Content = "Something has gone wrong",
+                    ContentType = "text/plain"
+                };
+            }
         }
     }
 }
