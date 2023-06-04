@@ -11,5 +11,17 @@ charset = utf-8
 trim_trailing_whitespace = false
 insert_final_newline = false
 
-[*.{json,yaml,yml,xml,csproj}]
+[*.{json}]
+indent_size = 2
+
+[*.{yaml,yml}]
+indent_size = 2
+
+[*.{xml}]
+indent_size = 2
+
+[*.{csproj}]
+indent_size = 2
+
+[*.{bicep}]
 indent_size = 2
