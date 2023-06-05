@@ -67,7 +67,7 @@ namespace Toast.Mms
 
         private static void ConfigureHttpClient(IServiceCollection services)
         {
-            services.AddHttpClient("messages");
+            services.AddHttpClient("mms");
         }
 
         private static void ConfigureValidators(IServiceCollection services)
