@@ -40,12 +40,12 @@ namespace Toast.Mms.Triggers
         {
             this._settings = settings.ThrowIfNullOrDefault();
             this._validator = validator.ThrowIfNullOrDefault();
-            this._http = factory.ThrowIfNullOrDefault().CreateClient("sms");
+            this._http = factory.ThrowIfNullOrDefault().CreateClient("mms");
             this._logger = log.ThrowIfNullOrDefault();
         }
 
         [FunctionName(nameof(SendMessages))]
-        [OpenApiOperation(operationId: "SMS.Send", tags: new[] { "sms" })]
+        [OpenApiOperation(operationId: "MMS.Send", tags: new[] { "mms" })]
         [OpenApiSecurity(schemeName: "function_key", schemeType: SecuritySchemeType.ApiKey, Name = "x-functions-key", In = OpenApiSecurityLocationType.Header, Description = "API Key")]
         [OpenApiSecurity(schemeName: "app_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Basic, Description = "Toast API basic auth")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(SendMessagesRequestBody), Example = typeof(SendMessagesRequestBodyModelExample), Description = "Message payload to send")]
